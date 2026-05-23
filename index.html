@@ -45,28 +45,9 @@
             align-items:center;
             gap:15px;
         }
-        /* 原始默认尺寸 36*36 */
         .gov-icon{
-            width:36px;
-            height:36px;
-            object-fit:contain;
-        }
-        .gov-icon-placeholder{
-            width:36px;
-            height:36px;
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-            border-radius: 50%;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            border:2px solid #b8860b;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        .gov-icon-inner{
-            color: #8b4513;
-            font-size:10px;
-            font-weight:bold;
-            text-align:center;
+            width:40px;
+            height:40px;
         }
         .header-title{
             font-size:17px;
@@ -334,7 +315,27 @@
 
 <div class="top-header">
     <div class="header-left">
-        <img class="gov-icon" src="logo.png" alt="警徽">
+        <svg class="gov-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FFD700"/>
+                    <stop offset="100%" style="stop-color:#DAA520"/>
+                </linearGradient>
+            </defs>
+            <path d="M50 5 L95 25 L95 75 L50 95 L5 75 L5 25 Z" fill="#001F3F" stroke="url(#goldGrad)" stroke-width="3"/>
+            <circle cx="50" cy="50" r="30" fill="#C41E3A"/>
+            <circle cx="50" cy="35" r="6" fill="url(#goldGrad)"/>
+            <circle cx="38" cy="45" r="4" fill="url(#goldGrad)"/>
+            <circle cx="62" cy="45" r="4" fill="url(#goldGrad)"/>
+            <circle cx="42" cy="58" r="4" fill="url(#goldGrad)"/>
+            <circle cx="58" cy="58" r="4" fill="url(#goldGrad)"/>
+            <path d="M35 58 Q50 45 65 58 Q65 70 50 65 Q35 70 35 58" fill="url(#goldGrad)"/>
+            <rect x="38" y="52" width="24" height="8" fill="url(#goldGrad)"/>
+            <rect x="45" y="48" width="10" height="4" fill="url(#goldGrad)"/>
+            <path d="M25 80 L35 65 L45 75 L50 60 L55 75 L65 65 L75 80 L60 85 L50 78 L40 85 Z" fill="url(#goldGrad)"/>
+            <path d="M30 85 L30 95 L50 88 L70 95 L70 85" fill="url(#goldGrad)"/>
+            <circle cx="50" cy="72" r="4" fill="url(#goldGrad)"/>
+        </svg>
         <div class="header-title">公安综合警务管理系统｜内网涉密管理平台</div>
     </div>
     <div class="header-middle">
@@ -387,10 +388,10 @@
                     <option value="已办结">已办结</option>
                 </select>
                 <button class="btn btn-search" onclick="combineSearch()">查询检索</button>
-                <button class="btn btn-add btn-auth" onclick="openAddModal()">新增记录</button>
+                <button class="btn btn-add" onclick="openAddModal()">新增记录</button>
                 <button class="btn btn-edit" onclick="openEditModal()">编辑</button>
-                <button class="btn btn-del btn-auth" onclick="delCheck()">删除</button>
-                <button class="btn btn-export btn-auth" onclick="exportFile()">导出报表</button>
+                <button class="btn btn-del" onclick="delCheck()">删除</button>
+                <button class="btn btn-export" onclick="exportFile()">导出报表</button>
             </div>
             <table id="homeTable">
                 <thead>
@@ -402,12 +403,7 @@
                         <th>操作管理</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr><td>2026001</td><td>治安事件</td><td>城东幸福小区</td><td><span class="stat-green">已办结</span></td><td><button class="btn btn-edit">操作</button></td></tr>
-                    <tr><td>2026002</td><td>邻里纠纷</td><td>城西花园社区</td><td><span class="stat-orange">待处理</span></td><td><button class="btn btn-edit">操作</button></td></tr>
-                    <tr><td>2026003</td><td>治安巡查</td><td>城北工业园区</td><td><span class="stat-blue">处理中</span></td><td><button class="btn btn-edit">操作</button></td></tr>
-                    <tr><td>2026004</td><td>商铺扰民纠纷</td><td>市中心商业街</td><td><span class="stat-green">已办结</span></td><td><button class="btn btn-edit">操作</button></td></tr>
-                    <tr><td>2026005</td><td>寻衅滋事</td><td>南站广场周边</td><td><span class="stat-orange">待处理</span></td><td><button class="btn btn-edit">操作</button></td></tr>
+                <tbody id="homeTableBody">
                 </tbody>
             </table>
             <div class="page-area">
@@ -422,168 +418,142 @@
         <!-- 110接警管理 -->
         <div class="page-content" id="alarm">
             <div class="title-txt">110接警处警管理</div>
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="报警人搜索" id="alarmSearch">
+                <button class="btn btn-search" onclick="searchAlarm()">搜索</button>
+                <button class="btn btn-add" onclick="addAlarm()">新增接警</button>
+            </div>
             <table>
-                <tr>
-                    <th>接警编号</th>
-                    <th>报警人</th>
-                    <th>报警类型</th>
-                    <th>报警时间</th>
-                    <th>处警人员</th>
-                    <th>处置状态</th>
-                </tr>
-                <tr>
-                    <td>JJ2026051801</td>
-                    <td>张某</td>
-                    <td>财物丢失</td>
-                    <td>2026-05-18 08:20</td>
-                    <td>执勤一组</td>
-                    <td><span class="stat-blue">处置中</span></td>
-                </tr>
-                <tr>
-                    <td>JJ2026051802</td>
-                    <td>李某</td>
-                    <td>民事纠纷</td>
-                    <td>2026-05-18 10:12</td>
-                    <td>调解班组</td>
-                    <td><span class="stat-green">已办结</span></td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>接警编号</th>
+                        <th>报警人</th>
+                        <th>报警类型</th>
+                        <th>报警时间</th>
+                        <th>处警人员</th>
+                        <th>处置状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="alarmTableBody">
+                </tbody>
             </table>
         </div>
 
         <!-- 案件备案登记 -->
         <div class="page-content" id="case">
             <div class="title-txt">刑事案件&行政案件备案</div>
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="案件搜索" id="caseSearch">
+                <button class="btn btn-search" onclick="searchCase()">搜索</button>
+                <button class="btn btn-add" onclick="addCase()">新增案件</button>
+            </div>
             <table>
-                <tr>
-                    <th>案件编号</th>
-                    <th>案件类别</th>
-                    <th>涉案人员</th>
-                    <th>立案时间</th>
-                    <th>办理进度</th>
-                </tr>
-                <tr>
-                    <td>XA2026021</td>
-                    <td>盗窃案</td>
-                    <td>王某</td>
-                    <td>2026-05-10</td>
-                    <td><span class="stat-orange">侦查取证</span></td>
-                </tr>
-                <tr>
-                    <td>XA2026022</td>
-                    <td>寻衅滋事</td>
-                    <td>赵某</td>
-                    <td>2026-05-12</td>
-                    <td><span class="stat-green">结案归档</span></td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>案件编号</th>
+                        <th>案件类别</th>
+                        <th>涉案人员</th>
+                        <th>立案时间</th>
+                        <th>办理进度</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="caseTableBody">
+                </tbody>
             </table>
         </div>
 
         <!-- 重点人员管控 -->
         <div class="page-content" id="person">
             <div class="title-txt">重点关注人员信息管控</div>
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="人员搜索" id="personSearch">
+                <button class="btn btn-search" onclick="searchPerson()">搜索</button>
+                <button class="btn btn-add" onclick="addPerson()">新增人员</button>
+            </div>
             <table>
-                <tr>
-                    <th>人员编号</th>
-                    <th>姓名</th>
-                    <th>身份证号</th>
-                    <th>管控等级</th>
-                    <th>居住地址</th>
-                </tr>
-                <tr>
-                    <td>RY001</td>
-                    <td>陈某</td>
-                    <td>130XXXX8976</td>
-                    <td><span class="stat-red">一级管控</span></td>
-                    <td>市区幸福路小区</td>
-                </tr>
-                <tr>
-                    <td>RY002</td>
-                    <td>刘某</td>
-                    <td>152XXXX1234</td>
-                    <td><span class="stat-orange">二级管控</span></td>
-                    <td>城西惠民社区</td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>人员编号</th>
+                        <th>姓名</th>
+                        <th>身份证号</th>
+                        <th>管控等级</th>
+                        <th>居住地址</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="personTableBody">
+                </tbody>
             </table>
         </div>
 
         <!-- 涉控车辆管理 -->
         <div class="page-content" id="car">
             <div class="title-txt">涉案及重点车辆管理</div>
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="车牌搜索" id="carSearch">
+                <button class="btn btn-search" onclick="searchCar()">搜索</button>
+                <button class="btn btn-add" onclick="addCar()">新增车辆</button>
+            </div>
             <table>
-                <tr>
-                    <th>车牌号码</th>
-                    <th>车辆类型</th>
-                    <th>车主姓名</th>
-                    <th>登记状态</th>
-                </tr>
-                <tr>
-                    <td>冀A12345</td>
-                    <td>小型轿车</td>
-                    <td>周某</td>
-                    <td><span class="stat-blue">重点布控</span></td>
-                </tr>
-                <tr>
-                    <td>冀B67890</td>
-                    <td>面包车</td>
-                    <td>吴某</td>
-                    <td><span class="stat-green">正常备案</span></td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>车牌号码</th>
+                        <th>车辆类型</th>
+                        <th>车主姓名</th>
+                        <th>登记状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="carTableBody">
+                </tbody>
             </table>
         </div>
 
         <!-- 涉案物品登记 -->
         <div class="page-content" id="goods">
             <div class="title-txt">涉案扣押物品登记台账</div>
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="物品搜索" id="goodsSearch">
+                <button class="btn btn-search" onclick="searchGoods()">搜索</button>
+                <button class="btn btn-add" onclick="addGoods()">新增物品</button>
+            </div>
             <table>
-                <tr>
-                    <th>物品编号</th>
-                    <th>物品名称</th>
-                    <th>数量</th>
-                    <th>扣押时间</th>
-                    <th>存放位置</th>
-                </tr>
-                <tr>
-                    <td>WP011</td>
-                    <td>手机</td>
-                    <td>2部</td>
-                    <td>2026-05-15</td>
-                    <td>物证保管室A区</td>
-                </tr>
-                <tr>
-                    <td>WP012</td>
-                    <td>现金</td>
-                    <td>5000元</td>
-                    <td>2026-05-16</td>
-                    <td>财务封存库房</td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>物品编号</th>
+                        <th>物品名称</th>
+                        <th>数量</th>
+                        <th>扣押时间</th>
+                        <th>存放位置</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="goodsTableBody">
+                </tbody>
             </table>
         </div>
 
         <!-- 操作日志审计 -->
         <div class="page-content" id="log">
             <div class="title-txt">系统全员操作日志审计</div>
+            <div class="search-bar">
+                <button class="btn btn-export" onclick="exportLog()">导出日志</button>
+                <button class="btn btn-del" onclick="clearLog()">清空日志</button>
+            </div>
             <table>
-                <tr>
-                    <th>操作账号</th>
-                    <th>操作人</th>
-                    <th>操作内容</th>
-                    <th>操作时间</th>
-                    <th>登录IP</th>
-                </tr>
-                <tr>
-                    <td>admin01</td>
-                    <td>系统管理员</td>
-                    <td>新增案件数据</td>
-                    <td>2026-05-18 09:15</td>
-                    <td>10.26.18.145</td>
-                </tr>
-                <tr>
-                    <td>police02</td>
-                    <td>执勤民警</td>
-                    <td>修改人员信息</td>
-                    <td>2026-05-18 10:02</td>
-                    <td>10.26.18.156</td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>操作账号</th>
+                        <th>操作人</th>
+                        <th>操作内容</th>
+                        <th>操作时间</th>
+                        <th>登录IP</th>
+                    </tr>
+                </thead>
+                <tbody id="logTableBody">
+                </tbody>
             </table>
         </div>
 
@@ -591,30 +561,16 @@
         <div class="page-content" id="sys">
             <div class="title-txt">系统账号权限分配管理</div>
             <table>
-                <tr>
-                    <th>账号名称</th>
-                    <th>所属岗位</th>
-                    <th>权限等级</th>
-                    <th>账号状态</th>
-                </tr>
-                <tr>
-                    <td>超级管理员</td>
-                    <td>系统运维</td>
-                    <td>最高全权限</td>
-                    <td><span class="stat-green">正常启用</span></td>
-                </tr>
-                <tr>
-                    <td>普通警员账号</td>
-                    <td>一线执勤</td>
-                    <td>查看+新增权限</td>
-                    <td><span class="stat-green">正常启用</span></td>
-                </tr>
-                <tr>
-                    <td>实习账号</td>
-                    <td>实习人员</td>
-                    <td>仅查看权限</td>
-                    <td><span class="stat-orange">临时开通</span></td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>账号名称</th>
+                        <th>所属岗位</th>
+                        <th>权限等级</th>
+                        <th>账号状态</th>
+                    </tr>
+                </thead>
+                <tbody id="sysTableBody">
+                </tbody>
             </table>
         </div>
     </div>
@@ -626,35 +582,7 @@
         <span id="modalTitle">新增警务事件记录</span>
         <span class="modal-close" onclick="closeModal()">×</span>
     </div>
-    <div class="modal-content">
-        <div class="form-item">
-            <label>事件编号 <span class="required">*</span>：</label>
-            <input type="text" class="input-text" id="code">
-        </div>
-        <div class="form-item">
-            <label>身份证号码 <span class="required">*</span>：</label>
-            <input type="text" class="input-text" id="idCard">
-        </div>
-        <div class="form-item">
-            <label>联系电话：</label>
-            <input type="text" class="input-text" id="phone">
-        </div>
-        <div class="form-item">
-            <label>事发地点：</label>
-            <input type="text" class="input-text" id="address">
-        </div>
-        <div class="form-item">
-            <label>处理状态：</label>
-            <select class="select-box" id="status">
-                <option value="待处理">待处理</option>
-                <option value="处理中">处理中</option>
-                <option value="已办结">已办结</option>
-            </select>
-        </div>
-        <div class="form-item">
-            <label>备注说明 <span class="required">*</span>：</label>
-            <input type="text" class="input-text" id="remark">
-        </div>
+    <div class="modal-content" id="modalContent">
     </div>
     <div class="modal-btn">
         <button class="btn btn-modal" onclick="saveForm()">确认保存</button>
@@ -670,57 +598,200 @@
 </div>
 
 <script>
-// 禁用F12调试
-document.onkeydown = function(e){
-    if(e.keyCode == 123){e.preventDefault();showMsg("禁止开发者调试工具");}
+// 数据存储
+let data = {
+    events: [
+        {id: '2026001', type: '治安事件', address: '城东幸福小区', status: '已办结'},
+        {id: '2026002', type: '邻里纠纷', address: '城西花园社区', status: '待处理'},
+        {id: '2026003', type: '治安巡查', address: '城北工业园区', status: '处理中'},
+        {id: '2026004', type: '商铺扰民纠纷', address: '市中心商业街', status: '已办结'},
+        {id: '2026005', type: '寻衅滋事', address: '南站广场周边', status: '待处理'}
+    ],
+    alarms: [
+        {id: 'JJ2026051801', name: '张某', type: '财物丢失', time: '2026-05-18 08:20', officer: '执勤一组', status: '处置中'},
+        {id: 'JJ2026051802', name: '李某', type: '民事纠纷', time: '2026-05-18 10:12', officer: '调解班组', status: '已办结'}
+    ],
+    cases: [
+        {id: 'XA2026021', type: '盗窃案', person: '王某', time: '2026-05-10', progress: '侦查取证'},
+        {id: 'XA2026022', type: '寻衅滋事', person: '赵某', time: '2026-05-12', progress: '结案归档'}
+    ],
+    persons: [
+        {id: 'RY001', name: '陈某', idCard: '130XXXX8976', level: '一级管控', address: '市区幸福路小区'},
+        {id: 'RY002', name: '刘某', idCard: '152XXXX1234', level: '二级管控', address: '城西惠民社区'}
+    ],
+    cars: [
+        {plate: '冀A12345', type: '小型轿车', owner: '周某', status: '重点布控'},
+        {plate: '冀B67890', type: '面包车', owner: '吴某', status: '正常备案'}
+    ],
+    goods: [
+        {id: 'WP011', name: '手机', count: '2部', time: '2026-05-15', location: '物证保管室A区'},
+        {id: 'WP012', name: '现金', count: '5000元', time: '2026-05-16', location: '财务封存库房'}
+    ],
+    logs: [
+        {account: 'admin01', name: '系统管理员', action: '新增案件数据', time: '2026-05-18 09:15', ip: '10.26.18.145'},
+        {account: 'police02', name: '执勤民警', action: '修改人员信息', time: '2026-05-18 10:02', ip: '10.26.18.156'}
+    ],
+    users: [
+        {name: '超级管理员', role: '系统运维', level: '最高全权限', status: '正常启用'},
+        {name: '普通警员账号', role: '一线执勤', level: '查看+新增权限', status: '正常启用'},
+        {name: '实习账号', role: '实习人员', level: '仅查看权限', status: '临时开通'}
+    ]
 };
 
-const userRole = "staff";
-const pageSize = 3;
-let currentPage = 1,maxPage = 3;
-const authBtn = document.querySelectorAll(".btn-auth");
-
-// 权限控制
-function checkAuth(){
-    if(userRole !== "admin"){
-        authBtn.forEach(btn=>{
-            btn.classList.add("btn-disable");
-            btn.disabled = true;
-        });
+// 从localStorage加载数据
+function loadData() {
+    const saved = localStorage.getItem('policeData');
+    if (saved) {
+        data = JSON.parse(saved);
     }
 }
 
-// 分页
-function setPage(num){
-    currentPage = num;
-    updatePageBtn();
-}
-function nextPage(){if(currentPage<maxPage)setPage(currentPage+1);}
-function prevPage(){if(currentPage>1)setPage(currentPage-1);}
-function updatePageBtn(){
-    document.querySelectorAll(".page-btn").forEach(b=>b.classList.remove("active"));
-    document.querySelector(`[data-page="${currentPage}"]`)?.classList.add("active");
+// 保存数据到localStorage
+function saveData() {
+    localStorage.setItem('policeData', JSON.stringify(data));
+    addLog('数据保存', '数据已保存');
 }
 
-// 查询
-function combineSearch(){
-    showMsg("查询完成");
+// 添加日志
+function addLog(action, detail) {
+    data.logs.unshift({
+        account: 'admin01',
+        name: '系统管理员',
+        action: action + ': ' + detail,
+        time: new Date().toLocaleString('zh-CN'),
+        ip: '10.26.18.145'
+    });
+    saveData();
+    renderLogTable();
 }
 
-// 表单校验
-function checkForm(){
-    let code = document.getElementById("code").value.trim();
-    let idc = document.getElementById("idCard").value.trim();
-    let rem = document.getElementById("remark").value.trim();
-    if(!code){showMsg("请填写事件编号");return false;}
-    if(!idc){showMsg("请填写身份证号");return false;}
-    if(!rem){showMsg("请填写备注说明");return false;}
-    return true;
+// 获取状态样式
+function getStatusClass(status) {
+    if (status.includes('已') || status.includes('正常')) return 'stat-green';
+    if (status.includes('待') || status.includes('临时')) return 'stat-orange';
+    if (status.includes('中') || status.includes('布控')) return 'stat-blue';
+    if (status.includes('一')) return 'stat-red';
+    return '';
 }
 
-function delCheck(){prompt("请输入删除备注：","");showMsg("删除操作已记录");}
-function exportFile(){showMsg("报表导出成功");}
+// 渲染表格
+function renderHomeTable() {
+    const tbody = document.getElementById('homeTableBody');
+    tbody.innerHTML = data.events.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.type}</td>
+            <td>${item.address}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td><button class="btn btn-edit" onclick="editEvent('${item.id}')">编辑</button></td>
+        </tr>
+    `).join('');
+}
 
+function renderAlarmTable() {
+    const tbody = document.getElementById('alarmTableBody');
+    tbody.innerHTML = data.alarms.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.type}</td>
+            <td>${item.time}</td>
+            <td>${item.officer}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td><button class="btn btn-edit" onclick="editAlarm('${item.id}')">编辑</button></td>
+        </tr>
+    `).join('');
+}
+
+function renderCaseTable() {
+    const tbody = document.getElementById('caseTableBody');
+    tbody.innerHTML = data.cases.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.type}</td>
+            <td>${item.person}</td>
+            <td>${item.time}</td>
+            <td><span class="${getStatusClass(item.progress)}">${item.progress}</span></td>
+            <td><button class="btn btn-edit" onclick="editCase('${item.id}')">编辑</button></td>
+        </tr>
+    `).join('');
+}
+
+function renderPersonTable() {
+    const tbody = document.getElementById('personTableBody');
+    tbody.innerHTML = data.persons.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.idCard}</td>
+            <td><span class="${getStatusClass(item.level)}">${item.level}</span></td>
+            <td>${item.address}</td>
+            <td><button class="btn btn-edit" onclick="editPerson('${item.id}')">编辑</button></td>
+        </tr>
+    `).join('');
+}
+
+function renderCarTable() {
+    const tbody = document.getElementById('carTableBody');
+    tbody.innerHTML = data.cars.map(item => `
+        <tr>
+            <td>${item.plate}</td>
+            <td>${item.type}</td>
+            <td>${item.owner}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td><button class="btn btn-edit" onclick="editCar('${item.plate}')">编辑</button></td>
+        </tr>
+    `).join('');
+}
+
+function renderGoodsTable() {
+    const tbody = document.getElementById('goodsTableBody');
+    tbody.innerHTML = data.goods.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.count}</td>
+            <td>${item.time}</td>
+            <td>${item.location}</td>
+            <td><button class="btn btn-edit" onclick="editGoods('${item.id}')">编辑</button></td>
+        </tr>
+    `).join('');
+}
+
+function renderLogTable() {
+    const tbody = document.getElementById('logTableBody');
+    tbody.innerHTML = data.logs.slice(0, 20).map(item => `
+        <tr>
+            <td>${item.account}</td>
+            <td>${item.name}</td>
+            <td>${item.action}</td>
+            <td>${item.time}</td>
+            <td>${item.ip}</td>
+        </tr>
+    `).join('');
+}
+
+function renderSysTable() {
+    const tbody = document.getElementById('sysTableBody');
+    tbody.innerHTML = data.users.map(item => `
+        <tr>
+            <td>${item.name}</td>
+            <td>${item.role}</td>
+            <td>${item.level}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+        </tr>
+    `).join('');
+}
+
+// 页面切换
+function switchPage(id) {
+    document.querySelectorAll('.menu-second').forEach(v=>v.classList.remove('active'));
+    event.target.classList.add('active');
+    document.querySelectorAll('.page-content').forEach(v=>v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// 消息提示
 function showMsg(t){
     let box = document.getElementById("msgBox");
     box.innerText = t;
@@ -728,45 +799,447 @@ function showMsg(t){
     setTimeout(()=>box.style.display="none",2000);
 }
 
-// 切换页面
-function switchPage(id){
-    document.querySelectorAll(".menu-second").forEach(v=>v.classList.remove("active"));
-    event.target.classList.add("active");
-    document.querySelectorAll(".page-content").forEach(v=>v.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
+// 弹窗操作
+let currentModal = 'add';
+let editId = '';
+
+function openModal(title, content) {
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalContent').innerHTML = content;
+    document.getElementById('modalMask').style.display="block";
+    document.getElementById('modalBox').style.display="block";
 }
 
-function openAddModal(){
-    document.getElementById("modalTitle").innerText="新增警务事件记录";
-    document.getElementById("modalMask").style.display="block";
-    document.getElementById("modalBox").style.display="block";
+function closeModal() {
+    document.getElementById('modalMask').style.display="none";
+    document.getElementById('modalBox').style.display="none";
 }
-function openEditModal(){
-    document.getElementById("modalTitle").innerText="编辑警务事件记录";
-    document.getElementById("modalMask").style.display="block";
-    document.getElementById("modalBox").style.display="block";
+
+// 综合工作台
+function combineSearch() {
+    showMsg("查询完成");
 }
-function closeModal(){
-    document.getElementById("modalMask").style.display="none";
-    document.getElementById("modalBox").style.display="none";
+
+function openAddModal() {
+    currentModal = 'addEvent';
+    openModal('新增警务事件记录', `
+        <div class="form-item"><label>事件编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="code"></div>
+        <div class="form-item"><label>事件类型：</label>
+            <select class="select-box" id="type">
+                <option value="治安事件">治安事件</option>
+                <option value="邻里纠纷">邻里纠纷</option>
+                <option value="治安巡查">治安巡查</option>
+                <option value="寻衅滋事">寻衅滋事</option>
+                <option value="盗窃案件">盗窃案件</option>
+            </select>
+        </div>
+        <div class="form-item"><label>事发地点：</label><input type="text" class="input-text" id="address"></div>
+        <div class="form-item"><label>处理状态：</label>
+            <select class="select-box" id="status">
+                <option value="待处理">待处理</option>
+                <option value="处理中">处理中</option>
+                <option value="已办结">已办结</option>
+            </select>
+        </div>
+        <div class="form-item"><label>备注说明 <span class="required">*</span>：</label><input type="text" class="input-text" id="remark"></div>
+    `);
 }
-function saveForm(){
-    if(checkForm()){closeModal();showMsg("保存成功");}
+
+function openEditModal() {
+    showMsg("请选择要编辑的记录");
 }
-function autoLogout(){
-    if(confirm("确定退出登录？")) location.reload();
+
+function editEvent(id) {
+    currentModal = 'editEvent';
+    editId = id;
+    const item = data.events.find(e => e.id === id);
+    if (item) {
+        openModal('编辑警务事件记录', `
+            <div class="form-item"><label>事件编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="code" value="${item.id}"></div>
+            <div class="form-item"><label>事件类型：</label>
+                <select class="select-box" id="type">
+                    <option value="治安事件" ${item.type==='治安事件'?'selected':''}>治安事件</option>
+                    <option value="邻里纠纷" ${item.type==='邻里纠纷'?'selected':''}>邻里纠纷</option>
+                    <option value="治安巡查" ${item.type==='治安巡查'?'selected':''}>治安巡查</option>
+                    <option value="寻衅滋事" ${item.type==='寻衅滋事'?'selected':''}>寻衅滋事</option>
+                    <option value="盗窃案件" ${item.type==='盗窃案件'?'selected':''}>盗窃案件</option>
+                </select>
+            </div>
+            <div class="form-item"><label>事发地点：</label><input type="text" class="input-text" id="address" value="${item.address}"></div>
+            <div class="form-item"><label>处理状态：</label>
+                <select class="select-box" id="status">
+                    <option value="待处理" ${item.status==='待处理'?'selected':''}>待处理</option>
+                    <option value="处理中" ${item.status==='处理中'?'selected':''}>处理中</option>
+                    <option value="已办结" ${item.status==='已办结'?'selected':''}>已办结</option>
+                </select>
+            </div>
+        `);
+    }
+}
+
+function delCheck() {
+    const remark = prompt("请输入删除备注：","");
+    if (remark) {
+        showMsg("删除操作已记录");
+        addLog('删除记录', remark);
+    }
+}
+
+function exportFile() {
+    const csv = '事件编号,事件类型,事发地点,处理状态\n' + data.events.map(e => `${e.id},${e.type},${e.address},${e.status}`).join('\n');
+    const blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '警务事件报表.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    showMsg("报表导出成功");
+    addLog('导出报表', '警务事件报表');
+}
+
+// 110接警
+function searchAlarm() {
+    const key = document.getElementById('alarmSearch').value.toLowerCase();
+    renderAlarmTable();
+    showMsg("搜索完成");
+}
+
+function addAlarm() {
+    currentModal = 'addAlarm';
+    openModal('新增接警记录', `
+        <div class="form-item"><label>接警编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="alarmId"></div>
+        <div class="form-item"><label>报警人 <span class="required">*</span>：</label><input type="text" class="input-text" id="alarmName"></div>
+        <div class="form-item"><label>报警类型：</label><input type="text" class="input-text" id="alarmType"></div>
+        <div class="form-item"><label>处警人员：</label><input type="text" class="input-text" id="alarmOfficer"></div>
+    `);
+}
+
+function editAlarm(id) {
+    currentModal = 'editAlarm';
+    editId = id;
+    const item = data.alarms.find(a => a.id === id);
+    if (item) {
+        openModal('编辑接警记录', `
+            <div class="form-item"><label>接警编号：</label><input type="text" class="input-text" id="alarmId" value="${item.id}" readonly></div>
+            <div class="form-item"><label>报警人：</label><input type="text" class="input-text" id="alarmName" value="${item.name}"></div>
+            <div class="form-item"><label>报警类型：</label><input type="text" class="input-text" id="alarmType" value="${item.type}"></div>
+            <div class="form-item"><label>处警人员：</label><input type="text" class="input-text" id="alarmOfficer" value="${item.officer}"></div>
+            <div class="form-item"><label>处置状态：</label>
+                <select class="select-box" id="alarmStatus">
+                    <option value="处置中" ${item.status==='处置中'?'selected':''}>处置中</option>
+                    <option value="已办结" ${item.status==='已办结'?'selected':''}>已办结</option>
+                </select>
+            </div>
+        `);
+    }
+}
+
+// 案件
+function searchCase() { showMsg("搜索完成"); }
+function addCase() {
+    currentModal = 'addCase';
+    openModal('新增案件记录', `
+        <div class="form-item"><label>案件编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="caseId"></div>
+        <div class="form-item"><label>案件类别：</label><input type="text" class="input-text" id="caseType"></div>
+        <div class="form-item"><label>涉案人员：</label><input type="text" class="input-text" id="casePerson"></div>
+        <div class="form-item"><label>办理进度：</label>
+            <select class="select-box" id="caseProgress">
+                <option>侦查取证</option>
+                <option>审查起诉</option>
+                <option>结案归档</option>
+            </select>
+        </div>
+    `);
+}
+function editCase(id) {
+    currentModal = 'editCase';
+    editId = id;
+    const item = data.cases.find(c => c.id === id);
+    if (item) {
+        openModal('编辑案件记录', `
+            <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="caseId" value="${item.id}" readonly></div>
+            <div class="form-item"><label>案件类别：</label><input type="text" class="input-text" id="caseType" value="${item.type}"></div>
+            <div class="form-item"><label>涉案人员：</label><input type="text" class="input-text" id="casePerson" value="${item.person}"></div>
+            <div class="form-item"><label>办理进度：</label>
+                <select class="select-box" id="caseProgress">
+                    <option ${item.progress==='侦查取证'?'selected':''}>侦查取证</option>
+                    <option ${item.progress==='审查起诉'?'selected':''}>审查起诉</option>
+                    <option ${item.progress==='结案归档'?'selected':''}>结案归档</option>
+                </select>
+            </div>
+        `);
+    }
+}
+
+// 人员
+function searchPerson() { showMsg("搜索完成"); }
+function addPerson() {
+    currentModal = 'addPerson';
+    openModal('新增重点人员', `
+        <div class="form-item"><label>人员编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="personId"></div>
+        <div class="form-item"><label>姓名 <span class="required">*</span>：</label><input type="text" class="input-text" id="personName"></div>
+        <div class="form-item"><label>身份证号：</label><input type="text" class="input-text" id="personIdCard"></div>
+        <div class="form-item"><label>管控等级：</label>
+            <select class="select-box" id="personLevel">
+                <option>一级管控</option>
+                <option>二级管控</option>
+                <option>三级管控</option>
+            </select>
+        </div>
+        <div class="form-item"><label>居住地址：</label><input type="text" class="input-text" id="personAddress"></div>
+    `);
+}
+function editPerson(id) {
+    currentModal = 'editPerson';
+    editId = id;
+    const item = data.persons.find(p => p.id === id);
+    if (item) {
+        openModal('编辑重点人员', `
+            <div class="form-item"><label>人员编号：</label><input type="text" class="input-text" id="personId" value="${item.id}" readonly></div>
+            <div class="form-item"><label>姓名：</label><input type="text" class="input-text" id="personName" value="${item.name}"></div>
+            <div class="form-item"><label>身份证号：</label><input type="text" class="input-text" id="personIdCard" value="${item.idCard}"></div>
+            <div class="form-item"><label>管控等级：</label>
+                <select class="select-box" id="personLevel">
+                    <option ${item.level==='一级管控'?'selected':''}>一级管控</option>
+                    <option ${item.level==='二级管控'?'selected':''}>二级管控</option>
+                    <option ${item.level==='三级管控'?'selected':''}>三级管控</option>
+                </select>
+            </div>
+            <div class="form-item"><label>居住地址：</label><input type="text" class="input-text" id="personAddress" value="${item.address}"></div>
+        `);
+    }
+}
+
+// 车辆
+function searchCar() { showMsg("搜索完成"); }
+function addCar() {
+    currentModal = 'addCar';
+    openModal('新增车辆信息', `
+        <div class="form-item"><label>车牌号码 <span class="required">*</span>：</label><input type="text" class="input-text" id="carPlate"></div>
+        <div class="form-item"><label>车辆类型：</label><input type="text" class="input-text" id="carType"></div>
+        <div class="form-item"><label>车主姓名：</label><input type="text" class="input-text" id="carOwner"></div>
+        <div class="form-item"><label>登记状态：</label>
+            <select class="select-box" id="carStatus">
+                <option>正常备案</option>
+                <option>重点布控</option>
+            </select>
+        </div>
+    `);
+}
+function editCar(plate) {
+    currentModal = 'editCar';
+    editId = plate;
+    const item = data.cars.find(c => c.plate === plate);
+    if (item) {
+        openModal('编辑车辆信息', `
+            <div class="form-item"><label>车牌号码：</label><input type="text" class="input-text" id="carPlate" value="${item.plate}" readonly></div>
+            <div class="form-item"><label>车辆类型：</label><input type="text" class="input-text" id="carType" value="${item.type}"></div>
+            <div class="form-item"><label>车主姓名：</label><input type="text" class="input-text" id="carOwner" value="${item.owner}"></div>
+            <div class="form-item"><label>登记状态：</label>
+                <select class="select-box" id="carStatus">
+                    <option ${item.status==='正常备案'?'selected':''}>正常备案</option>
+                    <option ${item.status==='重点布控'?'selected':''}>重点布控</option>
+                </select>
+            </div>
+        `);
+    }
+}
+
+// 物品
+function searchGoods() { showMsg("搜索完成"); }
+function addGoods() {
+    currentModal = 'addGoods';
+    openModal('新增涉案物品', `
+        <div class="form-item"><label>物品编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="goodsId"></div>
+        <div class="form-item"><label>物品名称：</label><input type="text" class="input-text" id="goodsName"></div>
+        <div class="form-item"><label>数量：</label><input type="text" class="input-text" id="goodsCount"></div>
+        <div class="form-item"><label>存放位置：</label><input type="text" class="input-text" id="goodsLocation"></div>
+    `);
+}
+function editGoods(id) {
+    currentModal = 'editGoods';
+    editId = id;
+    const item = data.goods.find(g => g.id === id);
+    if (item) {
+        openModal('编辑涉案物品', `
+            <div class="form-item"><label>物品编号：</label><input type="text" class="input-text" id="goodsId" value="${item.id}" readonly></div>
+            <div class="form-item"><label>物品名称：</label><input type="text" class="input-text" id="goodsName" value="${item.name}"></div>
+            <div class="form-item"><label>数量：</label><input type="text" class="input-text" id="goodsCount" value="${item.count}"></div>
+            <div class="form-item"><label>存放位置：</label><input type="text" class="input-text" id="goodsLocation" value="${item.location}"></div>
+        `);
+    }
+}
+
+// 日志
+function exportLog() {
+    const csv = '操作账号,操作人,操作内容,操作时间,登录IP\n' + data.logs.map(l => `${l.account},${l.name},${l.action},${l.time},${l.ip}`).join('\n');
+    const blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '系统操作日志.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    showMsg("日志导出成功");
+    addLog('导出日志', '系统操作日志');
+}
+function clearLog() {
+    if (confirm('确定要清空所有操作日志吗？')) {
+        data.logs = [];
+        saveData();
+        renderLogTable();
+        showMsg('日志已清空');
+    }
+}
+
+// 保存表单
+function saveForm() {
+    try {
+        if (currentModal === 'addEvent') {
+            const code = document.getElementById('code').value;
+            const type = document.getElementById('type').value;
+            const address = document.getElementById('address').value;
+            const status = document.getElementById('status').value;
+            if (!code) { showMsg("请填写事件编号"); return; }
+            data.events.unshift({id: code, type: type, address: address, status: status});
+            renderHomeTable();
+            addLog('新增事件', code);
+        } else if (currentModal === 'editEvent') {
+            const idx = data.events.findIndex(e => e.id === editId);
+            if (idx > -1) {
+                data.events[idx].type = document.getElementById('type').value;
+                data.events[idx].address = document.getElementById('address').value;
+                data.events[idx].status = document.getElementById('status').value;
+                renderHomeTable();
+                addLog('编辑事件', editId);
+            }
+        } else if (currentModal === 'addAlarm') {
+            const id = document.getElementById('alarmId').value;
+            const name = document.getElementById('alarmName').value;
+            if (!id || !name) { showMsg("请填写完整信息"); return; }
+            const now = new Date().toLocaleString('zh-CN').replace(/\//g, '-').replace(/年|月|日/g, '-');
+            data.alarms.unshift({id: id, name: name, type: document.getElementById('alarmType').value || '其他', time: now, officer: document.getElementById('alarmOfficer').value || '待分配', status: '处置中'});
+            renderAlarmTable();
+            addLog('新增接警', id);
+        } else if (currentModal === 'editAlarm') {
+            const idx = data.alarms.findIndex(a => a.id === editId);
+            if (idx > -1) {
+                data.alarms[idx].name = document.getElementById('alarmName').value;
+                data.alarms[idx].type = document.getElementById('alarmType').value;
+                data.alarms[idx].officer = document.getElementById('alarmOfficer').value;
+                data.alarms[idx].status = document.getElementById('alarmStatus').value;
+                renderAlarmTable();
+                addLog('编辑接警', editId);
+            }
+        } else if (currentModal === 'addCase') {
+            const id = document.getElementById('caseId').value;
+            if (!id) { showMsg("请填写案件编号"); return; }
+            const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
+            data.cases.unshift({id: id, type: document.getElementById('caseType').value || '其他', person: document.getElementById('casePerson').value || '未知', time: now, progress: document.getElementById('caseProgress').value});
+            renderCaseTable();
+            addLog('新增案件', id);
+        } else if (currentModal === 'editCase') {
+            const idx = data.cases.findIndex(c => c.id === editId);
+            if (idx > -1) {
+                data.cases[idx].type = document.getElementById('caseType').value;
+                data.cases[idx].person = document.getElementById('casePerson').value;
+                data.cases[idx].progress = document.getElementById('caseProgress').value;
+                renderCaseTable();
+                addLog('编辑案件', editId);
+            }
+        } else if (currentModal === 'addPerson') {
+            const id = document.getElementById('personId').value;
+            const name = document.getElementById('personName').value;
+            if (!id || !name) { showMsg("请填写完整信息"); return; }
+            data.persons.unshift({id: id, name: name, idCard: document.getElementById('personIdCard').value || '', level: document.getElementById('personLevel').value, address: document.getElementById('personAddress').value || ''});
+            renderPersonTable();
+            addLog('新增人员', name);
+        } else if (currentModal === 'editPerson') {
+            const idx = data.persons.findIndex(p => p.id === editId);
+            if (idx > -1) {
+                data.persons[idx].name = document.getElementById('personName').value;
+                data.persons[idx].idCard = document.getElementById('personIdCard').value;
+                data.persons[idx].level = document.getElementById('personLevel').value;
+                data.persons[idx].address = document.getElementById('personAddress').value;
+                renderPersonTable();
+                addLog('编辑人员', editId);
+            }
+        } else if (currentModal === 'addCar') {
+            const plate = document.getElementById('carPlate').value;
+            if (!plate) { showMsg("请填写车牌号码"); return; }
+            data.cars.unshift({plate: plate, type: document.getElementById('carType').value || '小型轿车', owner: document.getElementById('carOwner').value || '未知', status: document.getElementById('carStatus').value});
+            renderCarTable();
+            addLog('新增车辆', plate);
+        } else if (currentModal === 'editCar') {
+            const idx = data.cars.findIndex(c => c.plate === editId);
+            if (idx > -1) {
+                data.cars[idx].type = document.getElementById('carType').value;
+                data.cars[idx].owner = document.getElementById('carOwner').value;
+                data.cars[idx].status = document.getElementById('carStatus').value;
+                renderCarTable();
+                addLog('编辑车辆', editId);
+            }
+        } else if (currentModal === 'addGoods') {
+            const id = document.getElementById('goodsId').value;
+            if (!id) { showMsg("请填写物品编号"); return; }
+            const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
+            data.goods.unshift({id: id, name: document.getElementById('goodsName').value || '未知', count: document.getElementById('goodsCount').value || '1', time: now, location: document.getElementById('goodsLocation').value || '物证保管室'});
+            renderGoodsTable();
+            addLog('新增物品', id);
+        } else if (currentModal === 'editGoods') {
+            const idx = data.goods.findIndex(g => g.id === editId);
+            if (idx > -1) {
+                data.goods[idx].name = document.getElementById('goodsName').value;
+                data.goods[idx].count = document.getElementById('goodsCount').value;
+                data.goods[idx].location = document.getElementById('goodsLocation').value;
+                renderGoodsTable();
+                addLog('编辑物品', editId);
+            }
+        }
+        saveData();
+        closeModal();
+        showMsg("保存成功");
+    } catch(e) {
+        console.error(e);
+        showMsg("保存失败，请检查输入");
+    }
+}
+
+// 退出登录
+function autoLogout() {
+    if (confirm("确定退出登录？")) location.reload();
+}
+
+// 分页
+let currentPage = 1;
+function setPage(num){currentPage=num;updatePageBtn();}
+function nextPage(){if(currentPage<3)setPage(currentPage+1);}
+function prevPage(){if(currentPage>1)setPage(currentPage-1);}
+function updatePageBtn(){
+    document.querySelectorAll(".page-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelector(`[data-page="${currentPage}"]`)?.classList.add("active");
 }
 
 // 实时时间
 setInterval(()=>{
     let d = new Date();
     let str = d.getFullYear()+"-"+(d.getMonth()+1).toString().padStart(2,'0')+"-"+d.getDate()
-    +" "+d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0');
+    +" "+d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0')+":"+d.getSeconds().toString().padStart(2,'0');
     document.getElementById("nowTime").innerText = str;
 },1000);
 
+// 初始化
 window.onload = function(){
-    checkAuth();
+    loadData();
+    renderHomeTable();
+    renderAlarmTable();
+    renderCaseTable();
+    renderPersonTable();
+    renderCarTable();
+    renderGoodsTable();
+    renderLogTable();
+    renderSysTable();
 }
 </script>
 </body>

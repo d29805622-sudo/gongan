@@ -1110,11 +1110,73 @@ let data = {
     }
 };
 
+// 原始数据备份
+let originalData = {
+    events: [...data.events],
+    alarms: [...data.alarms],
+    cases: [...data.cases],
+    persons: [...data.persons],
+    cars: [...data.cars],
+    goods: [...data.goods],
+    logs: [...data.logs],
+    users: [...data.users]
+};
+
 // 从localStorage加载数据
 function loadData() {
     const saved = localStorage.getItem('policeData');
-    if (saved) {
-        data = JSON.parse(saved);
+    const savedVersion = localStorage.getItem('policeDataVersion');
+    const currentVersion = '4.1'; // 版本号，确保数据结构更新时递增
+    
+    if (saved && savedVersion === currentVersion) {
+        try {
+            const loadedData = JSON.parse(saved);
+            // 合并数据，确保新字段存在
+            data.events = loadedData.events || data.events;
+            data.alarms = loadedData.alarms || data.alarms;
+            data.cases = (loadedData.cases || data.cases).map(c => ({
+                ...c,
+                caseStatus: c.caseStatus || c.progress || '办理中',
+                investigator: c.investigator || '',
+                evidence: c.evidence || [],
+                timeline: c.timeline || []
+            }));
+            data.persons = (loadedData.persons || data.persons).map(p => ({
+                ...p,
+                riskLevel: p.riskLevel || '中风险',
+                notes: p.notes || '',
+                relatedPersons: p.relatedPersons || [],
+                trackRecords: p.trackRecords || []
+            }));
+            data.cars = (loadedData.cars || data.cars).map(c => ({
+                ...c,
+                brand: c.brand || '',
+                color: c.color || '',
+                riskLevel: c.riskLevel || '中',
+                trackRecords: c.trackRecords || []
+            }));
+            data.goods = (loadedData.goods || data.goods).map(g => ({
+                ...g,
+                caseId: g.caseId || '',
+                status: g.status || '已登记',
+                keeper: g.keeper || '',
+                inTime: g.inTime || '',
+                outTime: g.outTime || ''
+            }));
+            data.logs = loadedData.logs || data.logs;
+            data.users = loadedData.users || data.users;
+            data.statistics = loadedData.statistics || data.statistics;
+            data.supervision = loadedData.supervision || data.supervision;
+        } catch(e) {
+            console.warn('数据加载失败，使用默认数据:', e);
+        }
+    } else {
+        // 版本不匹配或没有数据，使用默认数据
+        if (saved) {
+            console.log('数据版本不匹配，使用默认数据');
+            localStorage.setItem('policeDataVersion', currentVersion);
+            saveData();
+        }
     }
     // 备份原始数据
     backupOriginalData();
@@ -1128,6 +1190,8 @@ function backupOriginalData() {
     originalData.persons = [...data.persons];
     originalData.cars = [...data.cars];
     originalData.goods = [...data.goods];
+    originalData.logs = [...data.logs];
+    originalData.users = [...data.users];
 }
 
 // 批量保存标识，用于减少localStorage写入
@@ -1152,6 +1216,7 @@ function scheduleSave() {
 function saveData() {
     try {
         localStorage.setItem('policeData', JSON.stringify(data));
+        localStorage.setItem('policeDataVersion', '4.1'); // 同步保存版本号
     } catch(e) {
         console.warn('数据保存失败:', e);
     }
@@ -1359,15 +1424,6 @@ function deleteUser(account) {
 
 // ==================== 登录系统 ====================
 let currentUser = null;
-// 备份原始数据用于搜索/筛选
-let originalData = {
-    events: [],
-    alarms: [],
-    cases: [],
-    persons: [],
-    cars: [],
-    goods: []
-};
 // 记录选择的事件ID
 let selectedEventId = null;
 

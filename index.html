@@ -306,12 +306,182 @@
         .page-content{display:none;}
         .page-content.active{display:block;}
         .title-txt{font-size:15px;margin-bottom:15px;color:#003366;font-weight:bold;}
+
+        /* 登录界面 */
+        .login-page{
+            display:none;
+            width:100%;
+            min-height:100vh;
+            background:linear-gradient(135deg,#1a3a5c 0%,#0d2845 50%,#001a32 100%);
+            position:relative;
+        }
+        .login-page.active{display:block;}
+        .login-bg-pattern{
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background-image:
+                linear-gradient(45deg,rgba(255,255,255,0.03) 25%,transparent 25%),
+                linear-gradient(-45deg,rgba(255,255,255,0.03) 25%,transparent 25%),
+                linear-gradient(45deg,transparent 75%,rgba(255,255,255,0.03) 75%),
+                linear-gradient(-45deg,transparent 75%,rgba(255,255,255,0.03) 75%);
+            background-size:60px 60px;
+            background-position:0 0,0 30px,30px -30px,-30px 0;
+        }
+        .login-container{
+            position:relative;
+            z-index:10;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            padding:20px;
+        }
+        .login-box{
+            background:rgba(255,255,255,0.98);
+            border:3px solid #003366;
+            border-radius:8px;
+            width:100%;
+            max-width:420px;
+            box-shadow:0 20px 60px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.1);
+        }
+        .login-header{
+            background:linear-gradient(135deg,#003366 0%,#004488 100%);
+            padding:30px 25px;
+            text-align:center;
+            border-radius:4px 4px 0 0;
+        }
+        .login-header .gov-icon{
+            width:70px;
+            height:70px;
+            margin-bottom:15px;
+            filter:drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+        }
+        .login-header h1{
+            color:#fff;
+            font-size:22px;
+            font-weight:600;
+            letter-spacing:3px;
+            margin:0;
+        }
+        .login-header p{
+            color:#c9d8eb;
+            font-size:12px;
+            margin-top:8px;
+            letter-spacing:1px;
+        }
+        .login-body{
+            padding:35px 30px;
+        }
+        .login-form-group{
+            margin-bottom:22px;
+        }
+        .login-form-group label{
+            display:block;
+            color:#003366;
+            font-size:13px;
+            font-weight:600;
+            margin-bottom:8px;
+            letter-spacing:1px;
+        }
+        .login-form-group label .required{
+            color:#990000;
+            margin-left:3px;
+        }
+        .login-input{
+            width:100%;
+            height:44px;
+            padding:0 15px;
+            border:2px solid #c9d8eb;
+            border-radius:4px;
+            font-size:14px;
+            background:#f8fafc;
+            transition:all 0.3s;
+        }
+        .login-input:focus{
+            border-color:#003366;
+            background:#fff;
+            box-shadow:0 0 0 3px rgba(0,51,102,0.1);
+        }
+        .login-btn{
+            width:100%;
+            height:48px;
+            background:linear-gradient(135deg,#003366 0%,#004488 100%);
+            color:#fff;
+            border:none;
+            border-radius:4px;
+            font-size:16px;
+            font-weight:600;
+            cursor:pointer;
+            letter-spacing:2px;
+            transition:all 0.3s;
+            margin-top:10px;
+        }
+        .login-btn:hover{
+            background:linear-gradient(135deg,#004488 0%,#0055aa 100%);
+            transform:translateY(-2px);
+            box-shadow:0 8px 20px rgba(0,51,102,0.3);
+        }
+        .login-btn:active{
+            transform:translateY(0);
+        }
+        .login-footer{
+            padding:15px 30px 25px;
+            text-align:center;
+        }
+        .login-footer p{
+            color:#888;
+            font-size:12px;
+        }
+        .login-footer p .stat-red{
+            color:#990000;
+            font-weight:600;
+        }
+        /* 主系统界面 */
+        .main-system{
+            display:none;
+        }
+        .main-system.active{
+            display:block;
+        }
     </style>
 </head>
 <body>
-<div class="secret-top">
-    ⚠️ 公安内网涉密系统｜严禁截图录屏及外泄信息｜内网专用 违规追责
+<!-- 登录界面 -->
+<div class="login-page" id="loginPage">
+    <div class="login-bg-pattern"></div>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <img class="gov-icon" src="logo.png" alt="警徽">
+                <h1>公安综合警务管理系统</h1>
+                <p>涉密专用 · 内网专用</p>
+            </div>
+            <div class="login-body">
+                <div class="login-form-group">
+                    <label>账号<span class="required">*</span></label>
+                    <input type="text" class="login-input" id="loginAccountInput" placeholder="请输入您的账号">
+                </div>
+                <div class="login-form-group">
+                    <label>密码<span class="required">*</span></label>
+                    <input type="password" class="login-input" id="loginPasswordInput" placeholder="请输入您的密码">
+                </div>
+                <button class="login-btn" onclick="doLoginAction()">登录系统</button>
+            </div>
+            <div class="login-footer">
+                <p>⚠️ <span class="stat-red">公安内网涉密系统</span> · 严禁截图录屏及外泄信息</p>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- 主系统界面 -->
+<div class="main-system" id="mainSystem">
+    <div class="secret-top">
+        ⚠️ 公安内网涉密系统｜严禁截图录屏及外泄信息｜内网专用 违规追责
+    </div>
 
 <div class="top-header">
     <div class="header-left">
@@ -328,7 +498,6 @@
     </div>
     <div class="header-right">
         <span id="headerUserInfo"></span>
-        <span class="logout-btn" id="loginBtn" onclick="showLoginModal()">登录</span>
         <span class="logout-btn" id="logoutBtn" style="display:none" onclick="doLogout()">退出登录</span>
     </div>
 </div>
@@ -561,27 +730,6 @@
     </div>
 </div>
 
-<div class="modal-mask" id="loginModalMask"></div>
-<div class="modal-box" id="loginModalBox">
-    <div class="modal-title">
-        <span>系统登录</span>
-        <span class="modal-close" onclick="hideLoginModal()">×</span>
-    </div>
-    <div class="modal-content">
-        <div class="form-item">
-            <label>账号 <span class="required">*</span>：</label>
-            <input type="text" class="input-text" id="loginAccount">
-        </div>
-        <div class="form-item">
-            <label>密码 <span class="required">*</span>：</label>
-            <input type="password" class="input-text" id="loginPassword">
-        </div>
-    </div>
-    <div class="modal-btn">
-        <button class="btn btn-modal" onclick="doLogin()">登录</button>
-    </div>
-</div>
-
 <div class="modal-mask" id="modalMask"></div>
 <div class="modal-box" id="modalBox">
     <div class="modal-title">
@@ -601,6 +749,7 @@
 
 <div class="footer">
     涉密内网专用｜数据全程留痕审计｜禁止私自篡改数据｜系统版本 V4.0 公安定制版
+</div>
 </div>
 
 <script>
@@ -794,19 +943,22 @@ function renderSysTable() {
 // ==================== 登录系统 ====================
 let currentUser = null;
 
-function showLoginModal() {
-    document.getElementById('loginModalMask').style.display = 'block';
-    document.getElementById('loginModalBox').style.display = 'block';
+// 显示登录界面
+function showLoginPage() {
+    document.getElementById('loginPage').classList.add('active');
+    document.getElementById('mainSystem').classList.remove('active');
 }
 
-function hideLoginModal() {
-    document.getElementById('loginModalMask').style.display = 'none';
-    document.getElementById('loginModalBox').style.display = 'none';
+// 显示主系统界面
+function showMainSystem() {
+    document.getElementById('loginPage').classList.remove('active');
+    document.getElementById('mainSystem').classList.add('active');
 }
 
-function doLogin() {
-    const account = document.getElementById('loginAccount').value;
-    const password = document.getElementById('loginPassword').value;
+// 登录操作
+function doLoginAction() {
+    const account = document.getElementById('loginAccountInput').value;
+    const password = document.getElementById('loginPasswordInput').value;
     
     if (!account || !password) {
         showMsg('请输入账号和密码');
@@ -819,7 +971,7 @@ function doLogin() {
         localStorage.setItem('currentUser', JSON.stringify(user));
         addLog('系统登录', user.name + ' 登录系统');
         updateHeaderUserInfo();
-        hideLoginModal();
+        showMainSystem();
         showMsg('登录成功');
     } else {
         showMsg('账号或密码错误');
@@ -832,22 +984,21 @@ function doLogout() {
         currentUser = null;
         localStorage.removeItem('currentUser');
         updateHeaderUserInfo();
-        showLoginModal();
+        document.getElementById('loginAccountInput').value = '';
+        document.getElementById('loginPasswordInput').value = '';
+        showLoginPage();
     }
 }
 
 function updateHeaderUserInfo() {
     const userInfo = document.getElementById('headerUserInfo');
-    const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     
     if (currentUser) {
         userInfo.innerHTML = `登录账号：${currentUser.name}｜所属单位：公安分局指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>`;
-        loginBtn.style.display = 'none';
         logoutBtn.style.display = 'inline';
     } else {
         userInfo.innerHTML = '';
-        loginBtn.style.display = 'inline';
         logoutBtn.style.display = 'none';
     }
 }
@@ -1388,9 +1539,11 @@ window.onload = function(){
         currentUser = JSON.parse(savedUser);
     }
     updateHeaderUserInfo();
-    // 如果未登录，显示登录弹窗
-    if (!currentUser) {
-        setTimeout(() => showLoginModal(), 500);
+    // 如果已登录，显示主系统；否则显示登录界面
+    if (currentUser) {
+        showMainSystem();
+    } else {
+        showLoginPage();
     }
     renderHomeTable();
     renderAlarmTable();
@@ -1402,8 +1555,17 @@ window.onload = function(){
     renderSysTable();
 };
 
-// 点击遮罩层关闭登录弹窗
-document.getElementById('loginModalMask').addEventListener('click', hideLoginModal);
+// 回车登录
+document.getElementById('loginPasswordInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        doLoginAction();
+    }
+});
+document.getElementById('loginAccountInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        document.getElementById('loginPasswordInput').focus();
+    }
+});
 </script>
 </body>
 </html>

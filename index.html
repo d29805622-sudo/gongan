@@ -199,6 +199,9 @@
         tbody tr:hover{
             background:#e8edf3;
         }
+        .selected-row {
+            background-color: #cfe2ff !important;
+        }
 
         .stat-orange{color:#d86c00;font-weight:500;}
         .stat-blue{color:#1a5fb4;font-weight:500;}
@@ -542,10 +545,12 @@
                 <button class="btn btn-edit" onclick="openEditModal()">编辑</button>
                 <button class="btn btn-del" onclick="delCheck()">删除</button>
                 <button class="btn btn-export" onclick="exportFile()">导出报表</button>
+                <button class="btn btn-close" onclick="resetEvents()">重置</button>
             </div>
             <table id="homeTable">
                 <thead>
                     <tr>
+                        <th style="width: 40px;">选择</th>
                         <th>事件编号</th>
                         <th>事件类型</th>
                         <th>事发地点</th>
@@ -572,6 +577,7 @@
                 <input type="text" class="input-text" placeholder="报警人搜索" id="alarmSearch">
                 <button class="btn btn-search" onclick="searchAlarm()">搜索</button>
                 <button class="btn btn-add" onclick="addAlarm()">新增接警</button>
+                <button class="btn btn-close" onclick="resetAlarms()">重置</button>
             </div>
             <table>
                 <thead>
@@ -597,6 +603,7 @@
                 <input type="text" class="input-text" placeholder="案件搜索" id="caseSearch">
                 <button class="btn btn-search" onclick="searchCase()">搜索</button>
                 <button class="btn btn-add" onclick="addCase()">新增案件</button>
+                <button class="btn btn-close" onclick="resetCases()">重置</button>
             </div>
             <table>
                 <thead>
@@ -621,6 +628,7 @@
                 <input type="text" class="input-text" placeholder="人员搜索" id="personSearch">
                 <button class="btn btn-search" onclick="searchPerson()">搜索</button>
                 <button class="btn btn-add" onclick="addPerson()">新增人员</button>
+                <button class="btn btn-close" onclick="resetPersons()">重置</button>
             </div>
             <table>
                 <thead>
@@ -645,6 +653,7 @@
                 <input type="text" class="input-text" placeholder="车牌搜索" id="carSearch">
                 <button class="btn btn-search" onclick="searchCar()">搜索</button>
                 <button class="btn btn-add" onclick="addCar()">新增车辆</button>
+                <button class="btn btn-close" onclick="resetCars()">重置</button>
             </div>
             <table>
                 <thead>
@@ -668,6 +677,7 @@
                 <input type="text" class="input-text" placeholder="物品搜索" id="goodsSearch">
                 <button class="btn btn-search" onclick="searchGoods()">搜索</button>
                 <button class="btn btn-add" onclick="addGoods()">新增物品</button>
+                <button class="btn btn-close" onclick="resetGoods()">重置</button>
             </div>
             <table>
                 <thead>
@@ -802,6 +812,18 @@ function loadData() {
     if (saved) {
         data = JSON.parse(saved);
     }
+    // 备份原始数据
+    backupOriginalData();
+}
+
+// 备份原始数据
+function backupOriginalData() {
+    originalData.events = [...data.events];
+    originalData.alarms = [...data.alarms];
+    originalData.cases = [...data.cases];
+    originalData.persons = [...data.persons];
+    originalData.cars = [...data.cars];
+    originalData.goods = [...data.goods];
 }
 
 // 批量保存标识，用于减少localStorage写入
@@ -860,14 +882,38 @@ function getStatusClass(status) {
 function renderHomeTable() {
     const tbody = document.getElementById('homeTableBody');
     tbody.innerHTML = data.events.map(item => `
-        <tr>
+        <tr class="${selectedEventId === item.id ? 'selected-row' : ''}" onclick="selectEvent('${item.id}', event)">
+            <td><input type="checkbox" ${selectedEventId === item.id ? 'checked' : ''} onclick="event.stopPropagation(); selectEvent('${item.id}', event)"></td>
             <td>${item.id}</td>
             <td>${item.type}</td>
             <td>${item.address}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td><button class="btn btn-edit" onclick="editEvent('${item.id}')">编辑</button></td>
+            <td><button class="btn btn-edit" onclick="event.stopPropagation(); editEvent('${item.id}')">编辑</button></td>
         </tr>
     `).join('');
+}
+
+// 选择事件
+function selectEvent(id, event) {
+    if (event && event.target && event.target.type === 'checkbox') {
+        // 如果是点击复选框，切换选择
+        selectedEventId = selectedEventId === id ? null : id;
+    } else {
+        // 如果是点击行，选择该行
+        selectedEventId = selectedEventId === id ? null : id;
+    }
+    renderHomeTable();
+}
+
+// 重置数据（取消筛选）
+function resetEvents() {
+    data.events = [...originalData.events];
+    selectedEventId = null;
+    document.getElementById('keySearch').value = '';
+    document.getElementById('typeSearch').value = '';
+    document.getElementById('statSearch').value = '';
+    renderHomeTable();
+    showMsg('已重置');
 }
 
 function renderAlarmTable() {
@@ -985,6 +1031,17 @@ function deleteUser(account) {
 
 // ==================== 登录系统 ====================
 let currentUser = null;
+// 备份原始数据用于搜索/筛选
+let originalData = {
+    events: [],
+    alarms: [],
+    cases: [],
+    persons: [],
+    cars: [],
+    goods: []
+};
+// 记录选择的事件ID
+let selectedEventId = null;
 
 // 显示登录界面
 function showLoginPage() {
@@ -1221,7 +1278,30 @@ function closeModal() {
 
 // 综合工作台
 function combineSearch() {
-    showMsg("查询完成");
+    const key = document.getElementById('keySearch').value.toLowerCase().trim();
+    const type = document.getElementById('typeSearch').value;
+    const stat = document.getElementById('statSearch').value;
+    
+    // 从原始数据筛选
+    data.events = originalData.events.filter(item => {
+        let match = true;
+        if (key) {
+            match = match && (item.id.toLowerCase().includes(key) || 
+                           item.type.toLowerCase().includes(key) || 
+                           item.address.toLowerCase().includes(key));
+        }
+        if (type) {
+            match = match && item.type === type;
+        }
+        if (stat) {
+            match = match && item.status === stat;
+        }
+        return match;
+    });
+    
+    selectedEventId = null;
+    renderHomeTable();
+    showMsg(`找到 ${data.events.length} 条记录`);
 }
 
 function openAddModal() {
@@ -1245,21 +1325,24 @@ function openAddModal() {
                 <option value="已办结">已办结</option>
             </select>
         </div>
-        <div class="form-item"><label>备注说明 <span class="required">*</span>：</label><input type="text" class="input-text" id="remark"></div>
     `);
 }
 
 function openEditModal() {
-    showMsg("请选择要编辑的记录");
+    if (!selectedEventId) {
+        showMsg("请先选择要编辑的记录");
+        return;
+    }
+    editEvent(selectedEventId);
 }
 
 function editEvent(id) {
     currentModal = 'editEvent';
     editId = id;
-    const item = data.events.find(e => e.id === id);
+    const item = data.events.find(e => e.id === id) || originalData.events.find(e => e.id === id);
     if (item) {
         openModal('编辑警务事件记录', `
-            <div class="form-item"><label>事件编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="code" value="${item.id}"></div>
+            <div class="form-item"><label>事件编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="code" value="${item.id}" readonly></div>
             <div class="form-item"><label>事件类型：</label>
                 <select class="select-box" id="type">
                     <option value="治安事件" ${item.type==='治安事件'?'selected':''}>治安事件</option>
@@ -1282,10 +1365,27 @@ function editEvent(id) {
 }
 
 function delCheck() {
-    const remark = prompt("请输入删除备注：","");
-    if (remark) {
-        showMsg("删除操作已记录");
-        addLog('删除记录', remark);
+    if (!selectedEventId) {
+        showMsg("请先选择要删除的记录");
+        return;
+    }
+    
+    if (confirm('确定要删除选中的记录吗？')) {
+        // 从data和originalData中删除
+        const idx = data.events.findIndex(e => e.id === selectedEventId);
+        if (idx > -1) {
+            data.events.splice(idx, 1);
+        }
+        const origIdx = originalData.events.findIndex(e => e.id === selectedEventId);
+        if (origIdx > -1) {
+            originalData.events.splice(origIdx, 1);
+        }
+        
+        selectedEventId = null;
+        scheduleSave();
+        renderHomeTable();
+        addLog('删除记录', selectedEventId);
+        showMsg("删除成功");
     }
 }
 
@@ -1304,9 +1404,26 @@ function exportFile() {
 
 // 110接警
 function searchAlarm() {
-    const key = document.getElementById('alarmSearch').value.toLowerCase();
+    const key = document.getElementById('alarmSearch').value.toLowerCase().trim();
+    if (!key) {
+        data.alarms = [...originalData.alarms];
+    } else {
+        data.alarms = originalData.alarms.filter(item => 
+            item.id.toLowerCase().includes(key) || 
+            item.name.toLowerCase().includes(key) || 
+            item.type.toLowerCase().includes(key)
+        );
+    }
     renderAlarmTable();
-    showMsg("搜索完成");
+    showMsg(`找到 ${data.alarms.length} 条记录`);
+}
+
+// 重置接警数据
+function resetAlarms() {
+    data.alarms = [...originalData.alarms];
+    document.getElementById('alarmSearch').value = '';
+    renderAlarmTable();
+    showMsg('已重置');
 }
 
 function addAlarm() {
@@ -1340,7 +1457,28 @@ function editAlarm(id) {
 }
 
 // 案件
-function searchCase() { showMsg("搜索完成"); }
+function searchCase() {
+    const key = document.getElementById('caseSearch').value.toLowerCase().trim();
+    if (!key) {
+        data.cases = [...originalData.cases];
+    } else {
+        data.cases = originalData.cases.filter(item => 
+            item.id.toLowerCase().includes(key) || 
+            item.type.toLowerCase().includes(key) || 
+            item.person.toLowerCase().includes(key)
+        );
+    }
+    renderCaseTable();
+    showMsg(`找到 ${data.cases.length} 条记录`);
+}
+
+// 重置案件数据
+function resetCases() {
+    data.cases = [...originalData.cases];
+    document.getElementById('caseSearch').value = '';
+    renderCaseTable();
+    showMsg('已重置');
+}
 function addCase() {
     currentModal = 'addCase';
     openModal('新增案件记录', `
@@ -1377,7 +1515,28 @@ function editCase(id) {
 }
 
 // 人员
-function searchPerson() { showMsg("搜索完成"); }
+function searchPerson() {
+    const key = document.getElementById('personSearch').value.toLowerCase().trim();
+    if (!key) {
+        data.persons = [...originalData.persons];
+    } else {
+        data.persons = originalData.persons.filter(item => 
+            item.id.toLowerCase().includes(key) || 
+            item.name.toLowerCase().includes(key) || 
+            item.idCard.includes(key)
+        );
+    }
+    renderPersonTable();
+    showMsg(`找到 ${data.persons.length} 条记录`);
+}
+
+// 重置人员数据
+function resetPersons() {
+    data.persons = [...originalData.persons];
+    document.getElementById('personSearch').value = '';
+    renderPersonTable();
+    showMsg('已重置');
+}
 function addPerson() {
     currentModal = 'addPerson';
     openModal('新增重点人员', `
@@ -1416,7 +1575,28 @@ function editPerson(id) {
 }
 
 // 车辆
-function searchCar() { showMsg("搜索完成"); }
+function searchCar() {
+    const key = document.getElementById('carSearch').value.toLowerCase().trim();
+    if (!key) {
+        data.cars = [...originalData.cars];
+    } else {
+        data.cars = originalData.cars.filter(item => 
+            item.plate.toLowerCase().includes(key) || 
+            item.type.toLowerCase().includes(key) || 
+            item.owner.toLowerCase().includes(key)
+        );
+    }
+    renderCarTable();
+    showMsg(`找到 ${data.cars.length} 条记录`);
+}
+
+// 重置车辆数据
+function resetCars() {
+    data.cars = [...originalData.cars];
+    document.getElementById('carSearch').value = '';
+    renderCarTable();
+    showMsg('已重置');
+}
 function addCar() {
     currentModal = 'addCar';
     openModal('新增车辆信息', `
@@ -1451,7 +1631,28 @@ function editCar(plate) {
 }
 
 // 物品
-function searchGoods() { showMsg("搜索完成"); }
+function searchGoods() {
+    const key = document.getElementById('goodsSearch').value.toLowerCase().trim();
+    if (!key) {
+        data.goods = [...originalData.goods];
+    } else {
+        data.goods = originalData.goods.filter(item => 
+            item.id.toLowerCase().includes(key) || 
+            item.name.toLowerCase().includes(key) || 
+            item.location.toLowerCase().includes(key)
+        );
+    }
+    renderGoodsTable();
+    showMsg(`找到 ${data.goods.length} 条记录`);
+}
+
+// 重置物品数据
+function resetGoods() {
+    data.goods = [...originalData.goods];
+    document.getElementById('goodsSearch').value = '';
+    renderGoodsTable();
+    showMsg('已重置');
+}
 function addGoods() {
     currentModal = 'addGoods';
     openModal('新增涉案物品', `
@@ -1635,6 +1836,7 @@ function saveForm() {
             }
         }
         scheduleSave();
+        backupOriginalData(); // 更新备份
         closeModal();
         showMsg("保存成功");
     } catch(e) {
@@ -1663,7 +1865,10 @@ setInterval(()=>{
     let d = new Date();
     let str = d.getFullYear()+"-"+(d.getMonth()+1).toString().padStart(2,'0')+"-"+d.getDate()
     +" "+d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0')+":"+d.getSeconds().toString().padStart(2,'0');
-    document.getElementById("nowTime").innerText = str;
+    const nowTimeElement = document.getElementById("nowTime");
+    if (nowTimeElement) {
+        nowTimeElement.innerText = str;
+    }
 },1000);
 
 // 定期检查会话

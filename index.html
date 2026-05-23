@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>公安内网｜综合警务管理系统｜涉密专用</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            font-family:"Microsoft YaHei",SimSun,Arial;
+            font-size:13px;
+            background:#f6f8fa;
+            color:#1a2436;
+            overflow-x:hidden;
+        }
+        a{text-decoration:none;color:inherit;}
+        ul,li{list-style:none;}
+        button,input,select{outline:none;border:1px solid #ccc;}
+
+        /* 顶部警示栏 标准警示红 */
+        .secret-top{
+            width:100%;
+            height:28px;
+            background:#990000;
+            color:#fff;
+            text-align:center;
+            line-height:28px;
+            font-size:12px;
+            letter-spacing:1px;
+        }
+
+        /* 顶部导航 公安标准藏青蓝 #003366 */
+        .top-header{
+            width:100%;
+            height:65px;
+            background:#003366;
+            display:flex;
+            align-items:center;
+            padding:0 40px;
+            color:#ffffff;
+        }
+        .header-left{
+            display:flex;
+            align-items:center;
+            gap:15px;
+        }
+        /* 原始默认尺寸 36*36 */
+        .gov-icon{
+            width:36px;
+            height:36px;
+            object-fit:contain;
+        }
+        .header-title{
+            font-size:17px;
+            letter-spacing:1px;
+            font-weight:500;
+        }
+        .header-middle{
+            margin:0 40px;
+        }
+        .top-nav-item{
+            display:inline-block;
+            margin:0 12px;
+            color:#c9d8eb;
+            font-size:12px;
+            cursor:pointer;
+        }
+        .top-nav-item:hover{
+            color:#fff;
+        }
+        .header-right{
+            font-size:12px;
+            color:#c9d8eb;
+            margin-left:auto;
+        }
+        .logout-btn{
+            color:#fff;
+            margin-left:15px;
+            cursor:pointer;
+        }
+
+        /* 主体布局 */
+        .main-wrap{
+            display:flex;
+            width:100%;
+            min-height:calc(100vh - 93px);
+        }
+        .left-menu{
+            width:220px;
+            background:#203959;
+            min-height:100%;
+        }
+        .menu-first{
+            padding:12px 20px;
+            background:#2c4b70;
+            color:#d0dceb;
+            font-size:13px;
+            border-bottom:1px solid #2f3e52;
+        }
+        .menu-second{
+            padding:10px 28px;
+            color:#b8c4d2;
+            font-size:12px;
+            border-bottom:1px solid #2f3e52;
+            transition:all 0.2s;
+            cursor:pointer;
+        }
+        .menu-second.active{
+            background:#122842;
+            border-left:4px solid #4080c9;
+            color:#ffffff;
+        }
+        .menu-second:hover{
+            background:#1a3250;
+            color:#fff;
+        }
+
+        .content-wrap{
+            flex:1;
+            padding:25px 30px;
+            background:#f6f8fa;
+        }
+        .search-bar{
+            background:#fff;
+            border:1px solid #c8d2e0;
+            padding:18px;
+            margin-bottom:20px;
+            border-radius:3px;
+        }
+        .input-text{
+            width:260px;
+            height:28px;
+            border:1px solid #b8c4d2;
+            padding:0 8px;
+            background:#fff;
+            font-size:12px;
+        }
+        .select-box{
+            height:28px;
+            border:1px solid #b8c4d2;
+            margin:0 10px;
+            padding:0 5px;
+            font-size:12px;
+        }
+
+        /* 按钮样式 */
+        .btn{
+            padding:6px 14px;
+            font-size:12px;
+            border-radius:2px;
+            cursor:pointer;
+            margin:0 3px;
+            border:none;
+            transition:0.2s;
+        }
+        .btn-search{background:#003366;color:#fff;}
+        .btn-add{background:#1f406b;color:#fff;}
+        .btn-edit{background:#344b68;color:#fff;}
+        .btn-del{background:#881818;color:#fff;}
+        .btn-export{background:#2c3e54;color:#fff;}
+        .btn-modal{background:#2a5298;color:#fff;}
+        .btn-close{background:#6c7a89;color:#fff;}
+
+        .btn:hover{opacity:0.9;}
+        .btn-disable{
+            background:#999 !important;
+            color:#eee !important;
+            cursor:not-allowed;
+            opacity:0.7 !important;
+        }
+
+        /* 表格样式 */
+        table{
+            width:100%;
+            border-collapse:collapse;
+            border:1px solid #b8c4d2;
+            background:#fff;
+            margin:15px 0;
+        }
+        th{
+            height:30px;
+            background:#003366;
+            color:#fff;
+            text-align:center;
+            font-weight:normal;
+            font-size:12px;
+            border:1px solid #b8c4d2;
+            cursor:pointer;
+        }
+        td{
+            height:27px;
+            text-align:center;
+            border:1px solid #b8c4d2;
+            font-size:12px;
+            padding:4px;
+        }
+        tbody tr:nth-child(even){
+            background:#f2f5f8;
+        }
+        tbody tr:hover{
+            background:#e8edf3;
+        }
+
+        .stat-orange{color:#d86c00;font-weight:500;}
+        .stat-blue{color:#1a5fb4;font-weight:500;}
+        .stat-green{color:#1b8c31;font-weight:500;}
+        .stat-red{color:#b81818;font-weight:500;}
+
+        .page-area{
+            text-align:right;
+            margin:15px 0;
+            font-size:12px;
+        }
+        .page-btn{
+            display:inline-block;
+            padding:4px 9px;
+            border:1px solid #b8c4d2;
+            background:#fff;
+            margin:0 2px;
+            cursor:pointer;
+        }
+        .page-btn.active{
+            background:#003366;
+            color:#fff;
+            border:1px solid #003366;
+        }
+
+        .form-item{
+            margin:12px 0;
+        }
+        .form-item label{
+            display:inline-block;
+            width:115px;
+            font-size:12px;
+            color:#202c3d;
+        }
+        .required{color:#c81f1f;}
+
+        /* 弹窗 */
+        .modal-mask{
+            position:fixed;
+            top:0;left:0;
+            width:100%;height:100%;
+            background:rgba(0,0,0,0.6);
+            display:none;
+            z-index:9999;
+        }
+        .modal-box{
+            position:fixed;
+            top:50%;left:50%;
+            transform:translate(-50%,-50%);
+            width:580px;
+            background:#fff;
+            border:3px solid #003366;
+            border-radius:4px;
+            display:none;
+            z-index:10000;
+        }
+        .modal-title{
+            height:42px;
+            line-height:42px;
+            background:#003366;
+            color:#fff;
+            padding:0 20px;
+            font-size:14px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .modal-close{
+            color:#fff;
+            font-size:16px;
+            cursor:pointer;
+        }
+        .modal-content{padding:22px;}
+        .modal-btn{
+            text-align:center;
+            padding:15px;
+            border-top:1px solid #e0e6ed;
+        }
+
+        .footer{
+            width:100%;
+            height:32px;
+            line-height:32px;
+            background:#003366;
+            color:#c9d8eb;
+            text-align:center;
+            font-size:11px;
+        }
+
+        .msg-tip,.load-tip{
+            position:fixed;
+            left:50%;
+            transform:translateX(-50%);
+            padding:10px 25px;
+            background:#003366;
+            color:#fff;
+            font-size:12px;
+            border-radius:2px;
+            z-index:10001;
+            display:none;
+        }
+        .load-tip{top:40%;}
+        .msg-tip{top:120px;}
+
+        .page-content{display:none;}
+        .page-content.active{display:block;}
+        .title-txt{font-size:15px;margin-bottom:15px;color:#003366;font-weight:bold;}
+    </style>
+</head>
+<body>
+<div class="secret-top">
+    ⚠️ 公安内网涉密系统｜严禁截图录屏及外泄信息｜内网专用 违规追责
+</div>
+
+<div class="top-header">
+    <div class="header-left">
+        <img class="gov-icon" src="logo.png" alt="警徽">
+        <div class="header-title">公安综合警务管理系统｜内网涉密管理平台</div>
+    </div>
+    <div class="header-middle">
+        <span class="top-nav-item">综合管控</span>
+        <span class="top-nav-item">案件管理</span>
+        <span class="top-nav-item">人员管控</span>
+        <span class="top-nav-item">警情勤务</span>
+        <span class="top-nav-item">数据审计</span>
+        <span class="top-nav-item">系统权限</span>
+    </div>
+    <div class="header-right">
+        登录账号：管理员｜所属单位：公安分局指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>
+        <span class="logout-btn" onclick="autoLogout()">【安全退出】</span>
+    </div>
+</div>
+
+<div class="main-wrap">
+    <div class="left-menu">
+        <div class="menu-first">综合业务管理</div>
+        <div class="menu-second active" onclick="switchPage('home')">综合工作台</div>
+        <div class="menu-second" onclick="switchPage('alarm')">110接警管理</div>
+        <div class="menu-second" onclick="switchPage('case')">案件备案登记</div>
+        <div class="menu-first">重点管控模块</div>
+        <div class="menu-second" onclick="switchPage('person')">重点人员管控</div>
+        <div class="menu-second" onclick="switchPage('car')">涉控车辆管理</div>
+        <div class="menu-second" onclick="switchPage('goods')">涉案物品登记</div>
+        <div class="menu-first">系统运维管理</div>
+        <div class="menu-second" onclick="switchPage('log')">操作日志审计</div>
+        <div class="menu-second" onclick="switchPage('sys')">权限分配管理</div>
+    </div>
+
+    <div class="content-wrap">
+        <!-- 综合工作台 -->
+        <div class="page-content active" id="home">
+            <div class="title-txt">警务综合数据工作台</div>
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="输入关键词快速检索" id="keySearch">
+                <select class="select-box" id="typeSearch">
+                    <option value="">全部事件类型</option>
+                    <option value="治安事件">治安事件</option>
+                    <option value="邻里纠纷">邻里纠纷</option>
+                    <option value="治安巡查">治安巡查</option>
+                    <option value="寻衅滋事">寻衅滋事</option>
+                    <option value="盗窃案件">盗窃案件</option>
+                </select>
+                <select class="select-box" id="statSearch">
+                    <option value="">全部处理状态</option>
+                    <option value="待处理">待处理</option>
+                    <option value="处理中">处理中</option>
+                    <option value="已办结">已办结</option>
+                </select>
+                <button class="btn btn-search" onclick="combineSearch()">查询检索</button>
+                <button class="btn btn-add btn-auth" onclick="openAddModal()">新增记录</button>
+                <button class="btn btn-edit" onclick="openEditModal()">编辑</button>
+                <button class="btn btn-del btn-auth" onclick="delCheck()">删除</button>
+                <button class="btn btn-export btn-auth" onclick="exportFile()">导出报表</button>
+            </div>
+            <table id="homeTable">
+                <thead>
+                    <tr>
+                        <th>事件编号</th>
+                        <th>事件类型</th>
+                        <th>事发地点</th>
+                        <th>处理状态</th>
+                        <th>操作管理</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>2026001</td><td>治安事件</td><td>城东幸福小区</td><td><span class="stat-green">已办结</span></td><td><button class="btn btn-edit">操作</button></td></tr>
+                    <tr><td>2026002</td><td>邻里纠纷</td><td>城西花园社区</td><td><span class="stat-orange">待处理</span></td><td><button class="btn btn-edit">操作</button></td></tr>
+                    <tr><td>2026003</td><td>治安巡查</td><td>城北工业园区</td><td><span class="stat-blue">处理中</span></td><td><button class="btn btn-edit">操作</button></td></tr>
+                    <tr><td>2026004</td><td>商铺扰民纠纷</td><td>市中心商业街</td><td><span class="stat-green">已办结</span></td><td><button class="btn btn-edit">操作</button></td></tr>
+                    <tr><td>2026005</td><td>寻衅滋事</td><td>南站广场周边</td><td><span class="stat-orange">待处理</span></td><td><button class="btn btn-edit">操作</button></td></tr>
+                </tbody>
+            </table>
+            <div class="page-area">
+                <span class="page-btn" onclick="prevPage()">上一页</span>
+                <span class="page-btn active" data-page="1" onclick="setPage(1)">1</span>
+                <span class="page-btn" data-page="2" onclick="setPage(2)">2</span>
+                <span class="page-btn" data-page="3" onclick="setPage(3)">3</span>
+                <span class="page-btn" onclick="nextPage()">下一页</span>
+            </div>
+        </div>
+
+        <!-- 110接警管理 -->
+        <div class="page-content" id="alarm">
+            <div class="title-txt">110接警处警管理</div>
+            <table>
+                <tr>
+                    <th>接警编号</th>
+                    <th>报警人</th>
+                    <th>报警类型</th>
+                    <th>报警时间</th>
+                    <th>处警人员</th>
+                    <th>处置状态</th>
+                </tr>
+                <tr>
+                    <td>JJ2026051801</td>
+                    <td>张某</td>
+                    <td>财物丢失</td>
+                    <td>2026-05-18 08:20</td>
+                    <td>执勤一组</td>
+                    <td><span class="stat-blue">处置中</span></td>
+                </tr>
+                <tr>
+                    <td>JJ2026051802</td>
+                    <td>李某</td>
+                    <td>民事纠纷</td>
+                    <td>2026-05-18 10:12</td>
+                    <td>调解班组</td>
+                    <td><span class="stat-green">已办结</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 案件备案登记 -->
+        <div class="page-content" id="case">
+            <div class="title-txt">刑事案件&行政案件备案</div>
+            <table>
+                <tr>
+                    <th>案件编号</th>
+                    <th>案件类别</th>
+                    <th>涉案人员</th>
+                    <th>立案时间</th>
+                    <th>办理进度</th>
+                </tr>
+                <tr>
+                    <td>XA2026021</td>
+                    <td>盗窃案</td>
+                    <td>王某</td>
+                    <td>2026-05-10</td>
+                    <td><span class="stat-orange">侦查取证</span></td>
+                </tr>
+                <tr>
+                    <td>XA2026022</td>
+                    <td>寻衅滋事</td>
+                    <td>赵某</td>
+                    <td>2026-05-12</td>
+                    <td><span class="stat-green">结案归档</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 重点人员管控 -->
+        <div class="page-content" id="person">
+            <div class="title-txt">重点关注人员信息管控</div>
+            <table>
+                <tr>
+                    <th>人员编号</th>
+                    <th>姓名</th>
+                    <th>身份证号</th>
+                    <th>管控等级</th>
+                    <th>居住地址</th>
+                </tr>
+                <tr>
+                    <td>RY001</td>
+                    <td>陈某</td>
+                    <td>130XXXX8976</td>
+                    <td><span class="stat-red">一级管控</span></td>
+                    <td>市区幸福路小区</td>
+                </tr>
+                <tr>
+                    <td>RY002</td>
+                    <td>刘某</td>
+                    <td>152XXXX1234</td>
+                    <td><span class="stat-orange">二级管控</span></td>
+                    <td>城西惠民社区</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 涉控车辆管理 -->
+        <div class="page-content" id="car">
+            <div class="title-txt">涉案及重点车辆管理</div>
+            <table>
+                <tr>
+                    <th>车牌号码</th>
+                    <th>车辆类型</th>
+                    <th>车主姓名</th>
+                    <th>登记状态</th>
+                </tr>
+                <tr>
+                    <td>冀A12345</td>
+                    <td>小型轿车</td>
+                    <td>周某</td>
+                    <td><span class="stat-blue">重点布控</span></td>
+                </tr>
+                <tr>
+                    <td>冀B67890</td>
+                    <td>面包车</td>
+                    <td>吴某</td>
+                    <td><span class="stat-green">正常备案</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 涉案物品登记 -->
+        <div class="page-content" id="goods">
+            <div class="title-txt">涉案扣押物品登记台账</div>
+            <table>
+                <tr>
+                    <th>物品编号</th>
+                    <th>物品名称</th>
+                    <th>数量</th>
+                    <th>扣押时间</th>
+                    <th>存放位置</th>
+                </tr>
+                <tr>
+                    <td>WP011</td>
+                    <td>手机</td>
+                    <td>2部</td>
+                    <td>2026-05-15</td>
+                    <td>物证保管室A区</td>
+                </tr>
+                <tr>
+                    <td>WP012</td>
+                    <td>现金</td>
+                    <td>5000元</td>
+                    <td>2026-05-16</td>
+                    <td>财务封存库房</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 操作日志审计 -->
+        <div class="page-content" id="log">
+            <div class="title-txt">系统全员操作日志审计</div>
+            <table>
+                <tr>
+                    <th>操作账号</th>
+                    <th>操作人</th>
+                    <th>操作内容</th>
+                    <th>操作时间</th>
+                    <th>登录IP</th>
+                </tr>
+                <tr>
+                    <td>admin01</td>
+                    <td>系统管理员</td>
+                    <td>新增案件数据</td>
+                    <td>2026-05-18 09:15</td>
+                    <td>10.26.18.145</td>
+                </tr>
+                <tr>
+                    <td>police02</td>
+                    <td>执勤民警</td>
+                    <td>修改人员信息</td>
+                    <td>2026-05-18 10:02</td>
+                    <td>10.26.18.156</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 权限分配管理 -->
+        <div class="page-content" id="sys">
+            <div class="title-txt">系统账号权限分配管理</div>
+            <table>
+                <tr>
+                    <th>账号名称</th>
+                    <th>所属岗位</th>
+                    <th>权限等级</th>
+                    <th>账号状态</th>
+                </tr>
+                <tr>
+                    <td>超级管理员</td>
+                    <td>系统运维</td>
+                    <td>最高全权限</td>
+                    <td><span class="stat-green">正常启用</span></td>
+                </tr>
+                <tr>
+                    <td>普通警员账号</td>
+                    <td>一线执勤</td>
+                    <td>查看+新增权限</td>
+                    <td><span class="stat-green">正常启用</span></td>
+                </tr>
+                <tr>
+                    <td>实习账号</td>
+                    <td>实习人员</td>
+                    <td>仅查看权限</td>
+                    <td><span class="stat-orange">临时开通</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal-mask" id="modalMask"></div>
+<div class="modal-box" id="modalBox">
+    <div class="modal-title">
+        <span id="modalTitle">新增警务事件记录</span>
+        <span class="modal-close" onclick="closeModal()">×</span>
+    </div>
+    <div class="modal-content">
+        <div class="form-item">
+            <label>事件编号 <span class="required">*</span>：</label>
+            <input type="text" class="input-text" id="code">
+        </div>
+        <div class="form-item">
+            <label>身份证号码 <span class="required">*</span>：</label>
+            <input type="text" class="input-text" id="idCard">
+        </div>
+        <div class="form-item">
+            <label>联系电话：</label>
+            <input type="text" class="input-text" id="phone">
+        </div>
+        <div class="form-item">
+            <label>事发地点：</label>
+            <input type="text" class="input-text" id="address">
+        </div>
+        <div class="form-item">
+            <label>处理状态：</label>
+            <select class="select-box" id="status">
+                <option value="待处理">待处理</option>
+                <option value="处理中">处理中</option>
+                <option value="已办结">已办结</option>
+            </select>
+        </div>
+        <div class="form-item">
+            <label>备注说明 <span class="required">*</span>：</label>
+            <input type="text" class="input-text" id="remark">
+        </div>
+    </div>
+    <div class="modal-btn">
+        <button class="btn btn-modal" onclick="saveForm()">确认保存</button>
+        <button class="btn btn-close" onclick="closeModal()">关闭</button>
+    </div>
+</div>
+
+<div class="load-tip" id="loadTip">🔄 数据加载中，请稍候...</div>
+<div class="msg-tip" id="msgBox"></div>
+
+<div class="footer">
+    涉密内网专用｜数据全程留痕审计｜禁止私自篡改数据｜系统版本 V4.0 公安定制版
+</div>
+
+<script>
+// 禁用F12调试
+document.onkeydown = function(e){
+    if(e.keyCode == 123){e.preventDefault();showMsg("禁止开发者调试工具");}
+};
+
+const userRole = "staff";
+const pageSize = 3;
+let currentPage = 1,maxPage = 3;
+const authBtn = document.querySelectorAll(".btn-auth");
+
+// 权限控制
+function checkAuth(){
+    if(userRole !== "admin"){
+        authBtn.forEach(btn=>{
+            btn.classList.add("btn-disable");
+            btn.disabled = true;
+        });
+    }
+}
+
+// 分页
+function setPage(num){
+    currentPage = num;
+    updatePageBtn();
+}
+function nextPage(){if(currentPage<maxPage)setPage(currentPage+1);}
+function prevPage(){if(currentPage>1)setPage(currentPage-1);}
+function updatePageBtn(){
+    document.querySelectorAll(".page-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelector(`[data-page="${currentPage}"]`)?.classList.add("active");
+}
+
+// 查询
+function combineSearch(){
+    showMsg("查询完成");
+}
+
+// 表单校验
+function checkForm(){
+    let code = document.getElementById("code").value.trim();
+    let idc = document.getElementById("idCard").value.trim();
+    let rem = document.getElementById("remark").value.trim();
+    if(!code){showMsg("请填写事件编号");return false;}
+    if(!idc){showMsg("请填写身份证号");return false;}
+    if(!rem){showMsg("请填写备注说明");return false;}
+    return true;
+}
+
+function delCheck(){prompt("请输入删除备注：","");showMsg("删除操作已记录");}
+function exportFile(){showMsg("报表导出成功");}
+
+function showMsg(t){
+    let box = document.getElementById("msgBox");
+    box.innerText = t;
+    box.style.display = "block";
+    setTimeout(()=>box.style.display="none",2000);
+}
+
+// 切换页面
+function switchPage(id){
+    document.querySelectorAll(".menu-second").forEach(v=>v.classList.remove("active"));
+    event.target.classList.add("active");
+    document.querySelectorAll(".page-content").forEach(v=>v.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+function openAddModal(){
+    document.getElementById("modalTitle").innerText="新增警务事件记录";
+    document.getElementById("modalMask").style.display="block";
+    document.getElementById("modalBox").style.display="block";
+}
+function openEditModal(){
+    document.getElementById("modalTitle").innerText="编辑警务事件记录";
+    document.getElementById("modalMask").style.display="block";
+    document.getElementById("modalBox").style.display="block";
+}
+function closeModal(){
+    document.getElementById("modalMask").style.display="none";
+    document.getElementById("modalBox").style.display="none";
+}
+function saveForm(){
+    if(checkForm()){closeModal();showMsg("保存成功");}
+}
+function autoLogout(){
+    if(confirm("确定退出登录？")) location.reload();
+}
+
+// 实时时间
+setInterval(()=>{
+    let d = new Date();
+    let str = d.getFullYear()+"-"+(d.getMonth()+1).toString().padStart(2,'0')+"-"+d.getDate()
+    +" "+d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0');
+    document.getElementById("nowTime").innerText = str;
+},1000);
+
+window.onload = function(){
+    checkAuth();
+}
+</script>
+</body>
+</html>

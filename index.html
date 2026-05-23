@@ -583,8 +583,10 @@
                 <thead>
                     <tr>
                         <th>接警编号</th>
-                        <th>报警人</th>
+                        <th>报案人</th>
+                        <th>受害人</th>
                         <th>报警类型</th>
+                        <th>事发地点</th>
                         <th>报警时间</th>
                         <th>处警人员</th>
                         <th>处置状态</th>
@@ -773,11 +775,18 @@ let data = {
         {id: '2026002', type: '邻里纠纷', address: '城西花园社区', status: '待处理'},
         {id: '2026003', type: '治安巡查', address: '城北工业园区', status: '处理中'},
         {id: '2026004', type: '商铺扰民纠纷', address: '市中心商业街', status: '已办结'},
-        {id: '2026005', type: '寻衅滋事', address: '南站广场周边', status: '待处理'}
+        {id: '2026005', type: '寻衅滋事', address: '南站广场周边', status: '待处理'},
+        {id: '2026006', type: '盗窃案件', address: '东城花园小区', status: '处理中'},
+        {id: '2026007', type: '治安事件', address: '西区公园', status: '待处理'},
+        {id: '2026008', type: '邻里纠纷', address: '南城居住区', status: '已办结'},
+        {id: '2026009', type: '治安巡查', address: '北区商贸中心', status: '处理中'},
+        {id: '2026010', type: '寻衅滋事', address: '火车站广场', status: '待处理'},
+        {id: '2026011', type: '商铺扰民纠纷', address: '市中心步行街', status: '已办结'},
+        {id: '2026012', type: '盗窃案件', address: '科技园区', status: '处理中'}
     ],
     alarms: [
-        {id: 'JJ2026051801', name: '张某', type: '财物丢失', time: '2026-05-18 08:20', officer: '执勤一组', status: '处置中'},
-        {id: 'JJ2026051802', name: '李某', type: '民事纠纷', time: '2026-05-18 10:12', officer: '调解班组', status: '已办结'}
+        {id: 'JJ2026051801', reporter: '张某', victim: '王某', type: '财物丢失', time: '2026-05-18 08:20', location: '幸福小区12号楼', officer: '执勤一组', status: '处置中'},
+        {id: 'JJ2026051802', reporter: '李某', victim: '赵某', type: '民事纠纷', time: '2026-05-18 10:12', location: '花园社区广场', officer: '调解班组', status: '已办结'}
     ],
     cases: [
         {id: 'XA2026021', type: '盗窃案', person: '王某', time: '2026-05-10', progress: '侦查取证'},
@@ -881,7 +890,13 @@ function getStatusClass(status) {
 // 渲染表格
 function renderHomeTable() {
     const tbody = document.getElementById('homeTableBody');
-    tbody.innerHTML = data.events.map(item => `
+    
+    // 计算分页数据
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageData = data.events.slice(startIndex, endIndex);
+    
+    tbody.innerHTML = pageData.map(item => `
         <tr class="${selectedEventId === item.id ? 'selected-row' : ''}" onclick="selectEvent('${item.id}', event)">
             <td><input type="checkbox" ${selectedEventId === item.id ? 'checked' : ''} onclick="event.stopPropagation(); selectEvent('${item.id}', event)"></td>
             <td>${item.id}</td>
@@ -891,6 +906,9 @@ function renderHomeTable() {
             <td><button class="btn btn-edit" onclick="event.stopPropagation(); editEvent('${item.id}')">编辑</button></td>
         </tr>
     `).join('');
+    
+    // 更新页码按钮
+    updatePageBtn();
 }
 
 // 选择事件
@@ -909,6 +927,7 @@ function selectEvent(id, event) {
 function resetEvents() {
     data.events = [...originalData.events];
     selectedEventId = null;
+    currentPage = 1; // 重置到第一页
     document.getElementById('keySearch').value = '';
     document.getElementById('typeSearch').value = '';
     document.getElementById('statSearch').value = '';
@@ -921,8 +940,10 @@ function renderAlarmTable() {
     tbody.innerHTML = data.alarms.map(item => `
         <tr>
             <td>${item.id}</td>
-            <td>${item.name}</td>
+            <td>${item.reporter || '-'}</td>
+            <td>${item.victim || '-'}</td>
             <td>${item.type}</td>
+            <td>${item.location || '-'}</td>
             <td>${item.time}</td>
             <td>${item.officer}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
@@ -1300,6 +1321,7 @@ function combineSearch() {
     });
     
     selectedEventId = null;
+    currentPage = 1; // 搜索后重置到第一页
     renderHomeTable();
     showMsg(`找到 ${data.events.length} 条记录`);
 }
@@ -1410,8 +1432,10 @@ function searchAlarm() {
     } else {
         data.alarms = originalData.alarms.filter(item => 
             item.id.toLowerCase().includes(key) || 
-            item.name.toLowerCase().includes(key) || 
-            item.type.toLowerCase().includes(key)
+            (item.reporter && item.reporter.toLowerCase().includes(key)) || 
+            (item.victim && item.victim.toLowerCase().includes(key)) || 
+            item.type.toLowerCase().includes(key) ||
+            (item.location && item.location.toLowerCase().includes(key))
         );
     }
     renderAlarmTable();
@@ -1430,8 +1454,10 @@ function addAlarm() {
     currentModal = 'addAlarm';
     openModal('新增接警记录', `
         <div class="form-item"><label>接警编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="alarmId"></div>
-        <div class="form-item"><label>报警人 <span class="required">*</span>：</label><input type="text" class="input-text" id="alarmName"></div>
+        <div class="form-item"><label>报案人 <span class="required">*</span>：</label><input type="text" class="input-text" id="alarmReporter"></div>
+        <div class="form-item"><label>受害人：</label><input type="text" class="input-text" id="alarmVictim"></div>
         <div class="form-item"><label>报警类型：</label><input type="text" class="input-text" id="alarmType"></div>
+        <div class="form-item"><label>事发地点：</label><input type="text" class="input-text" id="alarmLocation"></div>
         <div class="form-item"><label>处警人员：</label><input type="text" class="input-text" id="alarmOfficer"></div>
     `);
 }
@@ -1443,8 +1469,10 @@ function editAlarm(id) {
     if (item) {
         openModal('编辑接警记录', `
             <div class="form-item"><label>接警编号：</label><input type="text" class="input-text" id="alarmId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>报警人：</label><input type="text" class="input-text" id="alarmName" value="${item.name}"></div>
+            <div class="form-item"><label>报案人：</label><input type="text" class="input-text" id="alarmReporter" value="${item.reporter || ''}"></div>
+            <div class="form-item"><label>受害人：</label><input type="text" class="input-text" id="alarmVictim" value="${item.victim || ''}"></div>
             <div class="form-item"><label>报警类型：</label><input type="text" class="input-text" id="alarmType" value="${item.type}"></div>
+            <div class="form-item"><label>事发地点：</label><input type="text" class="input-text" id="alarmLocation" value="${item.location || ''}"></div>
             <div class="form-item"><label>处警人员：</label><input type="text" class="input-text" id="alarmOfficer" value="${item.officer}"></div>
             <div class="form-item"><label>处置状态：</label>
                 <select class="select-box" id="alarmStatus">
@@ -1721,17 +1749,28 @@ function saveForm() {
             }
         } else if (currentModal === 'addAlarm') {
             const id = document.getElementById('alarmId').value;
-            const name = document.getElementById('alarmName').value;
-            if (!id || !name) { showMsg("请填写完整信息"); return; }
+            const reporter = document.getElementById('alarmReporter').value;
+            if (!id || !reporter) { showMsg("请填写完整信息"); return; }
             const now = new Date().toLocaleString('zh-CN').replace(/\//g, '-').replace(/年|月|日/g, '-');
-            data.alarms.unshift({id: id, name: name, type: document.getElementById('alarmType').value || '其他', time: now, officer: document.getElementById('alarmOfficer').value || '待分配', status: '处置中'});
+            data.alarms.unshift({
+                id: id, 
+                reporter: reporter, 
+                victim: document.getElementById('alarmVictim').value || '',
+                type: document.getElementById('alarmType').value || '其他', 
+                location: document.getElementById('alarmLocation').value || '',
+                time: now, 
+                officer: document.getElementById('alarmOfficer').value || '待分配', 
+                status: '处置中'
+            });
             renderAlarmTable();
             addLog('新增接警', id);
         } else if (currentModal === 'editAlarm') {
             const idx = data.alarms.findIndex(a => a.id === editId);
             if (idx > -1) {
-                data.alarms[idx].name = document.getElementById('alarmName').value;
+                data.alarms[idx].reporter = document.getElementById('alarmReporter').value;
+                data.alarms[idx].victim = document.getElementById('alarmVictim').value;
                 data.alarms[idx].type = document.getElementById('alarmType').value;
+                data.alarms[idx].location = document.getElementById('alarmLocation').value;
                 data.alarms[idx].officer = document.getElementById('alarmOfficer').value;
                 data.alarms[idx].status = document.getElementById('alarmStatus').value;
                 renderAlarmTable();
@@ -1850,14 +1889,41 @@ function autoLogout() {
     if (confirm("确定退出登录？")) location.reload();
 }
 
-// 分页
+// 分页设置
 let currentPage = 1;
-function setPage(num){currentPage=num;updatePageBtn();}
-function nextPage(){if(currentPage<3)setPage(currentPage+1);}
-function prevPage(){if(currentPage>1)setPage(currentPage-1);}
+const itemsPerPage = 5; // 每页显示5条记录
+
+function setPage(num){
+    currentPage = num;
+    renderHomeTable();
+    updatePageBtn();
+}
+
+function nextPage(){
+    const totalPages = Math.ceil(data.events.length / itemsPerPage);
+    if(currentPage < totalPages) setPage(currentPage + 1);
+}
+
+function prevPage(){
+    if(currentPage > 1) setPage(currentPage - 1);
+}
+
 function updatePageBtn(){
-    document.querySelectorAll(".page-btn").forEach(b=>b.classList.remove("active"));
-    document.querySelector(`[data-page="${currentPage}"]`)?.classList.add("active");
+    const totalPages = Math.max(1, Math.ceil(data.events.length / itemsPerPage));
+    const pageContainer = document.querySelector('.page-area');
+    
+    if (!pageContainer) return;
+    
+    // 生成页码按钮
+    let pageHtml = '';
+    pageHtml += `<span class="page-btn ${currentPage === 1 ? 'btn-disable' : ''}" onclick="prevPage()">上一页</span>`;
+    
+    for (let i = 1; i <= totalPages; i++) {
+        pageHtml += `<span class="page-btn ${currentPage === i ? 'active' : ''}" data-page="${i}" onclick="setPage(${i})">${i}</span>`;
+    }
+    
+    pageHtml += `<span class="page-btn ${currentPage === totalPages ? 'btn-disable' : ''}" onclick="nextPage()">下一页</span>`;
+    pageContainer.innerHTML = pageHtml;
 }
 
 // 实时时间

@@ -50,9 +50,9 @@
             height:40px;
         }
         .header-title{
-            font-size:20px;
-            letter-spacing:4px;
-            font-weight:600;
+            font-size:17px;
+            letter-spacing:1px;
+            font-weight:500;
         }
         .header-middle{
             margin:0 40px;
@@ -361,9 +361,9 @@
         }
         .login-header h1{
             color:#fff;
-            font-size:24px;
+            font-size:22px;
             font-weight:600;
-            letter-spacing:6px;
+            letter-spacing:3px;
             margin:0;
         }
         .login-header p{
@@ -986,15 +986,16 @@ function doLogout() {
         localStorage.removeItem('currentUser');
         updateHeaderUserInfo();
         
-        // 清空登录表单
-        const accountInput = document.getElementById('loginAccountInput');
-        const passwordInput = document.getElementById('loginPasswordInput');
-        if (accountInput) accountInput.value = '';
-        if (passwordInput) passwordInput.value = '';
-        
         // 切换到登录页面
         showLoginPage();
-        showMsg('已退出登录');
+        
+        // 清空登录表单
+        setTimeout(() => {
+            const accountInput = document.getElementById('loginAccountInput');
+            const passwordInput = document.getElementById('loginPasswordInput');
+            if (accountInput) accountInput.value = '';
+            if (passwordInput) passwordInput.value = '';
+        }, 100);
     }
 }
 
@@ -1003,7 +1004,7 @@ function updateHeaderUserInfo() {
     const logoutBtn = document.getElementById('logoutBtn');
     
     if (currentUser) {
-        userInfo.innerHTML = `登录账号：${currentUser.name}｜所属单位：公安分局指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>`;
+        userInfo.innerHTML = `登录账号：${currentUser.name}｜所属单位：河北省总公安局指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>`;
         logoutBtn.style.display = 'inline';
     } else {
         userInfo.innerHTML = '';

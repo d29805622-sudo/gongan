@@ -442,6 +442,126 @@
             color:#990000;
             font-weight:600;
         }
+        /* 统计分析样式 */
+        .stat-cards{
+            display:flex;
+            gap:15px;
+            margin:15px 0;
+        }
+        .stat-card{
+            flex:1;
+            background:#fff;
+            border:1px solid #c8d2e0;
+            padding:20px;
+            text-align:center;
+            border-radius:3px;
+        }
+        .stat-number{
+            font-size:32px;
+            font-weight:700;
+            color:#003366;
+        }
+        .stat-label{
+            font-size:13px;
+            color:#666;
+            margin-top:8px;
+        }
+        .stat-rows{
+            display:flex;
+            gap:15px;
+            margin-top:15px;
+        }
+        .stat-chart{
+            flex:1;
+            background:#fff;
+            border:1px solid #c8d2e0;
+            padding:20px;
+            border-radius:3px;
+        }
+        .chart-title{
+            font-size:14px;
+            font-weight:600;
+            color:#333;
+            margin-bottom:15px;
+            border-left:3px solid #003366;
+            padding-left:10px;
+        }
+        .chart-bar{
+            display:flex;
+            align-items:center;
+            margin:10px 0;
+        }
+        .chart-bar-name{
+            width:80px;
+            font-size:12px;
+            color:#666;
+        }
+        .chart-bar-line{
+            flex:1;
+            height:20px;
+            background:#f0f4f8;
+            border-radius:2px;
+            overflow:hidden;
+            margin:0 10px;
+        }
+        .chart-bar-fill{
+            height:100%;
+            border-radius:2px;
+        }
+        .chart-bar-value{
+            width:40px;
+            text-align:right;
+            font-size:12px;
+            font-weight:600;
+            color:#003366;
+        }
+        .trend-container{
+            display:flex;
+            justify-content:space-around;
+            align-items:flex-end;
+            height:180px;
+            padding:10px 0;
+        }
+        .trend-item{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+        .trend-bar{
+            width:40px;
+            background:linear-gradient(180deg,#003366 0%,#4080c9 100%);
+            border-radius:3px 3px 0 0;
+            min-height:10px;
+        }
+        .trend-label{
+            font-size:11px;
+            color:#666;
+            margin-top:8px;
+        }
+        /* 执法监督样式 */
+        .supervision-cards{
+            display:flex;
+            gap:15px;
+            margin:15px 0;
+        }
+        .supervision-card{
+            flex:1;
+            background:#fff;
+            border:1px solid #c8d2e0;
+            padding:20px;
+            text-align:center;
+            border-radius:3px;
+        }
+        .supervision-number{
+            font-size:28px;
+            font-weight:700;
+            color:#990000;
+        }
+        .supervision-label{
+            font-size:13px;
+            color:#666;
+            margin-top:8px;
+        }
         /* 主系统界面 */
         .main-system{
             display:none;
@@ -515,6 +635,9 @@
         <div class="menu-second" onclick="switchPage('person')">重点人员管控</div>
         <div class="menu-second" onclick="switchPage('car')">涉控车辆管理</div>
         <div class="menu-second" onclick="switchPage('goods')">涉案物品登记</div>
+        <div class="menu-first">统计分析模块</div>
+        <div class="menu-second" onclick="switchPage('statistics')">警情分析报表</div>
+        <div class="menu-second" onclick="switchPage('supervision')">执法监督考评</div>
         <div class="menu-first">系统运维管理</div>
         <div class="menu-second" onclick="switchPage('log')">操作日志审计</div>
         <div class="menu-second" onclick="switchPage('sys')">权限分配管理</div>
@@ -614,7 +737,9 @@
                         <th>案件类别</th>
                         <th>涉案人员</th>
                         <th>立案时间</th>
-                        <th>办理进度</th>
+                        <th>案件状态</th>
+                        <th>办案单位</th>
+                        <th>操作</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -639,7 +764,9 @@
                         <th>姓名</th>
                         <th>身份证号</th>
                         <th>管控等级</th>
+                        <th>风险等级</th>
                         <th>居住地址</th>
+                        <th>操作</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -661,9 +788,13 @@
                 <thead>
                     <tr>
                         <th>车牌号码</th>
+                        <th>品牌</th>
                         <th>车辆类型</th>
+                        <th>颜色</th>
                         <th>车主姓名</th>
                         <th>登记状态</th>
+                        <th>风险等级</th>
+                        <th>操作</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -687,12 +818,145 @@
                         <th>物品编号</th>
                         <th>物品名称</th>
                         <th>数量</th>
-                        <th>扣押时间</th>
+                        <th>关联案件</th>
+                        <th>保管状态</th>
+                        <th>保管人</th>
+                        <th>入库时间</th>
+                        <th>出库时间</th>
                         <th>存放位置</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody id="goodsTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 警情分析报表 -->
+        <div class="page-content" id="statistics">
+            <div class="title-txt">警情数据统计分析报表</div>
+            <div class="search-bar">
+                <button class="btn btn-search" onclick="refreshStatistics()">刷新数据</button>
+                <button class="btn btn-export" onclick="exportStatistics()">导出报表</button>
+            </div>
+            <div class="stat-cards">
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">今日接警</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">今日立案</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">在办案件</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">85</div>
+                    <div class="stat-label">已结案件</div>
+                </div>
+            </div>
+            <div class="stat-rows">
+                <div class="stat-chart">
+                    <div class="chart-title">警情类型分布</div>
+                    <div id="alarmTypeChart">
+                        <div class="chart-bar">
+                            <div class="chart-bar-name">治安事件</div>
+                            <div class="chart-bar-line" style="width: 90%">
+                                <div class="chart-bar-fill" style="background: #003366;"></div>
+                            </div>
+                            <div class="chart-bar-value">45</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-name">邻里纠纷</div>
+                            <div class="chart-bar-line" style="width: 64%">
+                                <div class="chart-bar-fill" style="background: #2c4b70;"></div>
+                            </div>
+                            <div class="chart-bar-value">32</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-name">盗窃案件</div>
+                            <div class="chart-bar-line" style="width: 56%">
+                                <div class="chart-bar-fill" style="background: #4080c9;"></div>
+                            </div>
+                            <div class="chart-bar-value">28</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-bar-name">其他</div>
+                            <div class="chart-bar-line" style="width: 30%">
+                                <div class="chart-bar-fill" style="background: #889ab0;"></div>
+                            </div>
+                            <div class="chart-bar-value">15</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-chart">
+                    <div class="chart-title">近7日案件趋势</div>
+                    <div id="caseTrendChart">
+                        <div class="trend-container">
+                            <div class="trend-item">
+                                <div class="trend-bar" style="height: 60%"></div>
+                                <div class="trend-label">周一</div>
+                            </div>
+                            <div class="trend-item">
+                                <div class="trend-bar" style="height: 40%"></div>
+                                <div class="trend-label">周二</div>
+                            </div>
+                            <div class="trend-item">
+                                <div class="trend-bar" style="height: 75%"></div>
+                                <div class="trend-label">周三</div>
+                            </div>
+                            <div class="trend-item">
+                                <div class="trend-bar" style="height: 50%"></div>
+                                <div class="trend-label">周四</div>
+                            </div>
+                            <div class="trend-item">
+                                <div class="trend-bar" style="height: 90%"></div>
+                                <div class="trend-label">周五</div>
+                            </div>
+                            <div class="trend-item">
+                                <div class="trend-bar" style="height: 70%"></div>
+                                <div class="trend-label">周六</div>
+                            </div>
+                            <div class="trend-item">
+                                <div class="trend-bar" style="height: 55%"></div>
+                                <div class="trend-label">周日</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 执法监督考评 -->
+        <div class="page-content" id="supervision">
+            <div class="title-txt">执法监督与绩效考评</div>
+            <div class="search-bar">
+                <button class="btn btn-search" onclick="refreshSupervision()">刷新数据</button>
+                <button class="btn btn-add" onclick="addEvaluation()">新增考评</button>
+            </div>
+            <div class="supervision-cards">
+                <div class="supervision-card">
+                    <div class="supervision-number">3</div>
+                    <div class="supervision-label">待审批事项</div>
+                </div>
+                <div class="supervision-card">
+                    <div class="supervision-number">1</div>
+                    <div class="supervision-label">待整改问题</div>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>考评人员</th>
+                        <th>得分</th>
+                        <th>评级</th>
+                        <th>考评月份</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="supervisionTableBody">
                 </tbody>
             </table>
         </div>
@@ -785,24 +1049,38 @@ let data = {
         {id: '2026012', type: '盗窃案件', address: '科技园区', status: '处理中'}
     ],
     alarms: [
-        {id: 'JJ2026051801', reporter: '张某', victim: '王某', type: '财物丢失', time: '2026-05-18 08:20', location: '幸福小区12号楼', officer: '执勤一组', status: '处置中'},
-        {id: 'JJ2026051802', reporter: '李某', victim: '赵某', type: '民事纠纷', time: '2026-05-18 10:12', location: '花园社区广场', officer: '调解班组', status: '已办结'}
+        {id: 'JJ2026051801', reporter: '张某', victim: '王某', type: '财物丢失', time: '2026-05-18 08:20', location: '幸福小区12号楼', officer: '执勤一组', status: '处置中',
+         process: '已派警', records: ['接到报警', '派员处置', '现场勘查']},
+        {id: 'JJ2026051802', reporter: '李某', victim: '赵某', type: '民事纠纷', time: '2026-05-18 10:12', location: '花园社区广场', officer: '调解班组', status: '已办结',
+         process: '已结案', records: ['接到报警', '派员处置', '现场调解', '达成协议', '结案归档']}
     ],
     cases: [
-        {id: 'XA2026021', type: '盗窃案', person: '王某', time: '2026-05-10', progress: '侦查取证'},
-        {id: 'XA2026022', type: '寻衅滋事', person: '赵某', time: '2026-05-12', progress: '结案归档'}
+        {id: 'XA2026021', type: '盗窃案', person: '王某', time: '2026-05-10', progress: '侦查取证',
+         caseStatus: '办理中', investigator: '刑侦大队', evidence: ['现场照片', '指纹采集', '监控录像'],
+         timeline: ['2026-05-10 报案', '2026-05-11 立案', '2026-05-12 侦查取证']},
+        {id: 'XA2026022', type: '寻衅滋事', person: '赵某', time: '2026-05-12', progress: '结案归档',
+         caseStatus: '已结案', investigator: '治安大队', evidence: ['当事人陈述', '证人证言'],
+         timeline: ['2026-05-12 报案', '2026-05-13 立案', '2026-05-14 调查取证', '2026-05-18 结案归档']}
     ],
     persons: [
-        {id: 'RY001', name: '陈某', idCard: '130XXXX8976', level: '一级管控', address: '市区幸福路小区'},
-        {id: 'RY002', name: '刘某', idCard: '152XXXX1234', level: '二级管控', address: '城西惠民社区'}
+        {id: 'RY001', name: '陈某', idCard: '130XXXX8976', level: '一级管控', address: '市区幸福路小区',
+         relatedPersons: ['王某', '刘某'], trackRecords: ['2026-05-15 火车站', '2026-05-16 幸福小区', '2026-05-17 商业中心'],
+         riskLevel: '高风险', notes: '有盗窃前科'},
+        {id: 'RY002', name: '刘某', idCard: '152XXXX1234', level: '二级管控', address: '城西惠民社区',
+         relatedPersons: ['陈某'], trackRecords: ['2026-05-14 公园', '2026-05-16 超市'],
+         riskLevel: '中风险', notes: '重点关注人员'}
     ],
     cars: [
-        {plate: '冀A12345', type: '小型轿车', owner: '周某', status: '重点布控'},
-        {plate: '冀B67890', type: '面包车', owner: '吴某', status: '正常备案'}
+        {plate: '冀A12345', type: '小型轿车', owner: '周某', status: '重点布控',
+         color: '黑色', brand: '大众', trackRecords: ['2026-05-17 幸福路', '2026-05-18 人民路'], riskLevel: '高'},
+        {plate: '冀B67890', type: '面包车', owner: '吴某', status: '正常备案',
+         color: '白色', brand: '五菱', trackRecords: [], riskLevel: '低'}
     ],
     goods: [
-        {id: 'WP011', name: '手机', count: '2部', time: '2026-05-15', location: '物证保管室A区'},
-        {id: 'WP012', name: '现金', count: '5000元', time: '2026-05-16', location: '财务封存库房'}
+        {id: 'WP011', name: '手机', count: '2部', time: '2026-05-15', location: '物证保管室A区',
+         caseId: 'XA2026021', status: '已登记', keeper: '物证管理员', inTime: '2026-05-15 14:30', outTime: ''},
+        {id: 'WP012', name: '现金', count: '5000元', time: '2026-05-16', location: '财务封存库房',
+         caseId: 'XA2026022', status: '已移交', keeper: '财务室', inTime: '2026-05-16 09:00', outTime: '2026-05-18 10:00'}
     ],
     logs: [
         {account: 'admin01', name: '系统管理员', action: '新增案件数据', time: '2026-05-18 09:15', ip: '10.26.18.145'},
@@ -812,7 +1090,24 @@ let data = {
         {account: 'admin', password: '123456', name: '超级管理员', role: '系统运维', level: '最高全权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
         {account: 'police', password: '123456', name: '普通警员账号', role: '一线执勤', level: '查看+新增权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
         {account: 'trainee', password: '123456', name: '实习账号', role: '实习人员', level: '仅查看权限', status: '临时开通', expireDate: '', currentSessionId: '', lastLoginTime: ''}
-    ]
+    ],
+    statistics: {
+        todayAlarms: 5,
+        todayCases: 2,
+        pendingCases: 12,
+        closedCases: 85,
+        alarmTypes: {'治安事件': 45, '邻里纠纷': 32, '盗窃案件': 28, '其他': 15},
+        caseTrend: [12, 8, 15, 10, 18, 14, 11]
+    },
+    supervision: {
+        evaluations: [
+            {person: '张三', score: 95, rank: '优秀', month: '2026-05'},
+            {person: '李四', score: 88, rank: '良好', month: '2026-05'},
+            {person: '王五', score: 76, rank: '合格', month: '2026-05'}
+        ],
+        pendingAudits: 3,
+        issues: 1
+    }
 };
 
 // 从localStorage加载数据
@@ -960,8 +1255,10 @@ function renderCaseTable() {
             <td>${item.type}</td>
             <td>${item.person}</td>
             <td>${item.time}</td>
-            <td><span class="${getStatusClass(item.progress)}">${item.progress}</span></td>
+            <td><span class="${getStatusClass(item.caseStatus || item.progress)}">${item.caseStatus || item.progress}</span></td>
+            <td>${item.investigator || '-'}</td>
             <td><button class="btn btn-edit" onclick="editCase('${item.id}')">编辑</button></td>
+            <td><button class="btn btn-modal" onclick="viewCaseDetail('${item.id}')">详情</button></td>
         </tr>
     `).join('');
 }
@@ -974,8 +1271,10 @@ function renderPersonTable() {
             <td>${item.name}</td>
             <td>${item.idCard}</td>
             <td><span class="${getStatusClass(item.level)}">${item.level}</span></td>
+            <td><span class="${getStatusClass(item.riskLevel)}">${item.riskLevel || '-'}</span></td>
             <td>${item.address}</td>
             <td><button class="btn btn-edit" onclick="editPerson('${item.id}')">编辑</button></td>
+            <td><button class="btn btn-modal" onclick="viewPersonDetail('${item.id}')">详情</button></td>
         </tr>
     `).join('');
 }
@@ -985,10 +1284,14 @@ function renderCarTable() {
     tbody.innerHTML = data.cars.map(item => `
         <tr>
             <td>${item.plate}</td>
+            <td>${item.brand || '-'}</td>
             <td>${item.type}</td>
+            <td>${item.color || '-'}</td>
             <td>${item.owner}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td><span class="${getStatusClass(item.riskLevel)}">${item.riskLevel || '-'}</span></td>
             <td><button class="btn btn-edit" onclick="editCar('${item.plate}')">编辑</button></td>
+            <td><button class="btn btn-modal" onclick="viewCarDetail('${item.plate}')">详情</button></td>
         </tr>
     `).join('');
 }
@@ -1000,7 +1303,11 @@ function renderGoodsTable() {
             <td>${item.id}</td>
             <td>${item.name}</td>
             <td>${item.count}</td>
-            <td>${item.time}</td>
+            <td>${item.caseId || '-'}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status || '-'}</span></td>
+            <td>${item.keeper || '-'}</td>
+            <td>${item.inTime || '-'}</td>
+            <td>${item.outTime || '-'}</td>
             <td>${item.location}</td>
             <td><button class="btn btn-edit" onclick="editGoods('${item.id}')">编辑</button></td>
         </tr>
@@ -1873,6 +2180,27 @@ function saveForm() {
                 renderSysTable();
                 addLog('编辑账号', editId);
             }
+        } else if (currentModal === 'addEvaluation') {
+            const person = document.getElementById('evalPerson').value;
+            const score = parseInt(document.getElementById('evalScore').value);
+            if (!person || isNaN(score)) { showMsg("请填写完整信息"); return; }
+            data.supervision.evaluations.unshift({
+                person: person,
+                score: score,
+                rank: document.getElementById('evalRank').value,
+                month: document.getElementById('evalMonth').value
+            });
+            renderSupervisionTable();
+            addLog('新增考评', person);
+        } else if (currentModal === 'editEvaluation') {
+            const idx = data.supervision.evaluations.findIndex(e => e.person === editId);
+            if (idx > -1) {
+                data.supervision.evaluations[idx].score = parseInt(document.getElementById('evalScore').value);
+                data.supervision.evaluations[idx].rank = document.getElementById('evalRank').value;
+                data.supervision.evaluations[idx].month = document.getElementById('evalMonth').value;
+                renderSupervisionTable();
+                addLog('编辑考评', editId);
+            }
         }
         scheduleSave();
         backupOriginalData(); // 更新备份
@@ -1996,7 +2324,144 @@ window.onload = function(){
     renderGoodsTable();
     renderLogTable();
     renderSysTable();
+    renderSupervisionTable();
 };
+
+// ==================== 统计分析和执法监督功能 ====================
+
+// 渲染执法监督表格
+function renderSupervisionTable() {
+    const tbody = document.getElementById('supervisionTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = data.supervision.evaluations.map(item => `
+        <tr>
+            <td>${item.person}</td>
+            <td>${item.score}</td>
+            <td><span class="${item.rank === '优秀' ? 'stat-green' : item.rank === '良好' ? 'stat-blue' : 'stat-orange'}">${item.rank}</span></td>
+            <td>${item.month}</td>
+            <td><button class="btn btn-edit" onclick="editEvaluation('${item.person}')">编辑</button></td>
+        </tr>
+    `).join('');
+}
+
+// 刷新统计数据
+function refreshStatistics() {
+    showMsg('统计数据已刷新');
+}
+
+// 导出统计报表
+function exportStatistics() {
+    showMsg('报表导出功能已触发');
+}
+
+// 刷新执法监督数据
+function refreshSupervision() {
+    showMsg('执法监督数据已刷新');
+}
+
+// 新增考评
+function addEvaluation() {
+    currentModal = 'addEvaluation';
+    openModal('新增执法考评', `
+        <div class="form-item"><label>考评人员 <span class="required">*</span>：</label><input type="text" class="input-text" id="evalPerson"></div>
+        <div class="form-item"><label>分数 <span class="required">*</span>：</label><input type="number" class="input-text" id="evalScore" value="80"></div>
+        <div class="form-item"><label>评级：</label>
+            <select class="select-box" id="evalRank">
+                <option value="优秀">优秀</option>
+                <option value="良好">良好</option>
+                <option value="合格">合格</option>
+            </select>
+        </div>
+        <div class="form-item"><label>考评月份：</label><input type="text" class="input-text" id="evalMonth" value="2026-05"></div>
+    `);
+}
+
+// 编辑考评
+function editEvaluation(person) {
+    const item = data.supervision.evaluations.find(e => e.person === person);
+    if (item) {
+        currentModal = 'editEvaluation';
+        editId = person;
+        openModal('编辑执法考评', `
+            <div class="form-item"><label>考评人员：</label><input type="text" class="input-text" id="evalPerson" value="${item.person}" readonly></div>
+            <div class="form-item"><label>分数：</label><input type="number" class="input-text" id="evalScore" value="${item.score}"></div>
+            <div class="form-item"><label>评级：</label>
+                <select class="select-box" id="evalRank">
+                    <option value="优秀" ${item.rank === '优秀' ? 'selected' : ''}>优秀</option>
+                    <option value="良好" ${item.rank === '良好' ? 'selected' : ''}>良好</option>
+                    <option value="合格" ${item.rank === '合格' ? 'selected' : ''}>合格</option>
+                </select>
+            </div>
+            <div class="form-item"><label>考评月份：</label><input type="text" class="input-text" id="evalMonth" value="${item.month}"></div>
+        `);
+    }
+}
+
+// ==================== 详情查看功能 ====================
+
+// 查看案件详情
+function viewCaseDetail(id) {
+    const item = data.cases.find(c => c.id === id);
+    if (item) {
+        openModal('案件详情', `
+            <div class="form-item"><label>案件编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>案件类别：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>涉案人员：</label><span>${item.person}</span></div>
+            <div class="form-item"><label>立案时间：</label><span>${item.time}</span></div>
+            <div class="form-item"><label>案件状态：</label><span>${item.caseStatus || item.progress}</span></div>
+            <div class="form-item"><label>办案单位：</label><span>${item.investigator || '-'}</span></div>
+            <div class="form-item"><label>证据清单：</label><span>${item.evidence ? item.evidence.join('、') : '-'}</span></div>
+            <div class="form-item"><label>时间线：</label>
+                <ul style="padding-left:20px;">
+                    ${item.timeline ? item.timeline.map(t => '<li>' + t + '</li>').join('') : '-'}
+                </ul>
+            </div>
+        `);
+    }
+}
+
+// 查看人员详情
+function viewPersonDetail(id) {
+    const item = data.persons.find(p => p.id === id);
+    if (item) {
+        openModal('人员详情', `
+            <div class="form-item"><label>人员编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>姓名：</label><span>${item.name}</span></div>
+            <div class="form-item"><label>身份证号：</label><span>${item.idCard}</span></div>
+            <div class="form-item"><label>管控等级：</label><span>${item.level}</span></div>
+            <div class="form-item"><label>风险等级：</label><span>${item.riskLevel || '-'}</span></div>
+            <div class="form-item"><label>居住地址：</label><span>${item.address}</span></div>
+            <div class="form-item"><label>关联人员：</label><span>${item.relatedPersons ? item.relatedPersons.join('、') : '-'}</span></div>
+            <div class="form-item"><label>轨迹记录：</label>
+                <ul style="padding-left:20px;">
+                    ${item.trackRecords ? item.trackRecords.map(t => '<li>' + t + '</li>').join('') : '-'}
+                </ul>
+            </div>
+            <div class="form-item"><label>备注：</label><span>${item.notes || '-'}</span></div>
+        `);
+    }
+}
+
+// 查看车辆详情
+function viewCarDetail(plate) {
+    const item = data.cars.find(c => c.plate === plate);
+    if (item) {
+        openModal('车辆详情', `
+            <div class="form-item"><label>车牌号码：</label><span>${item.plate}</span></div>
+            <div class="form-item"><label>品牌：</label><span>${item.brand || '-'}</span></div>
+            <div class="form-item"><label>车辆类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>颜色：</label><span>${item.color || '-'}</span></div>
+            <div class="form-item"><label>车主姓名：</label><span>${item.owner}</span></div>
+            <div class="form-item"><label>登记状态：</label><span>${item.status}</span></div>
+            <div class="form-item"><label>风险等级：</label><span>${item.riskLevel || '-'}</span></div>
+            <div class="form-item"><label>轨迹记录：</label>
+                <ul style="padding-left:20px;">
+                    ${item.trackRecords ? item.trackRecords.map(t => '<li>' + t + '</li>').join('') : '-'}
+                </ul>
+            </div>
+        `);
+    }
+}
 
 // 回车登录
 document.getElementById('loginPasswordInput').addEventListener('keypress', function(e) {

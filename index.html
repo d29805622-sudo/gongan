@@ -456,7 +456,7 @@
         <div class="login-box">
             <div class="login-header">
                 <img class="gov-icon" src="logo.png" alt="警徽">
-                <h1>公安综合警务管理系统</h1>
+                <h1>河北省总公安局</h1>
                 <p>涉密专用 · 内网专用</p>
             </div>
             <div class="login-body">
@@ -486,7 +486,7 @@
 <div class="top-header">
     <div class="header-left">
         <img class="gov-icon" src="logo.png" alt="警徽">
-        <div class="header-title">公安综合警务管理系统｜内网涉密管理平台</div>
+        <div class="header-title">河北省总公安局｜内网涉密管理平台</div>
     </div>
     <div class="header-middle">
         <span class="top-nav-item">综合管控</span>
@@ -980,13 +980,21 @@ function doLoginAction() {
 
 function doLogout() {
     if (confirm('确定退出登录？')) {
-        addLog('系统退出', currentUser ? currentUser.name + ' 退出系统' : '用户退出');
+        const userName = currentUser ? currentUser.name : '用户';
+        addLog('系统退出', userName + ' 退出系统');
         currentUser = null;
         localStorage.removeItem('currentUser');
         updateHeaderUserInfo();
-        document.getElementById('loginAccountInput').value = '';
-        document.getElementById('loginPasswordInput').value = '';
+        
+        // 清空登录表单
+        const accountInput = document.getElementById('loginAccountInput');
+        const passwordInput = document.getElementById('loginPasswordInput');
+        if (accountInput) accountInput.value = '';
+        if (passwordInput) passwordInput.value = '';
+        
+        // 切换到登录页面
         showLoginPage();
+        showMsg('已退出登录');
     }
 }
 

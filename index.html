@@ -327,8 +327,9 @@
         <span class="top-nav-item">系统权限</span>
     </div>
     <div class="header-right">
-        登录账号：管理员｜所属单位：公安分局指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>
-        <span class="logout-btn" onclick="autoLogout()">【安全退出】</span>
+        <span id="headerUserInfo"></span>
+        <span class="logout-btn" id="loginBtn" onclick="showLoginModal()">登录</span>
+        <span class="logout-btn" id="logoutBtn" style="display:none" onclick="doLogout()">退出登录</span>
     </div>
 </div>
 
@@ -540,6 +541,9 @@
         <!-- 权限分配管理 -->
         <div class="page-content" id="sys">
             <div class="title-txt">系统账号权限分配管理</div>
+            <div class="search-bar">
+                <button class="btn btn-add" onclick="openAddUserModal()">新增账号</button>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -547,12 +551,34 @@
                         <th>所属岗位</th>
                         <th>权限等级</th>
                         <th>账号状态</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody id="sysTableBody">
                 </tbody>
             </table>
         </div>
+    </div>
+</div>
+
+<div class="modal-mask" id="loginModalMask"></div>
+<div class="modal-box" id="loginModalBox">
+    <div class="modal-title">
+        <span>系统登录</span>
+        <span class="modal-close" onclick="hideLoginModal()">×</span>
+    </div>
+    <div class="modal-content">
+        <div class="form-item">
+            <label>账号 <span class="required">*</span>：</label>
+            <input type="text" class="input-text" id="loginAccount">
+        </div>
+        <div class="form-item">
+            <label>密码 <span class="required">*</span>：</label>
+            <input type="password" class="input-text" id="loginPassword">
+        </div>
+    </div>
+    <div class="modal-btn">
+        <button class="btn btn-modal" onclick="doLogin()">登录</button>
     </div>
 </div>
 
@@ -612,9 +638,9 @@ let data = {
         {account: 'police02', name: '执勤民警', action: '修改人员信息', time: '2026-05-18 10:02', ip: '10.26.18.156'}
     ],
     users: [
-        {name: '超级管理员', role: '系统运维', level: '最高全权限', status: '正常启用'},
-        {name: '普通警员账号', role: '一线执勤', level: '查看+新增权限', status: '正常启用'},
-        {name: '实习账号', role: '实习人员', level: '仅查看权限', status: '临时开通'}
+        {account: 'admin', password: '123456', name: '超级管理员', role: '系统运维', level: '最高全权限', status: '正常启用'},
+        {account: 'police', password: '123456', name: '普通警员账号', role: '一线执勤', level: '查看+新增权限', status: '正常启用'},
+        {account: 'trainee', password: '123456', name: '实习账号', role: '实习人员', level: '仅查看权限', status: '临时开通'}
     ]
 };
 
@@ -635,8 +661,8 @@ function saveData() {
 // 添加日志
 function addLog(action, detail) {
     data.logs.unshift({
-        account: 'admin01',
-        name: '系统管理员',
+        account: currentUser ? currentUser.account : 'admin01',
+        name: currentUser ? currentUser.name : '系统管理员',
         action: action + ': ' + detail,
         time: new Date().toLocaleString('zh-CN'),
         ip: '10.26.18.145'
@@ -755,15 +781,131 @@ function renderSysTable() {
     const tbody = document.getElementById('sysTableBody');
     tbody.innerHTML = data.users.map(item => `
         <tr>
+            <td>${item.account}</td>
             <td>${item.name}</td>
             <td>${item.role}</td>
             <td>${item.level}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td><button class="btn btn-edit" onclick="editUser('${item.account}')">编辑</button></td>
         </tr>
     `).join('');
 }
 
-// 页面切换
+// ==================== 登录系统 ====================
+let currentUser = null;
+
+function showLoginModal() {
+    document.getElementById('loginModalMask').style.display = 'block';
+    document.getElementById('loginModalBox').style.display = 'block';
+}
+
+function hideLoginModal() {
+    document.getElementById('loginModalMask').style.display = 'none';
+    document.getElementById('loginModalBox').style.display = 'none';
+}
+
+function doLogin() {
+    const account = document.getElementById('loginAccount').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    if (!account || !password) {
+        showMsg('请输入账号和密码');
+        return;
+    }
+    
+    const user = data.users.find(u => u.account === account && u.password === password);
+    if (user) {
+        currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        addLog('系统登录', user.name + ' 登录系统');
+        updateHeaderUserInfo();
+        hideLoginModal();
+        showMsg('登录成功');
+    } else {
+        showMsg('账号或密码错误');
+    }
+}
+
+function doLogout() {
+    if (confirm('确定退出登录？')) {
+        addLog('系统退出', currentUser ? currentUser.name + ' 退出系统' : '用户退出');
+        currentUser = null;
+        localStorage.removeItem('currentUser');
+        updateHeaderUserInfo();
+        showLoginModal();
+    }
+}
+
+function updateHeaderUserInfo() {
+    const userInfo = document.getElementById('headerUserInfo');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    if (currentUser) {
+        userInfo.innerHTML = `登录账号：${currentUser.name}｜所属单位：公安分局指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>`;
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline';
+    } else {
+        userInfo.innerHTML = '';
+        loginBtn.style.display = 'inline';
+        logoutBtn.style.display = 'none';
+    }
+}
+
+// ==================== 账号管理 ====================
+function openAddUserModal() {
+    currentModal = 'addUser';
+    openModal('新增账号', `
+        <div class="form-item"><label>账号 <span class="required">*</span>：</label><input type="text" class="input-text" id="userAccount"></div>
+        <div class="form-item"><label>密码 <span class="required">*</span>：</label><input type="text" class="input-text" id="userPassword"></div>
+        <div class="form-item"><label>姓名 <span class="required">*</span>：</label><input type="text" class="input-text" id="userName"></div>
+        <div class="form-item"><label>岗位：</label><input type="text" class="input-text" id="userRole"></div>
+        <div class="form-item"><label>权限等级：</label>
+            <select class="select-box" id="userLevel">
+                <option>最高全权限</option>
+                <option>查看+新增权限</option>
+                <option>仅查看权限</option>
+            </select>
+        </div>
+        <div class="form-item"><label>账号状态：</label>
+            <select class="select-box" id="userStatus">
+                <option>正常启用</option>
+                <option>临时开通</option>
+                <option>已禁用</option>
+            </select>
+        </div>
+    `);
+}
+
+function editUser(account) {
+    currentModal = 'editUser';
+    editId = account;
+    const user = data.users.find(u => u.account === account);
+    if (user) {
+        openModal('编辑账号', `
+            <div class="form-item"><label>账号：</label><input type="text" class="input-text" id="userAccount" value="${user.account}" readonly></div>
+            <div class="form-item"><label>密码：</label><input type="text" class="input-text" id="userPassword" value="${user.password}"></div>
+            <div class="form-item"><label>姓名：</label><input type="text" class="input-text" id="userName" value="${user.name}"></div>
+            <div class="form-item"><label>岗位：</label><input type="text" class="input-text" id="userRole" value="${user.role}"></div>
+            <div class="form-item"><label>权限等级：</label>
+                <select class="select-box" id="userLevel">
+                    <option ${user.level === '最高全权限' ? 'selected' : ''}>最高全权限</option>
+                    <option ${user.level === '查看+新增权限' ? 'selected' : ''}>查看+新增权限</option>
+                    <option ${user.level === '仅查看权限' ? 'selected' : ''}>仅查看权限</option>
+                </select>
+            </div>
+            <div class="form-item"><label>账号状态：</label>
+                <select class="select-box" id="userStatus">
+                    <option ${user.status === '正常启用' ? 'selected' : ''}>正常启用</option>
+                    <option ${user.status === '临时开通' ? 'selected' : ''}>临时开通</option>
+                    <option ${user.status === '已禁用' ? 'selected' : ''}>已禁用</option>
+                </select>
+            </div>
+        `);
+    }
+}
+
+// ==================== 页面切换 ====================
 function switchPage(id) {
     document.querySelectorAll('.menu-second').forEach(v=>v.classList.remove('active'));
     event.target.classList.add('active');
@@ -1176,6 +1318,34 @@ function saveForm() {
                 renderGoodsTable();
                 addLog('编辑物品', editId);
             }
+        } else if (currentModal === 'addUser') {
+            const account = document.getElementById('userAccount').value;
+            const password = document.getElementById('userPassword').value;
+            const name = document.getElementById('userName').value;
+            if (!account || !password || !name) { showMsg("请填写完整信息"); return; }
+            const exist = data.users.find(u => u.account === account);
+            if (exist) { showMsg("账号已存在"); return; }
+            data.users.unshift({
+                account: account,
+                password: password,
+                name: name,
+                role: document.getElementById('userRole').value || '一线执勤',
+                level: document.getElementById('userLevel').value,
+                status: document.getElementById('userStatus').value
+            });
+            renderSysTable();
+            addLog('新增账号', account);
+        } else if (currentModal === 'editUser') {
+            const idx = data.users.findIndex(u => u.account === editId);
+            if (idx > -1) {
+                data.users[idx].password = document.getElementById('userPassword').value;
+                data.users[idx].name = document.getElementById('userName').value;
+                data.users[idx].role = document.getElementById('userRole').value;
+                data.users[idx].level = document.getElementById('userLevel').value;
+                data.users[idx].status = document.getElementById('userStatus').value;
+                renderSysTable();
+                addLog('编辑账号', editId);
+            }
         }
         saveData();
         closeModal();
@@ -1212,6 +1382,16 @@ setInterval(()=>{
 // 初始化
 window.onload = function(){
     loadData();
+    // 检查登录状态
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+    }
+    updateHeaderUserInfo();
+    // 如果未登录，显示登录弹窗
+    if (!currentUser) {
+        setTimeout(() => showLoginModal(), 500);
+    }
     renderHomeTable();
     renderAlarmTable();
     renderCaseTable();
@@ -1220,7 +1400,10 @@ window.onload = function(){
     renderGoodsTable();
     renderLogTable();
     renderSysTable();
-}
+};
+
+// 点击遮罩层关闭登录弹窗
+document.getElementById('loginModalMask').addEventListener('click', hideLoginModal);
 </script>
 </body>
 </html>

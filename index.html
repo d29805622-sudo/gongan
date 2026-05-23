@@ -802,10 +802,31 @@ function loadData() {
     }
 }
 
+// 批量保存标识，用于减少localStorage写入
+let needSave = false;
+let saveTimer = null;
+
+// 延迟保存，批量处理
+function scheduleSave() {
+    needSave = true;
+    if (!saveTimer) {
+        saveTimer = setTimeout(() => {
+            if (needSave) {
+                saveData();
+                needSave = false;
+            }
+            saveTimer = null;
+        }, 500);
+    }
+}
+
 // 保存数据到localStorage
 function saveData() {
-    localStorage.setItem('policeData', JSON.stringify(data));
-    addLog('数据保存', '数据已保存');
+    try {
+        localStorage.setItem('policeData', JSON.stringify(data));
+    } catch(e) {
+        console.warn('数据保存失败:', e);
+    }
 }
 
 // 添加日志
@@ -817,7 +838,10 @@ function addLog(action, detail) {
         time: new Date().toLocaleString('zh-CN'),
         ip: '10.26.18.145'
     });
-    saveData();
+    // 限制日志数量，最多保留100条
+    if (data.logs.length > 100) {
+        data.logs = data.logs.slice(0, 100);
+    }
     renderLogTable();
 }
 
@@ -949,7 +973,7 @@ function deleteUser(account) {
         const index = data.users.findIndex(u => u.account === account);
         if (index > -1) {
             data.users.splice(index, 1);
-            saveData();
+            scheduleSave();
             renderSysTable();
         }
     }
@@ -1370,7 +1394,7 @@ function exportLog() {
 function clearLog() {
     if (confirm('确定要清空所有操作日志吗？')) {
         data.logs = [];
-        saveData();
+        scheduleSave();
         renderLogTable();
         showMsg('日志已清空');
     }
@@ -1508,7 +1532,7 @@ function saveForm() {
                 addLog('编辑账号', editId);
             }
         }
-        saveData();
+        scheduleSave();
         closeModal();
         showMsg("保存成功");
     } catch(e) {

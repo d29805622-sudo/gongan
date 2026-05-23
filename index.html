@@ -1820,8 +1820,16 @@ function addCase() {
         <div class="form-item"><label>案件编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="caseId"></div>
         <div class="form-item"><label>案件类别：</label><input type="text" class="input-text" id="caseType"></div>
         <div class="form-item"><label>涉案人员：</label><input type="text" class="input-text" id="casePerson"></div>
+        <div class="form-item"><label>案件状态：</label>
+            <select class="select-box" id="caseStatus">
+                <option>办理中</option>
+                <option>已结案</option>
+            </select>
+        </div>
+        <div class="form-item"><label>办案单位：</label><input type="text" class="input-text" id="caseInvestigator"></div>
         <div class="form-item"><label>办理进度：</label>
             <select class="select-box" id="caseProgress">
+                <option>立案</option>
                 <option>侦查取证</option>
                 <option>审查起诉</option>
                 <option>结案归档</option>
@@ -1838,11 +1846,19 @@ function editCase(id) {
             <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="caseId" value="${item.id}" readonly></div>
             <div class="form-item"><label>案件类别：</label><input type="text" class="input-text" id="caseType" value="${item.type}"></div>
             <div class="form-item"><label>涉案人员：</label><input type="text" class="input-text" id="casePerson" value="${item.person}"></div>
+            <div class="form-item"><label>案件状态：</label>
+                <select class="select-box" id="caseStatus">
+                    <option value="办理中" ${(item.caseStatus || item.progress) === '办理中' ? 'selected' : ''}>办理中</option>
+                    <option value="已结案" ${(item.caseStatus || item.progress) === '已结案' ? 'selected' : ''}>已结案</option>
+                </select>
+            </div>
+            <div class="form-item"><label>办案单位：</label><input type="text" class="input-text" id="caseInvestigator" value="${item.investigator || ''}"></div>
             <div class="form-item"><label>办理进度：</label>
                 <select class="select-box" id="caseProgress">
-                    <option ${item.progress==='侦查取证'?'selected':''}>侦查取证</option>
-                    <option ${item.progress==='审查起诉'?'selected':''}>审查起诉</option>
-                    <option ${item.progress==='结案归档'?'selected':''}>结案归档</option>
+                    <option ${item.progress === '立案' ? 'selected' : ''}>立案</option>
+                    <option ${item.progress === '侦查取证' ? 'selected' : ''}>侦查取证</option>
+                    <option ${item.progress === '审查起诉' ? 'selected' : ''}>审查起诉</option>
+                    <option ${item.progress === '结案归档' ? 'selected' : ''}>结案归档</option>
                 </select>
             </div>
         `);
@@ -1885,7 +1901,15 @@ function addPerson() {
                 <option>三级管控</option>
             </select>
         </div>
+        <div class="form-item"><label>风险等级：</label>
+            <select class="select-box" id="personRiskLevel">
+                <option>高风险</option>
+                <option>中风险</option>
+                <option>低风险</option>
+            </select>
+        </div>
         <div class="form-item"><label>居住地址：</label><input type="text" class="input-text" id="personAddress"></div>
+        <div class="form-item"><label>备注：</label><textarea class="input-text" id="personNotes" style="height:60px;"></textarea></div>
     `);
 }
 function editPerson(id) {
@@ -1904,7 +1928,15 @@ function editPerson(id) {
                     <option ${item.level==='三级管控'?'selected':''}>三级管控</option>
                 </select>
             </div>
+            <div class="form-item"><label>风险等级：</label>
+                <select class="select-box" id="personRiskLevel">
+                    <option ${(item.riskLevel || '')==='高风险'?'selected':''}>高风险</option>
+                    <option ${(item.riskLevel || '')==='中风险'?'selected':''}>中风险</option>
+                    <option ${(item.riskLevel || '')==='低风险'?'selected':''}>低风险</option>
+                </select>
+            </div>
             <div class="form-item"><label>居住地址：</label><input type="text" class="input-text" id="personAddress" value="${item.address}"></div>
+            <div class="form-item"><label>备注：</label><textarea class="input-text" id="personNotes" style="height:60px;">${item.notes || ''}</textarea></div>
         `);
     }
 }
@@ -1936,12 +1968,21 @@ function addCar() {
     currentModal = 'addCar';
     openModal('新增车辆信息', `
         <div class="form-item"><label>车牌号码 <span class="required">*</span>：</label><input type="text" class="input-text" id="carPlate"></div>
+        <div class="form-item"><label>品牌：</label><input type="text" class="input-text" id="carBrand"></div>
         <div class="form-item"><label>车辆类型：</label><input type="text" class="input-text" id="carType"></div>
+        <div class="form-item"><label>颜色：</label><input type="text" class="input-text" id="carColor"></div>
         <div class="form-item"><label>车主姓名：</label><input type="text" class="input-text" id="carOwner"></div>
         <div class="form-item"><label>登记状态：</label>
             <select class="select-box" id="carStatus">
                 <option>正常备案</option>
                 <option>重点布控</option>
+            </select>
+        </div>
+        <div class="form-item"><label>风险等级：</label>
+            <select class="select-box" id="carRiskLevel">
+                <option>高</option>
+                <option>中</option>
+                <option>低</option>
             </select>
         </div>
     `);
@@ -1953,12 +1994,21 @@ function editCar(plate) {
     if (item) {
         openModal('编辑车辆信息', `
             <div class="form-item"><label>车牌号码：</label><input type="text" class="input-text" id="carPlate" value="${item.plate}" readonly></div>
+            <div class="form-item"><label>品牌：</label><input type="text" class="input-text" id="carBrand" value="${item.brand || ''}"></div>
             <div class="form-item"><label>车辆类型：</label><input type="text" class="input-text" id="carType" value="${item.type}"></div>
+            <div class="form-item"><label>颜色：</label><input type="text" class="input-text" id="carColor" value="${item.color || ''}"></div>
             <div class="form-item"><label>车主姓名：</label><input type="text" class="input-text" id="carOwner" value="${item.owner}"></div>
             <div class="form-item"><label>登记状态：</label>
                 <select class="select-box" id="carStatus">
                     <option ${item.status==='正常备案'?'selected':''}>正常备案</option>
                     <option ${item.status==='重点布控'?'selected':''}>重点布控</option>
+                </select>
+            </div>
+            <div class="form-item"><label>风险等级：</label>
+                <select class="select-box" id="carRiskLevel">
+                    <option ${(item.riskLevel || '')==='高'?'selected':''}>高</option>
+                    <option ${(item.riskLevel || '')==='中'?'selected':''}>中</option>
+                    <option ${(item.riskLevel || '')==='低'?'selected':''}>低</option>
                 </select>
             </div>
         `);
@@ -1994,6 +2044,15 @@ function addGoods() {
         <div class="form-item"><label>物品编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="goodsId"></div>
         <div class="form-item"><label>物品名称：</label><input type="text" class="input-text" id="goodsName"></div>
         <div class="form-item"><label>数量：</label><input type="text" class="input-text" id="goodsCount"></div>
+        <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="goodsCaseId"></div>
+        <div class="form-item"><label>保管状态：</label>
+            <select class="select-box" id="goodsStatus">
+                <option>已登记</option>
+                <option>已封存</option>
+                <option>已移交</option>
+            </select>
+        </div>
+        <div class="form-item"><label>保管人：</label><input type="text" class="input-text" id="goodsKeeper"></div>
         <div class="form-item"><label>存放位置：</label><input type="text" class="input-text" id="goodsLocation"></div>
     `);
 }
@@ -2006,6 +2065,15 @@ function editGoods(id) {
             <div class="form-item"><label>物品编号：</label><input type="text" class="input-text" id="goodsId" value="${item.id}" readonly></div>
             <div class="form-item"><label>物品名称：</label><input type="text" class="input-text" id="goodsName" value="${item.name}"></div>
             <div class="form-item"><label>数量：</label><input type="text" class="input-text" id="goodsCount" value="${item.count}"></div>
+            <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="goodsCaseId" value="${item.caseId || ''}"></div>
+            <div class="form-item"><label>保管状态：</label>
+                <select class="select-box" id="goodsStatus">
+                    <option ${(item.status || '')==='已登记'?'selected':''}>已登记</option>
+                    <option ${(item.status || '')==='已封存'?'selected':''}>已封存</option>
+                    <option ${(item.status || '')==='已移交'?'selected':''}>已移交</option>
+                </select>
+            </div>
+            <div class="form-item"><label>保管人：</label><input type="text" class="input-text" id="goodsKeeper" value="${item.keeper || ''}"></div>
             <div class="form-item"><label>存放位置：</label><input type="text" class="input-text" id="goodsLocation" value="${item.location}"></div>
         `);
     }
@@ -2087,7 +2155,17 @@ function saveForm() {
             const id = document.getElementById('caseId').value;
             if (!id) { showMsg("请填写案件编号"); return; }
             const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
-            data.cases.unshift({id: id, type: document.getElementById('caseType').value || '其他', person: document.getElementById('casePerson').value || '未知', time: now, progress: document.getElementById('caseProgress').value});
+            data.cases.unshift({
+                id: id,
+                type: document.getElementById('caseType').value || '其他',
+                person: document.getElementById('casePerson').value || '未知',
+                time: now,
+                caseStatus: document.getElementById('caseStatus').value,
+                investigator: document.getElementById('caseInvestigator').value || '',
+                progress: document.getElementById('caseProgress').value,
+                evidence: [],
+                timeline: [now + ' 立案']
+            });
             renderCaseTable();
             addLog('新增案件', id);
         } else if (currentModal === 'editCase') {
@@ -2095,6 +2173,8 @@ function saveForm() {
             if (idx > -1) {
                 data.cases[idx].type = document.getElementById('caseType').value;
                 data.cases[idx].person = document.getElementById('casePerson').value;
+                data.cases[idx].caseStatus = document.getElementById('caseStatus').value;
+                data.cases[idx].investigator = document.getElementById('caseInvestigator').value;
                 data.cases[idx].progress = document.getElementById('caseProgress').value;
                 renderCaseTable();
                 addLog('编辑案件', editId);
@@ -2103,7 +2183,17 @@ function saveForm() {
             const id = document.getElementById('personId').value;
             const name = document.getElementById('personName').value;
             if (!id || !name) { showMsg("请填写完整信息"); return; }
-            data.persons.unshift({id: id, name: name, idCard: document.getElementById('personIdCard').value || '', level: document.getElementById('personLevel').value, address: document.getElementById('personAddress').value || ''});
+            data.persons.unshift({
+                id: id,
+                name: name,
+                idCard: document.getElementById('personIdCard').value || '',
+                level: document.getElementById('personLevel').value,
+                riskLevel: document.getElementById('personRiskLevel').value,
+                address: document.getElementById('personAddress').value || '',
+                notes: document.getElementById('personNotes').value || '',
+                relatedPersons: [],
+                trackRecords: []
+            });
             renderPersonTable();
             addLog('新增人员', name);
         } else if (currentModal === 'editPerson') {
@@ -2112,22 +2202,36 @@ function saveForm() {
                 data.persons[idx].name = document.getElementById('personName').value;
                 data.persons[idx].idCard = document.getElementById('personIdCard').value;
                 data.persons[idx].level = document.getElementById('personLevel').value;
+                data.persons[idx].riskLevel = document.getElementById('personRiskLevel').value;
                 data.persons[idx].address = document.getElementById('personAddress').value;
+                data.persons[idx].notes = document.getElementById('personNotes').value;
                 renderPersonTable();
                 addLog('编辑人员', editId);
             }
         } else if (currentModal === 'addCar') {
             const plate = document.getElementById('carPlate').value;
             if (!plate) { showMsg("请填写车牌号码"); return; }
-            data.cars.unshift({plate: plate, type: document.getElementById('carType').value || '小型轿车', owner: document.getElementById('carOwner').value || '未知', status: document.getElementById('carStatus').value});
+            data.cars.unshift({
+                plate: plate,
+                brand: document.getElementById('carBrand').value || '',
+                type: document.getElementById('carType').value || '小型轿车',
+                color: document.getElementById('carColor').value || '',
+                owner: document.getElementById('carOwner').value || '未知',
+                status: document.getElementById('carStatus').value,
+                riskLevel: document.getElementById('carRiskLevel').value,
+                trackRecords: []
+            });
             renderCarTable();
             addLog('新增车辆', plate);
         } else if (currentModal === 'editCar') {
             const idx = data.cars.findIndex(c => c.plate === editId);
             if (idx > -1) {
+                data.cars[idx].brand = document.getElementById('carBrand').value;
                 data.cars[idx].type = document.getElementById('carType').value;
+                data.cars[idx].color = document.getElementById('carColor').value;
                 data.cars[idx].owner = document.getElementById('carOwner').value;
                 data.cars[idx].status = document.getElementById('carStatus').value;
+                data.cars[idx].riskLevel = document.getElementById('carRiskLevel').value;
                 renderCarTable();
                 addLog('编辑车辆', editId);
             }
@@ -2135,7 +2239,19 @@ function saveForm() {
             const id = document.getElementById('goodsId').value;
             if (!id) { showMsg("请填写物品编号"); return; }
             const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
-            data.goods.unshift({id: id, name: document.getElementById('goodsName').value || '未知', count: document.getElementById('goodsCount').value || '1', time: now, location: document.getElementById('goodsLocation').value || '物证保管室'});
+            const nowTime = new Date().toLocaleTimeString('zh-CN');
+            data.goods.unshift({
+                id: id,
+                name: document.getElementById('goodsName').value || '未知',
+                count: document.getElementById('goodsCount').value || '1',
+                caseId: document.getElementById('goodsCaseId').value || '',
+                status: document.getElementById('goodsStatus').value,
+                keeper: document.getElementById('goodsKeeper').value || '',
+                time: now,
+                inTime: now + ' ' + nowTime,
+                outTime: '',
+                location: document.getElementById('goodsLocation').value || '物证保管室'
+            });
             renderGoodsTable();
             addLog('新增物品', id);
         } else if (currentModal === 'editGoods') {
@@ -2143,6 +2259,9 @@ function saveForm() {
             if (idx > -1) {
                 data.goods[idx].name = document.getElementById('goodsName').value;
                 data.goods[idx].count = document.getElementById('goodsCount').value;
+                data.goods[idx].caseId = document.getElementById('goodsCaseId').value;
+                data.goods[idx].status = document.getElementById('goodsStatus').value;
+                data.goods[idx].keeper = document.getElementById('goodsKeeper').value;
                 data.goods[idx].location = document.getElementById('goodsLocation').value;
                 renderGoodsTable();
                 addLog('编辑物品', editId);

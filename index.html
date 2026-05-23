@@ -1043,6 +1043,9 @@ function doLoginAction() {
         updateHeaderUserInfo();
         showMainSystem();
         showMsg('登录成功');
+        // 清空登录表单
+        document.getElementById('loginAccountInput').value = '';
+        document.getElementById('loginPasswordInput').value = '';
     } else {
         showMsg('账号或密码错误');
     }
@@ -1688,6 +1691,12 @@ window.onload = function(){
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
+        // 从data.users中同步最新的用户数据（包括会话信息）
+        const user = data.users.find(u => u.account === currentUser.account);
+        if (user) {
+            currentUser = {...user};
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
         // 如果当前登录用户已过期，强制退出
         if (currentUser && (checkUserExpire(currentUser) || currentUser.status === '已失效' || currentUser.status === '已禁用')) {
             currentUser = null;

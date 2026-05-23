@@ -722,6 +722,7 @@
                         <th>权限等级</th>
                         <th>账号状态</th>
                         <th>到期日期</th>
+                        <th>最后登录时间</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -789,9 +790,9 @@ let data = {
         {account: 'police02', name: '执勤民警', action: '修改人员信息', time: '2026-05-18 10:02', ip: '10.26.18.156'}
     ],
     users: [
-        {account: 'admin', password: '123456', name: '超级管理员', role: '系统运维', level: '最高全权限', status: '正常启用'},
-        {account: 'police', password: '123456', name: '普通警员账号', role: '一线执勤', level: '查看+新增权限', status: '正常启用'},
-        {account: 'trainee', password: '123456', name: '实习账号', role: '实习人员', level: '仅查看权限', status: '临时开通'}
+        {account: 'admin', password: '123456', name: '超级管理员', role: '系统运维', level: '最高全权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'police', password: '123456', name: '普通警员账号', role: '一线执勤', level: '查看+新增权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'trainee', password: '123456', name: '实习账号', role: '实习人员', level: '仅查看权限', status: '临时开通', expireDate: '', currentSessionId: '', lastLoginTime: ''}
     ]
 };
 
@@ -962,6 +963,7 @@ function renderSysTable() {
             <td>${item.level}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
             <td>${item.expireDate || '-'}</td>
+            <td>${item.lastLoginTime || '-'}</td>
             <td>
                 <button class="btn btn-edit" onclick="editUser('${item.account}')">编辑</button>
                 <button class="btn btn-del" onclick="deleteUser('${item.account}')">删除</button>
@@ -994,9 +996,16 @@ function showLoginPage() {
 function showMainSystem() {
     document.getElementById('loginPage').classList.remove('active');
     document.getElementById('mainSystem').classList.add('active');
+    if (currentUser) {
+        startSessionCheck();
+    }
 }
 
 // 登录操作
+function generateSessionId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
 function doLoginAction() {
     const account = document.getElementById('loginAccountInput').value;
     const password = document.getElementById('loginPasswordInput').value;
@@ -1018,8 +1027,18 @@ function doLoginAction() {
             showMsg('此账号已被禁用，请联系管理员');
             return;
         }
-        currentUser = user;
-        localStorage.setItem('currentUser', JSON.stringify(user));
+        // 生成新的会话ID
+        const newSessionId = generateSessionId();
+        // 更新用户的会话信息
+        user.currentSessionId = newSessionId;
+        user.lastLoginTime = new Date().toLocaleString('zh-CN');
+        // 保存到currentUser
+        currentUser = {...user};
+        // 保存会话信息到localStorage
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        localStorage.setItem('sessionId', newSessionId);
+        // 保存数据
+        scheduleSave();
         addLog('系统登录', user.name + ' 登录系统');
         updateHeaderUserInfo();
         showMainSystem();
@@ -1031,9 +1050,43 @@ function doLoginAction() {
 
 function doLogout() {
     if (confirm('确定退出登录？')) {
+        // 清除用户会话
+        if (currentUser) {
+            const user = data.users.find(u => u.account === currentUser.account);
+            if (user) {
+                user.currentSessionId = '';
+                scheduleSave();
+            }
+        }
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('sessionId');
         location.reload();
     }
+}
+
+// 验证会话是否有效
+function validateSession() {
+    if (!currentUser) return false;
+    
+    const savedSessionId = localStorage.getItem('sessionId');
+    if (!savedSessionId) return false;
+    
+    const user = data.users.find(u => u.account === currentUser.account);
+    if (!user) return false;
+    
+    // 检查会话ID是否匹配
+    return user.currentSessionId === savedSessionId;
+}
+
+// 强制退出
+function forceLogout() {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('sessionId');
+    currentUser = null;
+    showMsg('此账号已在其他设备登录，当前登录已失效');
+    setTimeout(() => {
+        showLoginPage();
+    }, 1500);
 }
 
 function updateHeaderUserInfo() {
@@ -1558,7 +1611,9 @@ function saveForm() {
                 role: document.getElementById('userRole').value || '一线执勤',
                 level: document.getElementById('userLevel').value,
                 status: document.getElementById('userStatus').value,
-                expireDate: document.getElementById('userExpireDate').value || ''
+                expireDate: document.getElementById('userExpireDate').value || '',
+                currentSessionId: '',
+                lastLoginTime: ''
             });
             renderSysTable();
             addLog('新增账号', account);
@@ -1571,6 +1626,7 @@ function saveForm() {
                 data.users[idx].level = document.getElementById('userLevel').value;
                 data.users[idx].status = document.getElementById('userStatus').value;
                 data.users[idx].expireDate = document.getElementById('userExpireDate').value || '';
+                // 保持原有会话信息
                 renderSysTable();
                 addLog('编辑账号', editId);
             }
@@ -1607,6 +1663,22 @@ setInterval(()=>{
     document.getElementById("nowTime").innerText = str;
 },1000);
 
+// 定期检查会话
+let sessionCheckInterval = null;
+function startSessionCheck() {
+    if (sessionCheckInterval) clearInterval(sessionCheckInterval);
+    sessionCheckInterval = setInterval(() => {
+        if (currentUser) {
+            loadData(); // 重新加载数据，检查是否有更新
+            if (!validateSession()) {
+                clearInterval(sessionCheckInterval);
+                sessionCheckInterval = null;
+                forceLogout();
+            }
+        }
+    }, 3000); // 每3秒检查一次
+}
+
 // 初始化
 window.onload = function(){
     loadData();
@@ -1620,12 +1692,19 @@ window.onload = function(){
         if (currentUser && (checkUserExpire(currentUser) || currentUser.status === '已失效' || currentUser.status === '已禁用')) {
             currentUser = null;
             localStorage.removeItem('currentUser');
+            localStorage.removeItem('sessionId');
+        } else if (currentUser && !validateSession()) {
+            // 会话验证失败，强制退出
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('sessionId');
         }
     }
     updateHeaderUserInfo();
     // 如果已登录，显示主系统；否则显示登录界面
     if (currentUser) {
         showMainSystem();
+        startSessionCheck();
     } else {
         showLoginPage();
     }

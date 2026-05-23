@@ -716,7 +716,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th>账号名称</th>
+                        <th>账号</th>
+                        <th>姓名</th>
                         <th>所属岗位</th>
                         <th>权限等级</th>
                         <th>账号状态</th>
@@ -935,9 +936,23 @@ function renderSysTable() {
             <td>${item.role}</td>
             <td>${item.level}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td><button class="btn btn-edit" onclick="editUser('${item.account}')">编辑</button></td>
+            <td>
+                <button class="btn btn-edit" onclick="editUser('${item.account}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteUser('${item.account}')">删除</button>
+            </td>
         </tr>
     `).join('');
+}
+
+function deleteUser(account) {
+    if (confirm('确定要删除账号"' + account + '"吗？')) {
+        const index = data.users.findIndex(u => u.account === account);
+        if (index > -1) {
+            data.users.splice(index, 1);
+            saveData();
+            renderSysTable();
+        }
+    }
 }
 
 // ==================== 登录系统 ====================

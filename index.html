@@ -721,6 +721,7 @@
                         <th>所属岗位</th>
                         <th>权限等级</th>
                         <th>账号状态</th>
+                        <th>到期日期</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -960,6 +961,7 @@ function renderSysTable() {
             <td>${item.role}</td>
             <td>${item.level}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${item.expireDate || '-'}</td>
             <td>
                 <button class="btn btn-edit" onclick="editUser('${item.account}')">编辑</button>
                 <button class="btn btn-del" onclick="deleteUser('${item.account}')">删除</button>
@@ -1004,8 +1006,18 @@ function doLoginAction() {
         return;
     }
     
+    checkAndUpdateExpiredUsers();
+    
     const user = data.users.find(u => u.account === account && u.password === password);
     if (user) {
+        if (checkUserExpire(user) || user.status === '已失效') {
+            showMsg('此账号已被变为失效，请重新启用后再试');
+            return;
+        }
+        if (user.status === '已禁用') {
+            showMsg('此账号已被禁用，请联系管理员');
+            return;
+        }
         currentUser = user;
         localStorage.setItem('currentUser', JSON.stringify(user));
         addLog('系统登录', user.name + ' 登录系统');
@@ -1038,6 +1050,31 @@ function updateHeaderUserInfo() {
 }
 
 // ==================== 账号管理 ====================
+function checkUserExpire(user) {
+    if (!user.expireDate || user.expireDate === '') {
+        return false;
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const expireDate = new Date(user.expireDate);
+    expireDate.setHours(0, 0, 0, 0);
+    return today > expireDate;
+}
+
+function checkAndUpdateExpiredUsers() {
+    let updated = false;
+    data.users.forEach(user => {
+        if (checkUserExpire(user) && user.status !== '已失效') {
+            user.status = '已失效';
+            updated = true;
+        }
+    });
+    if (updated) {
+        scheduleSave();
+        renderSysTable();
+    }
+}
+
 function openAddUserModal() {
     currentModal = 'addUser';
     openModal('新增账号', `
@@ -1057,8 +1094,10 @@ function openAddUserModal() {
                 <option>正常启用</option>
                 <option>临时开通</option>
                 <option>已禁用</option>
+                <option>已失效</option>
             </select>
         </div>
+        <div class="form-item"><label>到期日期（临时账号）：</label><input type="date" class="input-text" id="userExpireDate"></div>
     `);
 }
 
@@ -1084,8 +1123,10 @@ function editUser(account) {
                     <option ${user.status === '正常启用' ? 'selected' : ''}>正常启用</option>
                     <option ${user.status === '临时开通' ? 'selected' : ''}>临时开通</option>
                     <option ${user.status === '已禁用' ? 'selected' : ''}>已禁用</option>
+                    <option ${user.status === '已失效' ? 'selected' : ''}>已失效</option>
                 </select>
             </div>
+            <div class="form-item"><label>到期日期（临时账号）：</label><input type="date" class="input-text" id="userExpireDate" value="${user.expireDate || ''}"></div>
         `);
     }
 }
@@ -1516,7 +1557,8 @@ function saveForm() {
                 name: name,
                 role: document.getElementById('userRole').value || '一线执勤',
                 level: document.getElementById('userLevel').value,
-                status: document.getElementById('userStatus').value
+                status: document.getElementById('userStatus').value,
+                expireDate: document.getElementById('userExpireDate').value || ''
             });
             renderSysTable();
             addLog('新增账号', account);
@@ -1528,6 +1570,7 @@ function saveForm() {
                 data.users[idx].role = document.getElementById('userRole').value;
                 data.users[idx].level = document.getElementById('userLevel').value;
                 data.users[idx].status = document.getElementById('userStatus').value;
+                data.users[idx].expireDate = document.getElementById('userExpireDate').value || '';
                 renderSysTable();
                 addLog('编辑账号', editId);
             }
@@ -1567,10 +1610,17 @@ setInterval(()=>{
 // 初始化
 window.onload = function(){
     loadData();
+    // 检查并更新过期用户
+    checkAndUpdateExpiredUsers();
     // 检查登录状态
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
+        // 如果当前登录用户已过期，强制退出
+        if (currentUser && (checkUserExpire(currentUser) || currentUser.status === '已失效' || currentUser.status === '已禁用')) {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+        }
     }
     updateHeaderUserInfo();
     // 如果已登录，显示主系统；否则显示登录界面

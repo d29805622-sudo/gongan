@@ -980,22 +980,8 @@ function doLoginAction() {
 
 function doLogout() {
     if (confirm('确定退出登录？')) {
-        const userName = currentUser ? currentUser.name : '用户';
-        addLog('系统退出', userName + ' 退出系统');
-        currentUser = null;
         localStorage.removeItem('currentUser');
-        updateHeaderUserInfo();
-        
-        // 切换到登录页面
-        showLoginPage();
-        
-        // 清空登录表单
-        setTimeout(() => {
-            const accountInput = document.getElementById('loginAccountInput');
-            const passwordInput = document.getElementById('loginPasswordInput');
-            if (accountInput) accountInput.value = '';
-            if (passwordInput) passwordInput.value = '';
-        }, 100);
+        location.reload();
     }
 }
 

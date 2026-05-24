@@ -570,6 +570,101 @@
         .main-system.active{
             display:block;
         }
+        
+        /* 配置弹窗 */
+        .config-btn{
+            color:#fff;
+            cursor:pointer;
+            margin-left:15px;
+            opacity:0.8;
+        }
+        .config-btn:hover{
+            opacity:1;
+        }
+        .modal-overlay{
+            position:fixed;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:rgba(0,0,0,0.6);
+            display:none;
+            justify-content:center;
+            align-items:center;
+            z-index:9999;
+        }
+        .modal-overlay.active{
+            display:flex;
+        }
+        .modal{
+            background:#fff;
+            width:450px;
+            border-radius:5px;
+            overflow:hidden;
+        }
+        .modal-header{
+            background:#003366;
+            color:#fff;
+            padding:12px 20px;
+            font-size:14px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .modal-close{
+            cursor:pointer;
+            font-size:18px;
+        }
+        .modal-body{
+            padding:20px;
+        }
+        .form-group{
+            margin-bottom:15px;
+        }
+        .form-group label{
+            display:block;
+            margin-bottom:6px;
+            font-size:12px;
+            color:#333;
+        }
+        .form-group input{
+            width:100%;
+            padding:8px 10px;
+            border:1px solid #ccc;
+            border-radius:3px;
+            font-size:12px;
+        }
+        .modal-footer{
+            padding:10px 20px;
+            border-top:1px solid #eee;
+            display:flex;
+            gap:10px;
+            justify-content:flex-end;
+        }
+        .btn{
+            padding:8px 20px;
+            border:none;
+            border-radius:3px;
+            cursor:pointer;
+            font-size:12px;
+        }
+        .btn-primary{
+            background:#003366;
+            color:#fff;
+        }
+        .btn-secondary{
+            background:#eee;
+            color:#333;
+        }
+        .btn-success{
+            background:#28a745;
+            color:#fff;
+        }
+        .sync-status{
+            font-size:11px;
+            color:#666;
+            margin-top:10px;
+        }
     </style>
 </head>
 <body>
@@ -613,15 +708,10 @@
         <div class="header-title">河北公安</div>
     </div>
     <div class="header-middle">
-        <span class="top-nav-item">综合管控</span>
-        <span class="top-nav-item">案件管理</span>
-        <span class="top-nav-item">人员管控</span>
-        <span class="top-nav-item">警情勤务</span>
-        <span class="top-nav-item">数据审计</span>
-        <span class="top-nav-item">系统权限</span>
     </div>
     <div class="header-right">
         <span id="headerUserInfo"></span>
+        <span class="config-btn" onclick="openConfigModal()">设置</span>
         <span class="logout-btn" id="logoutBtn" style="display:none" onclick="doLogout()">退出登录</span>
     </div>
 </div>

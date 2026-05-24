@@ -5,6 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>公安内网｜综合警务管理系统｜涉密专用</title>
+    <script>
+        // 阻止开发者工具
+        (function() {
+            // 禁止右键菜单
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+
+            // 禁止F12、Ctrl+Shift+I、Ctrl+Shift+J、Ctrl+U
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12') {
+                    e.preventDefault();
+                    return false;
+                }
+                if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) {
+                    e.preventDefault();
+                    return false;
+                }
+                if (e.ctrlKey && e.key === 'u') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // 检测开发者工具打开
+            var devtools = {
+                open: false,
+                orientation: null
+            };
+            var threshold = 160;
+            setInterval(function() {
+                var widthThreshold = window.outerWidth - window.innerWidth > threshold;
+                var heightThreshold = window.outerHeight - window.innerHeight > threshold;
+                var orientation = widthThreshold ? 'vertical' : 'horizontal';
+
+                if (!(heightThreshold && widthThreshold) &&
+                    ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
+                     widthThreshold || heightThreshold)) {
+                    if (!devtools.open || devtools.orientation !== orientation) {
+                        devtools.open = true;
+                        devtools.orientation = orientation;
+                        alert('请关闭开发者工具！');
+                        window.location.reload();
+                    }
+                } else {
+                    devtools.open = false;
+                    devtools.orientation = null;
+                }
+            }, 1000);
+        })();
+    </script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
         body{

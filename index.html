@@ -2821,5 +2821,85 @@ document.getElementById('loginAccountInput').addEventListener('keypress', functi
     }
 });
 </script>
+
+<!-- 配置弹窗 -->
+<div class="modal-overlay" id="configModal">
+    <div class="modal">
+        <div class="modal-header">
+            <span>Gist 同步配置</span>
+            <span class="modal-close" onclick="closeConfigModal()">×</span>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>GitHub Token</label>
+                <input type="password" id="configToken" placeholder="输入你的 GitHub Token">
+            </div>
+            <div class="form-group">
+                <label>Gist ID</label>
+                <input type="text" id="configGistId" placeholder="输入 Gist ID（如：9d615971b87057c6d10fdcd19141892e）">
+            </div>
+            <div class="sync-status" id="syncStatus">当前未配置 Gist 同步</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="syncNow()">立即同步</button>
+            <button class="btn btn-primary" onclick="saveConfig()">保存配置</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// 配置弹窗函数
+function openConfigModal() {
+    const config = getGistConfig();
+    document.getElementById('configToken').value = config.token;
+    document.getElementById('configGistId').value = config.gistId;
+    updateSyncStatus();
+    document.getElementById('configModal').classList.add('active');
+}
+
+function closeConfigModal() {
+    document.getElementById('configModal').classList.remove('active');
+}
+
+function saveConfig() {
+    const config = {
+        token: document.getElementById('configToken').value.trim(),
+        gistId: document.getElementById('configGistId').value.trim(),
+        filename: 'police_data.json'
+    };
+    setGistConfig(config);
+    GIST_CONFIG = config;
+    updateSyncStatus();
+    showMsg('配置已保存');
+    closeConfigModal();
+}
+
+function updateSyncStatus() {
+    const config = getGistConfig();
+    const status = document.getElementById('syncStatus');
+    if (config.token && config.gistId) {
+        status.textContent = '✓ 已配置 Gist 同步';
+        status.style.color = 'green';
+    } else {
+        status.textContent = '当前未配置 Gist 同步';
+        status.style.color = '#666';
+    }
+}
+
+async function syncNow() {
+    const config = getGistConfig();
+    if (!config.token || !config.gistId) {
+        showMsg('请先配置 Gist');
+        return;
+    }
+    showMsg('正在同步...');
+    const success = await saveDataToGist();
+    if (success) {
+        showMsg('同步成功');
+    } else {
+        showMsg('同步失败，请检查配置');
+    }
+}
+</script>
 </body>
 </html>

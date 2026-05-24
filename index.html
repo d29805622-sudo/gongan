@@ -3182,6 +3182,12 @@ document.getElementById('loginAccountInput').addEventListener('keypress', functi
                 <br><small style="color:#666;">导出后复制到其他设备导入即可同步数据</small>
             </div>
             
+            <div style="background:#fff3e0;padding:10px;border-radius:5px;margin-bottom:15px;font-size:12px;">
+                <b>账号导出（发给开发者）：</b><br>
+                <button class="btn btn-secondary" onclick="exportUsers()" style="margin-top:8px;">📋 导出所有账号</button>
+                <br><small style="color:#666;">导出后发给开发者，帮你预置账号到系统里</small>
+            </div>
+            
             <div class="sync-status" id="syncStatus">当前未配置云端同步</div>
         </div>
         <div class="modal-footer">
@@ -3363,6 +3369,35 @@ function importSyncId() {
         reader.readAsText(file);
     };
     input.click();
+}
+
+// 导出所有账号
+function exportUsers() {
+    const exportData = {
+        type: 'police_system_users',
+        version: '1.0',
+        timestamp: new Date().toISOString(),
+        users: data.users.map(u => ({
+            account: u.account,
+            password: u.password,
+            name: u.name,
+            role: u.role,
+            level: u.level,
+            status: u.status,
+            expireDate: u.expireDate || ''
+        }))
+    };
+    
+    const jsonStr = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonStr], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'police_users_' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showMsg('账号已导出，共 ' + data.users.length + ' 个账号');
 }
 
 function updateSyncStatus() {

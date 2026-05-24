@@ -1124,61 +1124,128 @@ let originalData = {
 };
 
 // 从localStorage加载数据
-function loadData() {
-    const saved = localStorage.getItem('policeData');
-    const savedVersion = localStorage.getItem('policeDataVersion');
-    const currentVersion = '4.1'; // 版本号，确保数据结构更新时递增
+// GitHub Gist 配置
+const GIST_CONFIG = {
+    token: '', // 填入你的 GitHub Token
+    gistId: '', // 填入你的 Gist ID
+    filename: 'police_data.json'
+};
+
+// 从 Gist 加载数据
+async function loadDataFromGist() {
+    if (!GIST_CONFIG.token || !GIST_CONFIG.gistId) return false;
     
-    if (saved && savedVersion === currentVersion) {
-        try {
-            const loadedData = JSON.parse(saved);
-            // 合并数据，确保新字段存在
-            data.events = loadedData.events || data.events;
-            data.alarms = loadedData.alarms || data.alarms;
-            data.cases = (loadedData.cases || data.cases).map(c => ({
-                ...c,
-                caseStatus: c.caseStatus || c.progress || '办理中',
-                investigator: c.investigator || '',
-                evidence: c.evidence || [],
-                timeline: c.timeline || []
-            }));
-            data.persons = (loadedData.persons || data.persons).map(p => ({
-                ...p,
-                riskLevel: p.riskLevel || '中风险',
-                notes: p.notes || '',
-                relatedPersons: p.relatedPersons || [],
-                trackRecords: p.trackRecords || []
-            }));
-            data.cars = (loadedData.cars || data.cars).map(c => ({
-                ...c,
-                brand: c.brand || '',
-                color: c.color || '',
-                riskLevel: c.riskLevel || '中',
-                trackRecords: c.trackRecords || []
-            }));
-            data.goods = (loadedData.goods || data.goods).map(g => ({
-                ...g,
-                caseId: g.caseId || '',
-                status: g.status || '已登记',
-                keeper: g.keeper || '',
-                inTime: g.inTime || '',
-                outTime: g.outTime || ''
-            }));
-            data.logs = loadedData.logs || data.logs;
-            data.users = loadedData.users || data.users;
-            data.statistics = loadedData.statistics || data.statistics;
-            data.supervision = loadedData.supervision || data.supervision;
-        } catch(e) {
-            console.warn('数据加载失败，使用默认数据:', e);
+    try {
+        const response = await fetch(`https://api.github.com/gists/${GIST_CONFIG.gistId}`, {
+            headers: { 'Authorization': `Bearer ${GIST_CONFIG.token}` }
+        });
+        
+        if (response.ok) {
+            const gist = await response.json();
+            const content = gist.files[GIST_CONFIG.filename]?.content;
+            if (content) {
+                const loadedData = JSON.parse(content);
+                return loadedData;
+            }
         }
-    } else {
-        // 版本不匹配或没有数据，使用默认数据
-        if (saved) {
+    } catch (e) {
+        console.warn('从 Gist 加载失败:', e);
+    }
+    return false;
+}
+
+// 保存数据到 Gist
+async function saveDataToGist() {
+    if (!GIST_CONFIG.token || !GIST_CONFIG.gistId) return false;
+    
+    try {
+        const response = await fetch(`https://api.github.com/gists/${GIST_CONFIG.gistId}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${GIST_CONFIG.token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                files: {
+                    [GIST_CONFIG.filename]: {
+                        content: JSON.stringify(data, null, 2)
+                    }
+                }
+            })
+        });
+        return response.ok;
+    } catch (e) {
+        console.warn('保存到 Gist 失败:', e);
+        return false;
+    }
+}
+
+async function loadData() {
+    let loadedData = null;
+    
+    // 优先从 Gist 加载
+    if (GIST_CONFIG.token && GIST_CONFIG.gistId) {
+        loadedData = await loadDataFromGist();
+    }
+    
+    // 如果 Gist 没有，从 localStorage 加载
+    if (!loadedData) {
+        const saved = localStorage.getItem('policeData');
+        const savedVersion = localStorage.getItem('policeDataVersion');
+        const currentVersion = '4.1';
+        
+        if (saved && savedVersion === currentVersion) {
+            try {
+                loadedData = JSON.parse(saved);
+            } catch(e) {
+                console.warn('从localStorage加载失败:', e);
+            }
+        } else if (saved) {
             console.log('数据版本不匹配，使用默认数据');
             localStorage.setItem('policeDataVersion', currentVersion);
             saveData();
         }
     }
+    
+    // 加载数据
+    if (loadedData) {
+        data.events = loadedData.events || data.events;
+        data.alarms = loadedData.alarms || data.alarms;
+        data.cases = (loadedData.cases || data.cases).map(c => ({
+            ...c,
+            caseStatus: c.caseStatus || c.progress || '办理中',
+            investigator: c.investigator || '',
+            evidence: c.evidence || [],
+            timeline: c.timeline || []
+        }));
+        data.persons = (loadedData.persons || data.persons).map(p => ({
+            ...p,
+            riskLevel: p.riskLevel || '中风险',
+            notes: p.notes || '',
+            relatedPersons: p.relatedPersons || [],
+            trackRecords: p.trackRecords || []
+        }));
+        data.cars = (loadedData.cars || data.cars).map(c => ({
+            ...c,
+            brand: c.brand || '',
+            color: c.color || '',
+            riskLevel: c.riskLevel || '中',
+            trackRecords: c.trackRecords || []
+        }));
+        data.goods = (loadedData.goods || data.goods).map(g => ({
+            ...g,
+            caseId: g.caseId || '',
+            status: g.status || '已登记',
+            keeper: g.keeper || '',
+            inTime: g.inTime || '',
+            outTime: g.outTime || ''
+        }));
+        data.logs = loadedData.logs || data.logs;
+        data.users = loadedData.users || data.users;
+        data.statistics = loadedData.statistics || data.statistics;
+        data.supervision = loadedData.supervision || data.supervision;
+    }
+    
     // 备份原始数据
     backupOriginalData();
 }
@@ -1213,11 +1280,14 @@ function scheduleSave() {
     }
 }
 
-// 保存数据到localStorage
+// 保存数据到localStorage和Gist
 function saveData() {
     try {
         localStorage.setItem('policeData', JSON.stringify(data));
         localStorage.setItem('policeDataVersion', '4.1'); // 同步保存版本号
+        
+        // 同时保存到 Gist
+        saveDataToGist();
     } catch(e) {
         console.warn('数据保存失败:', e);
     }
@@ -2458,8 +2528,8 @@ function startSessionCheck() {
 }
 
 // 初始化
-window.onload = function(){
-    loadData();
+window.onload = async function(){
+    await loadData();
     // 检查并更新过期用户
     checkAndUpdateExpiredUsers();
     // 检查登录状态

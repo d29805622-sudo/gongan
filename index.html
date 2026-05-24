@@ -1124,12 +1124,22 @@ let originalData = {
 };
 
 // 从localStorage加载数据
-// GitHub Gist 配置
-const GIST_CONFIG = {
-    token: '', // 填入你的 GitHub Token
-    gistId: '', // 填入你的 Gist ID
-    filename: 'police_data.json'
-};
+// GitHub Gist 配置（从 localStorage 读取）
+function getGistConfig() {
+    const saved = localStorage.getItem('gistConfig');
+    return saved ? JSON.parse(saved) : {
+        token: '',
+        gistId: '',
+        filename: 'police_data.json'
+    };
+}
+
+function setGistConfig(config) {
+    localStorage.setItem('gistConfig', JSON.stringify(config));
+}
+
+// 使用时获取配置
+let GIST_CONFIG = getGistConfig();
 
 // 从 Gist 加载数据
 async function loadDataFromGist() {

@@ -579,7 +579,7 @@
         <div class="login-box">
             <div class="login-header">
                 <img class="gov-icon" src="logo.png" alt="警徽">
-                <h1>河北省总公安局</h1>
+                <h1>河北公安</h1>
                 <p>涉密专用 · 内网专用</p>
             </div>
             <div class="login-body">
@@ -609,7 +609,7 @@
 <div class="top-header">
     <div class="header-left">
         <img class="gov-icon" src="logo.png" alt="警徽">
-        <div class="header-title">河北省总公安局</div>
+        <div class="header-title">河北公安</div>
     </div>
     <div class="header-middle">
         <span class="top-nav-item">综合管控</span>
@@ -1031,7 +1031,32 @@
 </div>
 </div>
 
+<!-- Supabase JS Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// Supabase配置 - 需要用户提供自己的项目URL和API密钥
+const SUPABASE_URL = 'https://thdbtwdlywlvvorwanbu.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_TV9i7jH5lmgfobKM24sSaw_ZJLR1lss'; // 注意：这里需要用户提供自己的正确API密钥
+
+// 初始化Supabase客户端
+let supabase = null;
+try {
+    if (typeof window !== 'undefined' && window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('Supabase客户端初始化成功');
+    }
+} catch (e) {
+    console.warn('Supabase初始化失败，将使用本地存储模式:', e);
+}
+
+// 检查Supabase是否可用
+function isSupabaseAvailable() {
+    return supabase !== null;
+}
+
+// 使用Supabase的标志
+let USE_SUPABASE = isSupabaseAvailable();
+
 // 数据存储
 let data = {
     events: [
@@ -1122,8 +1147,113 @@ let originalData = {
     users: [...data.users]
 };
 
+// 从Supabase加载数据
+async function loadDataFromSupabase() {
+    if (!USE_SUPABASE || !supabase) {
+        return false;
+    }
+    
+    try {
+        console.log('正在从Supabase加载数据...');
+        
+        // 从police_data表加载所有数据
+        const { data: dbData, error } = await supabase
+            .from('police_data')
+            .select('*')
+            .order('updated_at', { ascending: false })
+            .limit(1);
+        
+        if (error) {
+            console.warn('从Supabase加载数据失败:', error);
+            return false;
+        }
+        
+        if (dbData && dbData.length > 0) {
+            const loadedData = dbData[0].data;
+            if (loadedData) {
+                // 合并数据，确保新字段存在
+                data.events = loadedData.events || data.events;
+                data.alarms = loadedData.alarms || data.alarms;
+                data.cases = (loadedData.cases || data.cases).map(c => ({
+                    ...c,
+                    caseStatus: c.caseStatus || c.progress || '办理中',
+                    investigator: c.investigator || '',
+                    evidence: c.evidence || [],
+                    timeline: c.timeline || []
+                }));
+                data.persons = (loadedData.persons || data.persons).map(p => ({
+                    ...p,
+                    riskLevel: p.riskLevel || '中风险',
+                    notes: p.notes || '',
+                    relatedPersons: p.relatedPersons || [],
+                    trackRecords: p.trackRecords || []
+                }));
+                data.cars = (loadedData.cars || data.cars).map(c => ({
+                    ...c,
+                    brand: c.brand || '',
+                    color: c.color || '',
+                    riskLevel: c.riskLevel || '中',
+                    trackRecords: c.trackRecords || []
+                }));
+                data.goods = (loadedData.goods || data.goods).map(g => ({
+                    ...g,
+                    caseId: g.caseId || '',
+                    status: g.status || '已登记',
+                    keeper: g.keeper || '',
+                    inTime: g.inTime || '',
+                    outTime: g.outTime || ''
+                }));
+                data.logs = loadedData.logs || data.logs;
+                data.users = loadedData.users || data.users;
+                data.statistics = loadedData.statistics || data.statistics;
+                data.supervision = loadedData.supervision || data.supervision;
+                
+                console.log('从Supabase加载数据成功');
+                return true;
+            }
+        }
+    } catch (e) {
+        console.warn('从Supabase加载数据异常:', e);
+    }
+    
+    return false;
+}
+
+// 保存数据到Supabase
+async function saveDataToSupabase() {
+    if (!USE_SUPABASE || !supabase) {
+        return false;
+    }
+    
+    try {
+        console.log('正在保存数据到Supabase...');
+        
+        // 先尝试更新，如果不存在则插入
+        const { error } = await supabase
+            .from('police_data')
+            .upsert({
+                id: 1, // 使用固定ID，确保只有一条记录
+                data: data,
+                updated_at: new Date().toISOString()
+            }, {
+                onConflict: 'id'
+            });
+        
+        if (error) {
+            console.warn('保存到Supabase失败:', error);
+            return false;
+        }
+        
+        console.log('保存到Supabase成功');
+        return true;
+    } catch (e) {
+        console.warn('保存到Supabase异常:', e);
+        return false;
+    }
+}
+
 // 从localStorage加载数据
-function loadData() {
+function loadDataFromLocalStorage() {
     const saved = localStorage.getItem('policeData');
     const savedVersion = localStorage.getItem('policeDataVersion');
     const currentVersion = '4.1'; // 版本号，确保数据结构更新时递增
@@ -1167,17 +1297,39 @@ function loadData() {
             data.users = loadedData.users || data.users;
             data.statistics = loadedData.statistics || data.statistics;
             data.supervision = loadedData.supervision || data.supervision;
+            return true;
         } catch(e) {
-            console.warn('数据加载失败，使用默认数据:', e);
-        }
-    } else {
-        // 版本不匹配或没有数据，使用默认数据
-        if (saved) {
-            console.log('数据版本不匹配，使用默认数据');
-            localStorage.setItem('policeDataVersion', currentVersion);
-            saveData();
+            console.warn('从本地存储加载数据失败，使用默认数据:', e);
         }
     }
+    return false;
+}
+
+// 加载数据（优先从Supabase，失败则从本地存储）
+async function loadData() {
+    let loaded = false;
+    
+    // 尝试从Supabase加载
+    if (USE_SUPABASE) {
+        loaded = await loadDataFromSupabase();
+    }
+    
+    // 如果Supabase加载失败，尝试从本地存储加载
+    if (!loaded) {
+        loaded = loadDataFromLocalStorage();
+        
+        // 如果本地存储也没有，使用默认数据并保存到Supabase
+        if (!loaded && USE_SUPABASE) {
+            const saved = localStorage.getItem('policeData');
+            const savedVersion = localStorage.getItem('policeDataVersion');
+            const currentVersion = '4.1';
+            if (saved) {
+                localStorage.setItem('policeDataVersion', currentVersion);
+                await saveDataToSupabase();
+            }
+        }
+    }
+    
     // 备份原始数据
     backupOriginalData();
 }
@@ -1202,9 +1354,9 @@ let saveTimer = null;
 function scheduleSave() {
     needSave = true;
     if (!saveTimer) {
-        saveTimer = setTimeout(() => {
+        saveTimer = setTimeout(async () => {
             if (needSave) {
-                saveData();
+                await saveData();
                 needSave = false;
             }
             saveTimer = null;
@@ -1212,11 +1364,17 @@ function scheduleSave() {
     }
 }
 
-// 保存数据到localStorage
-function saveData() {
+// 保存数据（同时保存到localStorage和Supabase）
+async function saveData() {
     try {
+        // 保存到本地存储
         localStorage.setItem('policeData', JSON.stringify(data));
         localStorage.setItem('policeDataVersion', '4.1'); // 同步保存版本号
+        
+        // 尝试保存到Supabase
+        if (USE_SUPABASE) {
+            await saveDataToSupabase();
+        }
     } catch(e) {
         console.warn('数据保存失败:', e);
     }
@@ -1538,7 +1696,7 @@ function updateHeaderUserInfo() {
     const logoutBtn = document.getElementById('logoutBtn');
     
     if (currentUser) {
-        userInfo.innerHTML = `登录账号：${currentUser.name}｜所属单位：河北省总公安局指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>`;
+        userInfo.innerHTML = `登录账号：${currentUser.name}｜所属单位：河北省公安厅指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>`;
         logoutBtn.style.display = 'inline';
     } else {
         userInfo.innerHTML = '';
@@ -2457,10 +2615,13 @@ function startSessionCheck() {
 }
 
 // 初始化
-window.onload = function(){
-    loadData();
+window.onload = async function(){
+    // 加载数据
+    await loadData();
+    
     // 检查并更新过期用户
     checkAndUpdateExpiredUsers();
+    
     // 检查登录状态
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
@@ -2483,7 +2644,9 @@ window.onload = function(){
             localStorage.removeItem('sessionId');
         }
     }
+    
     updateHeaderUserInfo();
+    
     // 如果已登录，显示主系统；否则显示登录界面
     if (currentUser) {
         showMainSystem();
@@ -2491,6 +2654,7 @@ window.onload = function(){
     } else {
         showLoginPage();
     }
+    
     renderHomeTable();
     renderAlarmTable();
     renderCaseTable();

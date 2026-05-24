@@ -78,6 +78,24 @@
             margin-left:15px;
             cursor:pointer;
         }
+        .menu-toggle{
+            display:none;
+            width:40px;
+            height:40px;
+            background:none;
+            border:none;
+            cursor:pointer;
+            padding:8px;
+            margin-right:10px;
+        }
+        .menu-toggle span{
+            display:block;
+            width:100%;
+            height:3px;
+            background:#fff;
+            margin:6px 0;
+            border-radius:2px;
+        }
 
         /* 主体布局 */
         .main-wrap{
@@ -89,6 +107,16 @@
             width:220px;
             background:#203959;
             min-height:100%;
+        }
+        .left-menu-overlay{
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:rgba(0,0,0,0.5);
+            z-index:998;
         }
         .menu-first{
             padding:12px 20px;
@@ -665,6 +693,76 @@
             color:#666;
             margin-top:10px;
         }
+
+        /* 响应式 - 手机适配 */
+        @media screen and (max-width: 768px) {
+            .menu-toggle{
+                display:block;
+            }
+            .left-menu{
+                position:fixed;
+                left:-220px;
+                top:0;
+                bottom:0;
+                width:220px;
+                z-index:999;
+                transition:left 0.3s ease;
+                overflow-y:auto;
+            }
+            .left-menu.active{
+                left:0;
+            }
+            .left-menu-overlay.active{
+                display:block;
+            }
+            .top-header{
+                padding:0 15px;
+            }
+            .header-title{
+                font-size:15px;
+            }
+            .header-right{
+                font-size:11px;
+            }
+            .content-wrap{
+                padding:15px;
+            }
+            .search-bar{
+                padding:12px;
+                display:flex;
+                flex-direction:column;
+                gap:8px;
+            }
+            .input-text{
+                width:100%;
+            }
+            .select-box{
+                width:100%;
+                margin:0;
+            }
+            .search-bar .btn{
+                width:100%;
+                margin:2px 0;
+            }
+            table{
+                font-size:11px;
+            }
+            th,td{
+                padding:6px 3px;
+                white-space:nowrap;
+            }
+            .stat-cards,.stat-rows{
+                flex-direction:column;
+            }
+            .modal-box{
+                width:95%;
+                left:2.5%;
+                transform:none;
+            }
+            .modal-content{
+                padding:15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -703,6 +801,11 @@
     </div>
 
 <div class="top-header">
+    <button class="menu-toggle" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
     <div class="header-left">
         <img class="gov-icon" src="logo.png" alt="警徽">
         <div class="header-title">河北公安</div>
@@ -716,8 +819,10 @@
     </div>
 </div>
 
+<div class="left-menu-overlay" onclick="toggleMenu()"></div>
+
 <div class="main-wrap">
-    <div class="left-menu">
+    <div class="left-menu" id="leftMenu">
         <div class="menu-first">综合业务管理</div>
         <div class="menu-second active" onclick="switchPage('home')">综合工作台</div>
         <div class="menu-second" onclick="switchPage('alarm')">110接警管理</div>
@@ -2848,6 +2953,25 @@ document.getElementById('loginAccountInput').addEventListener('keypress', functi
 </div>
 
 <script>
+// 侧边栏切换
+function toggleMenu() {
+    document.getElementById('leftMenu').classList.toggle('active');
+    document.querySelector('.left-menu-overlay').classList.toggle('active');
+}
+
+// 点击菜单项后自动关闭
+function switchPage(id) {
+    document.querySelectorAll('.menu-second').forEach(v=>v.classList.remove('active'));
+    event.target.classList.add('active');
+    document.querySelectorAll('.page-content').forEach(v=>v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    
+    // 手机端自动关闭侧边栏
+    if (window.innerWidth <= 768) {
+        toggleMenu();
+    }
+}
+
 // 配置弹窗函数
 function openConfigModal() {
     const config = getGistConfig();

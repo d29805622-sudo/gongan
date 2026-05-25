@@ -1921,19 +1921,13 @@ function renderSysTable() {
     `).join('');
 }
 
-async function deleteUser(account) {
+function deleteUser(account) {
     if (confirm('确定要删除账号"' + account + '"吗？')) {
-        const user = data.users.find(u => u.account === account);
-        if (user && user.id) {
-            const result = await apiRequest('/api/users/' + user.id, 'DELETE');
-            if (result.success) {
-                showMsg('删除成功');
-                await loadDataFromAPI();
-                renderSysTable();
-                addLog('删除账号', account);
-            } else {
-                showMsg(result.message || '删除失败');
-            }
+        const index = data.users.findIndex(u => u.account === account);
+        if (index > -1) {
+            data.users.splice(index, 1);
+            scheduleSave();
+            renderSysTable();
         }
     }
 }
@@ -1963,6 +1957,46 @@ function generateSessionId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
+function doLoginAction() {
+    const account = document.getElementById('loginAccountInput').value;
+    const password = document.getElementById('loginPasswordInput').value;
+    
+    if (!account || !password) {
+        showMsg('请输入账号和密码');
+        return;
+    }
+    
+    checkAndUpdateExpiredUsers();
+    
+    const user = data.users.find(u => u.account === account && u.password === password);
+    if (user) {
+        if (checkUserExpire(user) || user.status === '已失效') {
+            showMsg('此账号已被变为失效，请重新启用后再试');
+            return;
+        }
+        if (user.status === '已禁用') {
+            showMsg('此账号已被禁用，请联系管理员');
+            return;
+        }
+        const newSessionId = generateSessionId();
+        user.currentSessionId = newSessionId;
+        user.lastLoginTime = new Date().toLocaleString('zh-CN');
+        currentUser = {...user};
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        localStorage.setItem('sessionId', newSessionId);
+        scheduleSave();
+        addLog('系统登录', user.name + ' 登录系统');
+        updateHeaderUserInfo();
+        showMainSystem();
+        showMsg('登录成功');
+        document.getElementById('loginAccountInput').value = '';
+        document.getElementById('loginPasswordInput').value = '';
+    } else {
+        showMsg('账号或密码错误');
+    }
+}
+
+/*
 async function doLoginAction() {
     const account = document.getElementById('loginAccountInput').value;
     const password = document.getElementById('loginPasswordInput').value;
@@ -1991,6 +2025,7 @@ async function doLoginAction() {
         showMsg(result.message || '登录失败');
     }
 }
+*/
 
 async function loadDataFromAPI() {
     const usersResult = await apiRequest('/api/users');
@@ -2728,7 +2763,7 @@ function clearLog() {
 }
 
 // 保存表单
-function saveForm() {
+async function saveForm() {
     try {
         if (currentModal === 'addEvent') {
             const code = document.getElementById('code').value;
@@ -2897,45 +2932,32 @@ function saveForm() {
             const password = document.getElementById('userPassword').value;
             const name = document.getElementById('userName').value;
             if (!account || !password || !name) { showMsg("请填写完整信息"); return; }
-            
-            const result = await apiRequest('/api/users', 'POST', {
-                account,
-                password,
-                name,
+            const exist = data.users.find(u => u.account === account);
+            if (exist) { showMsg("账号已存在"); return; }
+            data.users.unshift({
+                account: account,
+                password: password,
+                name: name,
                 role: document.getElementById('userRole').value || '一线执勤',
                 level: document.getElementById('userLevel').value,
                 status: document.getElementById('userStatus').value,
-                expireDate: document.getElementById('userExpireDate').value || ''
+                expireDate: document.getElementById('userExpireDate').value || '',
+                currentSessionId: '',
+                lastLoginTime: ''
             });
-            
-            if (result.success) {
-                showMsg('账号创建成功');
-                await loadDataFromAPI();
-                renderSysTable();
-                addLog('新增账号', account);
-            } else {
-                showMsg(result.message || '创建失败');
-            }
+            renderSysTable();
+            addLog('新增账号', account);
         } else if (currentModal === 'editUser') {
-            const user = data.users.find(u => u.account === editId);
-            if (!user) { showMsg('用户不存在'); return; }
-            
-            const result = await apiRequest('/api/users/' + user.id, 'PUT', {
-                password: document.getElementById('userPassword').value,
-                name: document.getElementById('userName').value,
-                role: document.getElementById('userRole').value,
-                level: document.getElementById('userLevel').value,
-                status: document.getElementById('userStatus').value,
-                expireDate: document.getElementById('userExpireDate').value || ''
-            });
-            
-            if (result.success) {
-                showMsg('账号更新成功');
-                await loadDataFromAPI();
+            const idx = data.users.findIndex(u => u.account === editId);
+            if (idx > -1) {
+                data.users[idx].password = document.getElementById('userPassword').value;
+                data.users[idx].name = document.getElementById('userName').value;
+                data.users[idx].role = document.getElementById('userRole').value;
+                data.users[idx].level = document.getElementById('userLevel').value;
+                data.users[idx].status = document.getElementById('userStatus').value;
+                data.users[idx].expireDate = document.getElementById('userExpireDate').value || '';
                 renderSysTable();
                 addLog('编辑账号', editId);
-            } else {
-                showMsg(result.message || '更新失败');
             }
         } else if (currentModal === 'addEvaluation') {
             const person = document.getElementById('evalPerson').value;

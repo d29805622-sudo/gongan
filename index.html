@@ -1505,27 +1505,7 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>和平社区</td>
-                        <td>王警官</td>
-                        <td>重点人员走访</td>
-                        <td>李某</td>
-                        <td>了解近期思想动态</td>
-                        <td><span class="stat-green">已完成</span></td>
-                        <td>2025-05-24</td>
-                        <td><button class="btn btn-edit">查看</button> <button class="btn btn-add">新增</button></td>
-                    </tr>
-                    <tr>
-                        <td>幸福社区</td>
-                        <td>张警官</td>
-                        <td>纠纷调解</td>
-                        <td>邻里纠纷</td>
-                        <td>噪音扰民问题调解</td>
-                        <td><span class="stat-orange">进行中</span></td>
-                        <td>2025-05-25</td>
-                        <td><button class="btn btn-edit">查看</button></td>
-                    </tr>
+                <tbody id="communityTableBody">
                 </tbody>
             </table>
         </div>
@@ -1534,16 +1514,16 @@
         <div class="page-content" id="patrol">
             <div class="title-txt">智慧巡逻防控平台</div>
             <div class="search-bar">
-                <input type="text" class="input-text" placeholder="巡逻编号">
-                <select class="select-box">
+                <input type="text" class="input-text" id="patrolSearch" placeholder="巡逻编号">
+                <select class="select-box" id="patrolStatusFilter">
                     <option>全部状态</option>
                     <option>巡逻中</option>
                     <option>已结束</option>
                 </select>
-                <button class="btn btn-search">查询</button>
-                <button class="btn btn-add">新建巡逻</button>
+                <button class="btn btn-search" onclick="searchPatrol()">查询</button>
+                <button class="btn btn-add" onclick="addPatrol()">新建巡逻</button>
             </div>
-            <table>
+            <table id="patrolTable">
                 <thead>
                     <tr>
                         <th>巡逻编号</th>
@@ -1556,27 +1536,7 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>XL20250525001</td>
-                        <td>商业中心</td>
-                        <td>巡逻一组</td>
-                        <td>步巡</td>
-                        <td>2025-05-25 08:00</td>
-                        <td><span class="stat-orange">巡逻中</span></td>
-                        <td>5</td>
-                        <td><button class="btn btn-edit">查看</button></td>
-                    </tr>
-                    <tr>
-                        <td>XL20250524002</td>
-                        <td>居民区</td>
-                        <td>巡逻二组</td>
-                        <td>车巡</td>
-                        <td>2025-05-24 20:00</td>
-                        <td><span class="stat-green">已结束</span></td>
-                        <td>8</td>
-                        <td><button class="btn btn-edit">查看</button></td>
-                    </tr>
+                <tbody id="patrolTableBody">
                 </tbody>
             </table>
         </div>
@@ -1585,17 +1545,17 @@
         <div class="page-content" id="record">
             <div class="title-txt">电子笔录制作系统</div>
             <div class="search-bar">
-                <input type="text" class="input-text" placeholder="案件编号">
-                <select class="select-box">
+                <input type="text" class="input-text" id="recordSearch" placeholder="案件编号">
+                <select class="select-box" id="recordTypeFilter">
                     <option>全部类型</option>
                     <option>询问笔录</option>
                     <option>讯问笔录</option>
                     <option>报案笔录</option>
                 </select>
-                <button class="btn btn-search">查询</button>
-                <button class="btn btn-add">新建笔录</button>
+                <button class="btn btn-search" onclick="searchRecord()">查询</button>
+                <button class="btn btn-add" onclick="addRecord()">新建笔录</button>
             </div>
-            <table>
+            <table id="recordTable">
                 <thead>
                     <tr>
                         <th>笔录编号</th>
@@ -1608,27 +1568,7 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>BL20250525001</td>
-                        <td>JA20250525001</td>
-                        <td>询问笔录</td>
-                        <td>证人王某</td>
-                        <td>李警官</td>
-                        <td><span class="stat-green">已完成</span></td>
-                        <td>2025-05-25</td>
-                        <td><button class="btn btn-edit">查看</button> <button class="btn btn-export">导出</button></td>
-                    </tr>
-                    <tr>
-                        <td>BL20250524002</td>
-                        <td>JA20250524002</td>
-                        <td>报案笔录</td>
-                        <td>报警人张某</td>
-                        <td>王警官</td>
-                        <td><span class="stat-orange">制作中</span></td>
-                        <td>2025-05-24</td>
-                        <td><button class="btn btn-edit">编辑</button></td>
-                    </tr>
+                <tbody id="recordTableBody">
                 </tbody>
             </table>
         </div>
@@ -1637,16 +1577,16 @@
         <div class="page-content" id="law">
             <div class="title-txt">执法监督管理平台</div>
             <div class="search-bar">
-                <input type="text" class="input-text" placeholder="案件编号">
-                <select class="select-box">
+                <input type="text" class="input-text" id="lawSearch" placeholder="案件编号">
+                <select class="select-box" id="lawStatusFilter">
                     <option>全部状态</option>
                     <option>正常</option>
                     <option>预警</option>
                     <option>异常</option>
                 </select>
-                <button class="btn btn-search">查询</button>
+                <button class="btn btn-search" onclick="searchLawSupervision()">查询</button>
             </div>
-            <table>
+            <table id="lawTable">
                 <thead>
                     <tr>
                         <th>案件编号</th>
@@ -1659,27 +1599,7 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>JA20250525001</td>
-                        <td>盗窃案件</td>
-                        <td>张警官</td>
-                        <td>30天</td>
-                        <td>25天</td>
-                        <td><span class="stat-blue">办理中</span></td>
-                        <td><span class="stat-green">正常</span></td>
-                        <td><button class="btn btn-edit">查看</button></td>
-                    </tr>
-                    <tr>
-                        <td>JA20250510002</td>
-                        <td>治安案件</td>
-                        <td>李警官</td>
-                        <td>7天</td>
-                        <td>1天</td>
-                        <td><span class="stat-blue">办理中</span></td>
-                        <td><span class="stat-orange">预警</span></td>
-                        <td><button class="btn btn-edit">督办</button></td>
-                    </tr>
+                <tbody id="lawTableBody">
                 </tbody>
             </table>
         </div>
@@ -1688,17 +1608,17 @@
         <div class="page-content" id="service">
             <div class="title-txt">便民服务大厅</div>
             <div class="search-bar">
-                <input type="text" class="input-text" placeholder="申请人/业务编号">
-                <select class="select-box">
+                <input type="text" class="input-text" id="serviceSearch" placeholder="申请人/业务编号">
+                <select class="select-box" id="serviceTypeFilter">
                     <option>全部业务</option>
                     <option>户籍业务</option>
                     <option>身份证业务</option>
                     <option>无犯罪记录</option>
                 </select>
-                <button class="btn btn-search">查询</button>
-                <button class="btn btn-add">新增业务</button>
+                <button class="btn btn-search" onclick="searchService()">查询</button>
+                <button class="btn btn-add" onclick="addService()">新增业务</button>
             </div>
-            <table>
+            <table id="serviceTable">
                 <thead>
                     <tr>
                         <th>业务编号</th>
@@ -1711,27 +1631,7 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>BW20250525001</td>
-                        <td>身份证补办</td>
-                        <td>赵某</td>
-                        <td>13800138001</td>
-                        <td>2025-05-25</td>
-                        <td><span class="stat-orange">办理中</span></td>
-                        <td>刘警官</td>
-                        <td><button class="btn btn-edit">查看</button> <button class="btn btn-success">办结</button></td>
-                    </tr>
-                    <tr>
-                        <td>BW20250524002</td>
-                        <td>户籍迁移</td>
-                        <td>孙某</td>
-                        <td>13900139002</td>
-                        <td>2025-05-24</td>
-                        <td><span class="stat-green">已办结</span></td>
-                        <td>王警官</td>
-                        <td><button class="btn btn-edit">查看</button></td>
-                    </tr>
+                <tbody id="serviceTableBody">
                 </tbody>
             </table>
         </div>
@@ -1740,17 +1640,17 @@
         <div class="page-content" id="traffic">
             <div class="title-txt">交通管理服务平台</div>
             <div class="search-bar">
-                <input type="text" class="input-text" placeholder="车牌号码">
-                <select class="select-box">
+                <input type="text" class="input-text" id="trafficSearch" placeholder="车牌号码">
+                <select class="select-box" id="trafficTypeFilter">
                     <option>全部类型</option>
                     <option>违法处理</option>
                     <option>事故处理</option>
                     <option>车辆管理</option>
                 </select>
-                <button class="btn btn-search">查询</button>
-                <button class="btn btn-add">新增业务</button>
+                <button class="btn btn-search" onclick="searchTraffic()">查询</button>
+                <button class="btn btn-add" onclick="addTrafficService()">新增业务</button>
             </div>
-            <table>
+            <table id="trafficTable">
                 <thead>
                     <tr>
                         <th>业务编号</th>
@@ -1763,27 +1663,7 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>JT20250525001</td>
-                        <td>冀A12345</td>
-                        <td>违法处理</td>
-                        <td>钱某</td>
-                        <td>2025-05-25</td>
-                        <td><span class="stat-green">已处理</span></td>
-                        <td>交警张警官</td>
-                        <td><button class="btn btn-edit">查看</button> <button class="btn btn-export">打印</button></td>
-                    </tr>
-                    <tr>
-                        <td>JT20250524002</td>
-                        <td>冀B67890</td>
-                        <td>事故处理</td>
-                        <td>周某</td>
-                        <td>2025-05-24</td>
-                        <td><span class="stat-orange">处理中</span></td>
-                        <td>交警李警官</td>
-                        <td><button class="btn btn-edit">查看</button></td>
-                    </tr>
+                <tbody id="trafficTableBody">
                 </tbody>
             </table>
         </div>

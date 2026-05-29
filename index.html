@@ -3669,7 +3669,8 @@ function renderIntelTable() {
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
             <td>${item.time}</td>
             <td>
-                ${item.status !== '已处置' ? `<button class="btn btn-edit" onclick="analyzeIntelligence('${item.id}')">研判</button>` : `<button class="btn btn-edit">查看</button>`}
+                <button class="btn btn-edit" onclick="viewIntelligenceDetail('${item.id}')">查看</button>
+                ${item.status !== '已处置' ? `<button class="btn btn-edit" onclick="analyzeIntelligence('${item.id}')">研判</button>` : ''}
                 <button class="btn btn-del" onclick="deleteIntelligence('${item.id}')">删除</button>
             </td>
         </tr>
@@ -3679,7 +3680,7 @@ function renderIntelTable() {
 function renderCommunityTable() {
     const tbody = document.getElementById('communityTableBody');
     if (!tbody) return;
-    tbody.innerHTML = communityData.visits.map(item => `
+    tbody.innerHTML = communityData.visits.map((item, index) => `
         <tr>
             <td>${item.community}</td>
             <td>${item.police}</td>
@@ -3688,6 +3689,10 @@ function renderCommunityTable() {
             <td>${item.content}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
             <td>${item.time}</td>
+            <td>
+                <button class="btn btn-edit" onclick="viewCommunityDetail(${index})">查看</button>
+                <button class="btn btn-add" onclick="addVisit()">新增</button>
+            </td>
         </tr>
     `).join('');
 }
@@ -3704,7 +3709,9 @@ function renderPatrolTable() {
             <td>${item.time}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
             <td>${item.checkins}</td>
-            <td><button class="btn btn-edit">查看</button></td>
+            <td>
+                <button class="btn btn-edit" onclick="viewPatrolDetail('${item.id}')">查看</button>
+            </td>
         </tr>
     `).join('');
 }
@@ -3722,8 +3729,8 @@ function renderRecordTable() {
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
             <td>${item.time}</td>
             <td>
-                <button class="btn btn-edit">查看</button>
-                ${item.status === '已完成' ? `<button class="btn btn-export">导出</button>` : `<button class="btn btn-edit">编辑</button>`}
+                <button class="btn btn-edit" onclick="viewRecordDetail('${item.id}')">查看</button>
+                ${item.status === '已完成' ? `<button class="btn btn-export" onclick="exportRecord('${item.id}')">导出</button>` : `<button class="btn btn-edit" onclick="editRecord('${item.id}')">编辑</button>`}
             </td>
         </tr>
     `).join('');
@@ -3741,7 +3748,10 @@ function renderLawTable() {
             <td>${item.remaining}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
             <td><span class="${getStatusClass(item.supervision)}">${item.supervision}</span></td>
-            <td><button class="btn btn-edit" onclick="superviseCase('${item.id}')">督办</button></td>
+            <td>
+                <button class="btn btn-edit" onclick="viewLawDetail('${item.id}')">查看</button>
+                <button class="btn btn-edit" onclick="superviseCase('${item.id}')">督办</button>
+            </td>
         </tr>
     `).join('');
 }
@@ -3759,7 +3769,7 @@ function renderServiceTable() {
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
             <td>${item.police}</td>
             <td>
-                <button class="btn btn-edit">查看</button>
+                <button class="btn btn-edit" onclick="viewServiceDetail('${item.id}')">查看</button>
                 ${item.status === '办理中' ? `<button class="btn btn-success" onclick="completeService('${item.id}')">办结</button>` : ''}
             </td>
         </tr>
@@ -3779,7 +3789,7 @@ function renderTrafficTable() {
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
             <td>${item.police}</td>
             <td>
-                <button class="btn btn-edit">查看</button>
+                <button class="btn btn-edit" onclick="viewTrafficDetail('${item.id}')">查看</button>
                 ${item.status === '已处理' ? `<button class="btn btn-export" onclick="printTrafficService('${item.id}')">打印</button>` : ''}
             </td>
         </tr>
@@ -4618,6 +4628,122 @@ function renderMarketTable() {
         </tr>
     `).join('');
 }
+
+// 所有模块的查看详情功能
+function viewIntelligenceDetail(id) {
+    const item = intelligenceData.items.find(i => i.id === id);
+    if (item) {
+        openModal('情报详情', `
+            <div class="form-item"><label>情报编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>情报类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>情报摘要：</label><span>${item.summary}</span></div>
+            <div class="form-item"><label>情报来源：</label><span>${item.source}</span></div>
+            <div class="form-item"><label>风险等级：</label><span class="${getStatusClass(item.risk)}">${item.risk}</span></div>
+            <div class="form-item"><label>研判状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+            <div class="form-item"><label>提交时间：</label><span>${item.time}</span></div>
+        `);
+    }
+}
+
+function viewCommunityDetail(index) {
+    const item = communityData.visits[index];
+    if (item) {
+        openModal('走访详情', `
+            <div class="form-item"><label>社区名称：</label><span>${item.community}</span></div>
+            <div class="form-item"><label>包片民警：</label><span>${item.police}</span></div>
+            <div class="form-item"><label>走访类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>走访对象：</label><span>${item.target}</span></div>
+            <div class="form-item"><label>走访内容：</label><span>${item.content}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+            <div class="form-item"><label>走访时间：</label><span>${item.time}</span></div>
+        `);
+    }
+}
+
+function viewPatrolDetail(id) {
+    const item = patrolData.patrols.find(p => p.id === id);
+    if (item) {
+        openModal('巡逻详情', `
+            <div class="form-item"><label>巡逻编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>巡逻区域：</label><span>${item.area}</span></div>
+            <div class="form-item"><label>巡逻民警：</label><span>${item.police}</span></div>
+            <div class="form-item"><label>巡逻方式：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>开始时间：</label><span>${item.time}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+            <div class="form-item"><label>签到次数：</label><span>${item.checkins}</span></div>
+        `);
+    }
+}
+
+function viewRecordDetail(id) {
+    const item = recordData.records.find(r => r.id === id);
+    if (item) {
+        openModal('笔录详情', `
+            <div class="form-item"><label>笔录编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>案件关联：</label><span>${item.caseId || '-'}</span></div>
+            <div class="form-item"><label>笔录类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>被询问人：</label><span>${item.target}</span></div>
+            <div class="form-item"><label>制作民警：</label><span>${item.police}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+            <div class="form-item"><label>制作时间：</label><span>${item.time}</span></div>
+        `);
+    }
+}
+
+function editRecord(id) {
+    showMsg('编辑笔录功能');
+}
+
+function exportRecord(id) {
+    showMsg('导出笔录功能');
+    addLog('导出笔录', id);
+}
+
+function viewLawDetail(id) {
+    const item = lawSupervisionData.cases.find(c => c.id === id);
+    if (item) {
+        openModal('执法监督详情', `
+            <div class="form-item"><label>案件编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>案件名称：</label><span>${item.name}</span></div>
+            <div class="form-item"><label>主办民警：</label><span>${item.police}</span></div>
+            <div class="form-item"><label>办理期限：</label><span>${item.deadline}</span></div>
+            <div class="form-item"><label>剩余天数：</label><span>${item.remaining}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+            <div class="form-item"><label>监督状态：</label><span class="${getStatusClass(item.supervision)}">${item.supervision}</span></div>
+        `);
+    }
+}
+
+function viewServiceDetail(id) {
+    const item = serviceData.services.find(s => s.id === id);
+    if (item) {
+        openModal('便民服务详情', `
+            <div class="form-item"><label>业务编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>业务类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>申请人：</label><span>${item.applicant}</span></div>
+            <div class="form-item"><label>联系电话：</label><span>${item.phone}</span></div>
+            <div class="form-item"><label>申请时间：</label><span>${item.time}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+            <div class="form-item"><label>办理民警：</label><span>${item.police}</span></div>
+        `);
+    }
+}
+
+function viewTrafficDetail(id) {
+    const item = trafficData.services.find(t => t.id === id);
+    if (item) {
+        openModal('交通管理详情', `
+            <div class="form-item"><label>业务编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>车牌号码：</label><span>${item.plate}</span></div>
+            <div class="form-item"><label>业务类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>当事人：</label><span>${item.party}</span></div>
+            <div class="form-item"><label>受理时间：</label><span>${item.time}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+            <div class="form-item"><label>处理民警：</label><span>${item.police}</span></div>
+        `);
+    }
+}
+
 function refreshStatistics() {
     showMsg('统计数据已刷新');
 }

@@ -64,6 +64,12 @@
             background:#f6f8fa;
             color:#1a2436;
             overflow-x:hidden;
+            width:100%;
+            max-width:100vw;
+            position:relative;
+        }
+        html {
+            overflow-x: hidden;
         }
         a{text-decoration:none;color:inherit;}
         ul,li{list-style:none;}
@@ -747,6 +753,11 @@
 
         /* 响应式 - 手机适配 */
         @media screen and (max-width: 768px) {
+            * {
+                box-sizing: border-box;
+                max-width: 100vw;
+            }
+            
             .menu-toggle{
                 display:block;
             }
@@ -766,23 +777,72 @@
             .left-menu-overlay.active{
                 display:block;
             }
+            
+            /* 优化顶部导航栏 */
             .top-header{
-                padding:0 15px;
+                padding:0 8px;
+                height:50px;
+                width:100%;
+                overflow: hidden;
+            }
+            .header-left{
+                gap:8px;
+                flex: 1;
+                min-width: 0;
+            }
+            .gov-icon{
+                width:28px;
+                height:28px;
+                flex-shrink: 0;
             }
             .header-title{
-                font-size:15px;
+                font-size:13px;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
             }
+            .header-middle{
+                display:none;
+            }
+            
+            /* 优化右上角，更简洁 */
             .header-right{
-                font-size:11px;
+                display:flex;
+                align-items:center;
+                gap:4px;
+                flex-shrink: 0;
             }
+            .header-right #headerUserInfo{
+                display:none;
+            }
+            .header-right .config-btn,
+            .header-right .logout-btn{
+                padding:4px 6px;
+                font-size:9px;
+                white-space:nowrap;
+                line-height: 1.2;
+            }
+            
+            .menu-toggle{
+                margin-right:5px;
+                padding:5px;
+            }
+            .menu-toggle span{
+                margin:4px 0;
+            }
+            
             .content-wrap{
-                padding:15px;
+                padding:10px;
+                width:100%;
+                overflow-x: hidden;
             }
+            
+            /* 搜索栏优化 */
             .search-bar{
-                padding:12px;
+                padding:10px;
                 display:flex;
                 flex-direction:column;
-                gap:8px;
+                gap:6px;
             }
             .input-text{
                 width:100%;
@@ -794,70 +854,101 @@
             .search-bar .btn{
                 width:100%;
                 margin:2px 0;
+                padding:8px 12px;
+                font-size:12px;
             }
+            
+            /* 表格优化 */
             table{
-                font-size:11px;
+                font-size:10px;
+                display:block;
+                overflow-x:auto;
+                -webkit-overflow-scrolling:touch;
+                width:100%;
             }
             th,td{
-                padding:6px 3px;
+                padding:5px 3px;
                 white-space:nowrap;
+                font-size:10px;
             }
+            
             .stat-cards,.stat-rows{
                 flex-direction:column;
             }
+            
+            /* 弹窗优化 */
             .modal-box{
-                width:95%;
-                left:2.5%;
+                width:92%;
+                left:4%;
                 transform:none;
-                max-height:90vh;
+                max-height:85vh;
                 overflow-y:auto;
             }
             .modal-content{
-                padding:15px;
+                padding:12px;
             }
+            .form-item label{
+                width:85px;
+                font-size:12px;
+            }
+            .form-item .input-text,
+            .form-item .select-box{
+                font-size:12px;
+            }
+            
             .search-bar{
                 flex-wrap:wrap;
                 gap:8px;
             }
             .search-bar .input-text{
                 width:100%;
-                margin:5px 0;
+                margin:4px 0;
             }
             .search-bar .select-box{
                 width:100%;
-                margin:5px 0;
+                margin:4px 0;
             }
             .search-bar .btn{
-                width:calc(50% - 5px);
-                margin:5px 0;
+                width:calc(50% - 4px);
+                margin:4px 0;
             }
-            table{
-                display:block;
-                overflow-x:auto;
-                -webkit-overflow-scrolling:touch;
-            }
+            
             .stat-card{
                 width:100%;
-                margin:10px 0;
+                margin:8px 0;
             }
+            
             .login-box{
-                width:90%;
-                padding:25px 20px;
+                width:92%;
+                padding:20px 15px;
             }
-            .top-header{
-                padding:0 10px;
+            
+            .main-wrap{
+                width:100%;
+                max-width:100vw;
+                overflow-x: hidden;
             }
-            .header-title{
+            .left-menu{
+                width:200px;
+            }
+            
+            /* 确保没有元素超出屏幕 */
+            .secret-top {
+                font-size:10px;
+                padding:0 5px;
+                height:24px;
+                line-height:24px;
+            }
+            
+            .title-txt {
                 font-size:14px;
             }
-            .header-right{
-                font-size:10px;
+            
+            .stat-number {
+                font-size:24px;
             }
-            .header-right .config-btn,
-            .header-right .logout-btn{
-                margin-left:8px;
-                padding:6px 10px;
-                font-size:11px;
+            .stat-label {
+                font-size:12px;
             }
         }
     </style>

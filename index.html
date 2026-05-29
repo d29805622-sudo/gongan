@@ -1045,6 +1045,7 @@
         <div class="menu-first">便民服务模块</div>
         <div class="menu-second" onclick="switchPage('service')">便民服务大厅</div>
         <div class="menu-second" onclick="switchPage('traffic')">交通管理服务</div>
+        <div class="menu-second" onclick="switchPage('market')">市场主体管理</div>
         
         <div class="menu-first">统计分析模块</div>
         <div class="menu-second" onclick="switchPage('statistics')">警情分析报表</div>
@@ -1783,6 +1784,47 @@
                         <td>交警李警官</td>
                         <td><button class="btn btn-edit">查看</button></td>
                     </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 市场主体管理 -->
+        <div class="page-content" id="market">
+            <div class="title-txt">市场主体管理</div>
+            <div class="search-bar">
+                <input type="text" class="input-text" id="marketSearch" placeholder="企业名称/统一社会信用代码">
+                <select class="select-box" id="marketTypeFilter">
+                    <option>全部类型</option>
+                    <option>有限责任公司</option>
+                    <option>股份有限公司</option>
+                    <option>个体工商户</option>
+                    <option>合伙企业</option>
+                    <option>农民专业合作社</option>
+                </select>
+                <select class="select-box" id="marketStatusFilter">
+                    <option>全部状态</option>
+                    <option>存续</option>
+                    <option>在业</option>
+                    <option>吊销</option>
+                    <option>注销</option>
+                </select>
+                <button class="btn btn-search" onclick="searchMarket()">查询</button>
+                <button class="btn btn-add" onclick="addMarket()">新增主体</button>
+            </div>
+            <table id="marketTable">
+                <thead>
+                    <tr>
+                        <th>统一社会信用代码</th>
+                        <th>企业名称</th>
+                        <th>企业类型</th>
+                        <th>法定代表人</th>
+                        <th>经营场所</th>
+                        <th>成立日期</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="marketTableBody">
                 </tbody>
             </table>
         </div>
@@ -3796,6 +3838,7 @@ window.onload = async function(){
     renderLawTable();
     renderServiceTable();
     renderTrafficTable();
+    renderMarketTable();
 };
 
 // ==================== 统计分析和执法监督功能 ====================
@@ -4349,6 +4392,54 @@ function updateSaveForm() {
                     police: document.getElementById('trafficPolice').value
                 });
                 addLog('新增交通业务', id);
+            } else if (currentModal === 'addMarket') {
+                const id = document.getElementById('marketId').value;
+                if (!id || id.length !== 18) {
+                    showMsg('请输入有效的18位统一社会信用代码');
+                    return;
+                }
+                const name = document.getElementById('marketName').value;
+                if (!name) {
+                    showMsg('请输入企业名称');
+                    return;
+                }
+                const legalRep = document.getElementById('marketLegalRep').value;
+                if (!legalRep) {
+                    showMsg('请输入法定代表人');
+                    return;
+                }
+                
+                marketData.entities.unshift({
+                    id: id,
+                    name: name,
+                    type: document.getElementById('marketType').value,
+                    legalRep: legalRep,
+                    address: document.getElementById('marketAddress').value,
+                    date: document.getElementById('marketDate').value || new Date().toISOString().split('T')[0],
+                    status: document.getElementById('marketStatus').value,
+                    scope: document.getElementById('marketScope').value,
+                    phone: document.getElementById('marketPhone').value,
+                    regCapital: document.getElementById('marketCapital').value
+                });
+                
+                addLog('新增市场主体', id);
+                renderMarketTable();
+            } else if (currentModal === 'editMarket') {
+                const item = marketData.entities.find(m => m.id === editId);
+                if (item) {
+                    item.name = document.getElementById('marketName').value;
+                    item.type = document.getElementById('marketType').value;
+                    item.legalRep = document.getElementById('marketLegalRep').value;
+                    item.address = document.getElementById('marketAddress').value;
+                    item.date = document.getElementById('marketDate').value;
+                    item.status = document.getElementById('marketStatus').value;
+                    item.scope = document.getElementById('marketScope').value;
+                    item.phone = document.getElementById('marketPhone').value;
+                    item.regCapital = document.getElementById('marketCapital').value;
+                    
+                    addLog('编辑市场主体', editId);
+                    renderMarketTable();
+                }
             } else {
                 await originalSaveForm();
                 return;
@@ -4364,6 +4455,169 @@ function updateSaveForm() {
 
 // 调用更新函数
 updateSaveForm();
+
+// 市场主体管理功能
+let marketData = {
+    entities: [
+        {
+            id: '91130100MA12345678',
+            name: '石家庄科技有限公司',
+            type: '有限责任公司',
+            legalRep: '张三',
+            address: '石家庄市高新区科技路123号',
+            date: '2020-05-15',
+            status: '存续',
+            scope: '计算机软硬件开发、技术咨询、技术服务',
+            phone: '13800138001',
+            regCapital: '500万元人民币'
+        },
+        {
+            id: '92130102MA87654321',
+            name: '桥西区便民超市',
+            type: '个体工商户',
+            legalRep: '李四',
+            address: '石家庄市桥西区中华大街456号',
+            date: '2018-08-20',
+            status: '在业',
+            scope: '预包装食品、日用百货零售',
+            phone: '13900139002',
+            regCapital: '-'
+        },
+        {
+            id: '93130100MA55556666',
+            name: '石家庄种植专业合作社',
+            type: '农民专业合作社',
+            legalRep: '王五',
+            address: '石家庄市正定县农业产业园789号',
+            date: '2019-03-10',
+            status: '存续',
+            scope: '农作物种植、销售，农业技术服务',
+            phone: '13700137003',
+            regCapital: '100万元人民币'
+        }
+    ]
+};
+
+function searchMarket() {
+    showMsg('查询功能已触发');
+}
+
+function addMarket() {
+    currentModal = 'addMarket';
+    openModal('新增市场主体', `
+        <div class="form-item"><label>统一社会信用代码<span class="required">*</span>：</label><input type="text" class="input-text" id="marketId" placeholder="18位统一社会信用代码"></div>
+        <div class="form-item"><label>企业名称<span class="required">*</span>：</label><input type="text" class="input-text" id="marketName" placeholder="请输入企业名称"></div>
+        <div class="form-item"><label>企业类型<span class="required">*</span>：</label>
+            <select class="select-box" id="marketType">
+                <option>有限责任公司</option>
+                <option>股份有限公司</option>
+                <option>个体工商户</option>
+                <option>合伙企业</option>
+                <option>农民专业合作社</option>
+            </select>
+        </div>
+        <div class="form-item"><label>法定代表人<span class="required">*</span>：</label><input type="text" class="input-text" id="marketLegalRep" placeholder="请输入法定代表人姓名"></div>
+        <div class="form-item"><label>经营场所：</label><input type="text" class="input-text" id="marketAddress" placeholder="请输入经营场所地址"></div>
+        <div class="form-item"><label>成立日期：</label><input type="date" class="input-text" id="marketDate"></div>
+        <div class="form-item"><label>状态：</label>
+            <select class="select-box" id="marketStatus">
+                <option>存续</option>
+                <option>在业</option>
+                <option>吊销</option>
+                <option>注销</option>
+            </select>
+        </div>
+        <div class="form-item"><label>经营范围：</label><textarea class="input-text" id="marketScope" style="height:60px;" placeholder="请输入经营范围"></textarea></div>
+        <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="marketPhone" placeholder="请输入联系电话"></div>
+        <div class="form-item"><label>注册资本：</label><input type="text" class="input-text" id="marketCapital" placeholder="请输入注册资本"></div>
+    `);
+}
+
+function editMarket(id) {
+    currentModal = 'editMarket';
+    editId = id;
+    const item = marketData.entities.find(m => m.id === id);
+    if (item) {
+        openModal('编辑市场主体', `
+            <div class="form-item"><label>统一社会信用代码：</label><input type="text" class="input-text" id="marketId" value="${item.id}" readonly></div>
+            <div class="form-item"><label>企业名称：</label><input type="text" class="input-text" id="marketName" value="${item.name}"></div>
+            <div class="form-item"><label>企业类型：</label>
+                <select class="select-box" id="marketType">
+                    <option ${item.type === '有限责任公司' ? 'selected' : ''}>有限责任公司</option>
+                    <option ${item.type === '股份有限公司' ? 'selected' : ''}>股份有限公司</option>
+                    <option ${item.type === '个体工商户' ? 'selected' : ''}>个体工商户</option>
+                    <option ${item.type === '合伙企业' ? 'selected' : ''}>合伙企业</option>
+                    <option ${item.type === '农民专业合作社' ? 'selected' : ''}>农民专业合作社</option>
+                </select>
+            </div>
+            <div class="form-item"><label>法定代表人：</label><input type="text" class="input-text" id="marketLegalRep" value="${item.legalRep}"></div>
+            <div class="form-item"><label>经营场所：</label><input type="text" class="input-text" id="marketAddress" value="${item.address}"></div>
+            <div class="form-item"><label>成立日期：</label><input type="date" class="input-text" id="marketDate" value="${item.date}"></div>
+            <div class="form-item"><label>状态：</label>
+                <select class="select-box" id="marketStatus">
+                    <option ${item.status === '存续' ? 'selected' : ''}>存续</option>
+                    <option ${item.status === '在业' ? 'selected' : ''}>在业</option>
+                    <option ${item.status === '吊销' ? 'selected' : ''}>吊销</option>
+                    <option ${item.status === '注销' ? 'selected' : ''}>注销</option>
+                </select>
+            </div>
+            <div class="form-item"><label>经营范围：</label><textarea class="input-text" id="marketScope" style="height:60px;">${item.scope}</textarea></div>
+            <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="marketPhone" value="${item.phone}"></div>
+            <div class="form-item"><label>注册资本：</label><input type="text" class="input-text" id="marketCapital" value="${item.regCapital}"></div>
+        `);
+    }
+}
+
+function viewMarketDetail(id) {
+    const item = marketData.entities.find(m => m.id === id);
+    if (item) {
+        openModal('市场主体详情', `
+            <div class="form-item"><label>统一社会信用代码：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>企业名称：</label><span>${item.name}</span></div>
+            <div class="form-item"><label>企业类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>法定代表人：</label><span>${item.legalRep}</span></div>
+            <div class="form-item"><label>经营场所：</label><span>${item.address}</span></div>
+            <div class="form-item"><label>成立日期：</label><span>${item.date}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+            <div class="form-item"><label>经营范围：</label><span>${item.scope}</span></div>
+            <div class="form-item"><label>联系电话：</label><span>${item.phone}</span></div>
+            <div class="form-item"><label>注册资本：</label><span>${item.regCapital}</span></div>
+        `);
+    }
+}
+
+function deleteMarket(id) {
+    if (confirm('确定要删除该市场主体记录吗？')) {
+        const idx = marketData.entities.findIndex(m => m.id === id);
+        if (idx > -1) {
+            marketData.entities.splice(idx, 1);
+            renderMarketTable();
+            showMsg('删除成功');
+            addLog('删除市场主体', id);
+        }
+    }
+}
+
+function renderMarketTable() {
+    const tbody = document.getElementById('marketTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = marketData.entities.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.type}</td>
+            <td>${item.legalRep}</td>
+            <td>${item.address}</td>
+            <td>${item.date}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>
+                <button class="btn btn-edit" onclick="viewMarketDetail('${item.id}')">详情</button>
+                <button class="btn btn-edit" onclick="editMarket('${item.id}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteMarket('${item.id}')">删除</button>
+            </td>
+        </tr>
+    `).join('');
+}
 function refreshStatistics() {
     showMsg('统计数据已刷新');
 }
@@ -4412,72 +4666,6 @@ function editEvaluation(person) {
                 </select>
             </div>
             <div class="form-item"><label>考评月份：</label><input type="text" class="input-text" id="evalMonth" value="${item.month}"></div>
-        `);
-    }
-}
-
-// ==================== 详情查看功能 ====================
-
-// 查看案件详情
-function viewCaseDetail(id) {
-    const item = data.cases.find(c => c.id === id);
-    if (item) {
-        openModal('案件详情', `
-            <div class="form-item"><label>案件编号：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>案件类别：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>涉案人员：</label><span>${item.person}</span></div>
-            <div class="form-item"><label>立案时间：</label><span>${item.time}</span></div>
-            <div class="form-item"><label>案件状态：</label><span>${item.caseStatus || item.progress}</span></div>
-            <div class="form-item"><label>办案单位：</label><span>${item.investigator || '-'}</span></div>
-            <div class="form-item"><label>证据清单：</label><span>${item.evidence ? item.evidence.join('、') : '-'}</span></div>
-            <div class="form-item"><label>时间线：</label>
-                <ul style="padding-left:20px;">
-                    ${item.timeline ? item.timeline.map(t => '<li>' + t + '</li>').join('') : '-'}
-                </ul>
-            </div>
-        `);
-    }
-}
-
-// 查看人员详情
-function viewPersonDetail(id) {
-    const item = data.persons.find(p => p.id === id);
-    if (item) {
-        openModal('人员详情', `
-            <div class="form-item"><label>人员编号：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>姓名：</label><span>${item.name}</span></div>
-            <div class="form-item"><label>身份证号：</label><span>${item.idCard}</span></div>
-            <div class="form-item"><label>管控等级：</label><span>${item.level}</span></div>
-            <div class="form-item"><label>风险等级：</label><span>${item.riskLevel || '-'}</span></div>
-            <div class="form-item"><label>居住地址：</label><span>${item.address}</span></div>
-            <div class="form-item"><label>关联人员：</label><span>${item.relatedPersons ? item.relatedPersons.join('、') : '-'}</span></div>
-            <div class="form-item"><label>轨迹记录：</label>
-                <ul style="padding-left:20px;">
-                    ${item.trackRecords ? item.trackRecords.map(t => '<li>' + t + '</li>').join('') : '-'}
-                </ul>
-            </div>
-            <div class="form-item"><label>备注：</label><span>${item.notes || '-'}</span></div>
-        `);
-    }
-}
-
-// 查看车辆详情
-function viewCarDetail(plate) {
-    const item = data.cars.find(c => c.plate === plate);
-    if (item) {
-        openModal('车辆详情', `
-            <div class="form-item"><label>车牌号码：</label><span>${item.plate}</span></div>
-            <div class="form-item"><label>品牌：</label><span>${item.brand || '-'}</span></div>
-            <div class="form-item"><label>车辆类型：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>颜色：</label><span>${item.color || '-'}</span></div>
-            <div class="form-item"><label>车主姓名：</label><span>${item.owner}</span></div>
-            <div class="form-item"><label>登记状态：</label><span>${item.status}</span></div>
-            <div class="form-item"><label>风险等级：</label><span>${item.riskLevel || '-'}</span></div>
-            <div class="form-item"><label>轨迹记录：</label>
-                <ul style="padding-left:20px;">
-                    ${item.trackRecords ? item.trackRecords.map(t => '<li>' + t + '</li>').join('') : '-'}
-                </ul>
-            </div>
         `);
     }
 }

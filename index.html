@@ -1423,11 +1423,11 @@
         <div class="page-content" id="command">
             <div class="title-txt">指挥调度中心</div>
             <div class="search-bar">
-                <input type="text" class="input-text" placeholder="输入警情编号">
-                <button class="btn btn-search">调度查询</button>
-                <button class="btn btn-add">新增调度</button>
+                <input type="text" class="input-text" id="commandSearch" placeholder="输入警情编号">
+                <button class="btn btn-search" onclick="searchDispatch()">调度查询</button>
+                <button class="btn btn-add" onclick="addDispatch()">新增调度</button>
             </div>
-            <table>
+            <table id="commandTable">
                 <thead>
                     <tr>
                         <th>警情编号</th>
@@ -1440,27 +1440,7 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>DD20250525001</td>
-                        <td>紧急处警</td>
-                        <td>指挥中心一组</td>
-                        <td>巡警三队</td>
-                        <td>红旗路与建设街交口</td>
-                        <td><span class="stat-orange">处置中</span></td>
-                        <td>2025-05-25 09:35</td>
-                        <td><button class="btn btn-edit">查看</button> <button class="btn btn-success">完成</button></td>
-                    </tr>
-                    <tr>
-                        <td>DD20250524002</td>
-                        <td>案件支援</td>
-                        <td>指挥中心二组</td>
-                        <td>刑侦一队</td>
-                        <td>开发区工业园区</td>
-                        <td><span class="stat-green">已完成</span></td>
-                        <td>2025-05-24 15:20</td>
-                        <td><button class="btn btn-edit">查看</button></td>
-                    </tr>
+                <tbody id="commandTableBody">
                 </tbody>
             </table>
         </div>
@@ -1469,17 +1449,17 @@
         <div class="page-content" id="intelligence">
             <div class="title-txt">情报研判分析平台</div>
             <div class="search-bar">
-                <input type="text" class="input-text" placeholder="输入关键词">
-                <select class="select-box">
+                <input type="text" class="input-text" id="intelSearch" placeholder="输入关键词">
+                <select class="select-box" id="intelTypeFilter">
                     <option>全部类型</option>
                     <option>人员情报</option>
                     <option>案件情报</option>
                     <option>舆情情报</option>
                 </select>
-                <button class="btn btn-search">情报分析</button>
-                <button class="btn btn-add">新增情报</button>
+                <button class="btn btn-search" onclick="searchIntelligence()">情报分析</button>
+                <button class="btn btn-add" onclick="addIntelligence()">新增情报</button>
             </div>
-            <table>
+            <table id="intelTable">
                 <thead>
                     <tr>
                         <th>情报编号</th>
@@ -1492,27 +1472,7 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>QB20250525001</td>
-                        <td>人员情报</td>
-                        <td>重点人员张某近期活动异常</td>
-                        <td>社区网格员</td>
-                        <td><span class="stat-red">高风险</span></td>
-                        <td><span class="stat-orange">待研判</span></td>
-                        <td>2025-05-25 08:45</td>
-                        <td><button class="btn btn-edit">研判</button> <button class="btn btn-del">删除</button></td>
-                    </tr>
-                    <tr>
-                        <td>QB20250524002</td>
-                        <td>案件情报</td>
-                        <td>近期盗窃案件线索</td>
-                        <td>视频监控</td>
-                        <td><span class="stat-orange">中风险</span></td>
-                        <td><span class="stat-green">已处置</span></td>
-                        <td>2025-05-24 11:30</td>
-                        <td><button class="btn btn-edit">查看</button></td>
-                    </tr>
+                <tbody id="intelTableBody">
                 </tbody>
             </table>
         </div>
@@ -1521,17 +1481,17 @@
         <div class="page-content" id="community">
             <div class="title-txt">社区警务管理平台</div>
             <div class="search-bar">
-                <input type="text" class="input-text" placeholder="社区名称">
-                <select class="select-box">
+                <input type="text" class="input-text" id="communitySearch" placeholder="社区名称">
+                <select class="select-box" id="communityFilter">
                     <option>全部社区</option>
                     <option>和平社区</option>
                     <option>幸福社区</option>
                     <option>阳光社区</option>
                 </select>
-                <button class="btn btn-search">查询</button>
-                <button class="btn btn-add">新增走访</button>
+                <button class="btn btn-search" onclick="searchCommunity()">查询</button>
+                <button class="btn btn-add" onclick="addVisit()">新增走访</button>
             </div>
-            <table>
+            <table id="communityTable">
                 <thead>
                     <tr>
                         <th>社区名称</th>
@@ -3633,6 +3593,157 @@ function startSessionCheck() {
     }, 3000); // 每3秒检查一次
 }
 
+// 新增各模块渲染函数
+function renderCommandTable() {
+    const tbody = document.getElementById('commandTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = commandData.dispatches.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.type}</td>
+            <td>${item.center}</td>
+            <td>${item.police}</td>
+            <td>${item.location}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${item.time}</td>
+            <td>
+                <button class="btn btn-edit" onclick="viewDispatch('${item.id}')">查看</button>
+                ${item.status !== '已完成' ? `<button class="btn btn-success" onclick="completeDispatch('${item.id}')">完成</button>` : ''}
+            </td>
+        </tr>
+    `).join('');
+}
+
+function renderIntelTable() {
+    const tbody = document.getElementById('intelTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = intelligenceData.items.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.type}</td>
+            <td>${item.summary}</td>
+            <td>${item.source}</td>
+            <td><span class="${getStatusClass(item.risk)}">${item.risk}</span></td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${item.time}</td>
+            <td>
+                ${item.status !== '已处置' ? `<button class="btn btn-edit" onclick="analyzeIntelligence('${item.id}')">研判</button>` : `<button class="btn btn-edit">查看</button>`}
+                <button class="btn btn-del" onclick="deleteIntelligence('${item.id}')">删除</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function renderCommunityTable() {
+    const tbody = document.getElementById('communityTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = communityData.visits.map(item => `
+        <tr>
+            <td>${item.community}</td>
+            <td>${item.police}</td>
+            <td>${item.type}</td>
+            <td>${item.target}</td>
+            <td>${item.content}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${item.time}</td>
+        </tr>
+    `).join('');
+}
+
+function renderPatrolTable() {
+    const tbody = document.getElementById('patrolTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = patrolData.patrols.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.area}</td>
+            <td>${item.police}</td>
+            <td>${item.type}</td>
+            <td>${item.time}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${item.checkins}</td>
+            <td><button class="btn btn-edit">查看</button></td>
+        </tr>
+    `).join('');
+}
+
+function renderRecordTable() {
+    const tbody = document.getElementById('recordTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = recordData.records.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.caseId || '-'}</td>
+            <td>${item.type}</td>
+            <td>${item.target}</td>
+            <td>${item.police}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${item.time}</td>
+            <td>
+                <button class="btn btn-edit">查看</button>
+                ${item.status === '已完成' ? `<button class="btn btn-export">导出</button>` : `<button class="btn btn-edit">编辑</button>`}
+            </td>
+        </tr>
+    `).join('');
+}
+
+function renderLawTable() {
+    const tbody = document.getElementById('lawTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = lawSupervisionData.cases.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.police}</td>
+            <td>${item.deadline}</td>
+            <td>${item.remaining}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td><span class="${getStatusClass(item.supervision)}">${item.supervision}</span></td>
+            <td><button class="btn btn-edit" onclick="superviseCase('${item.id}')">督办</button></td>
+        </tr>
+    `).join('');
+}
+
+function renderServiceTable() {
+    const tbody = document.getElementById('serviceTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = serviceData.services.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.type}</td>
+            <td>${item.applicant}</td>
+            <td>${item.phone}</td>
+            <td>${item.time}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${item.police}</td>
+            <td>
+                <button class="btn btn-edit">查看</button>
+                ${item.status === '办理中' ? `<button class="btn btn-success" onclick="completeService('${item.id}')">办结</button>` : ''}
+            </td>
+        </tr>
+    `).join('');
+}
+
+function renderTrafficTable() {
+    const tbody = document.getElementById('trafficTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = trafficData.services.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.plate}</td>
+            <td>${item.type}</td>
+            <td>${item.party}</td>
+            <td>${item.time}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${item.police}</td>
+            <td>
+                <button class="btn btn-edit">查看</button>
+                ${item.status === '已处理' ? `<button class="btn btn-export" onclick="printTrafficService('${item.id}')">打印</button>` : ''}
+            </td>
+        </tr>
+    `).join('');
+}
+
 // 初始化
 window.onload = async function(){
     await loadData();
@@ -3677,6 +3788,14 @@ window.onload = async function(){
     renderLogTable();
     renderSysTable();
     renderSupervisionTable();
+    renderCommandTable();
+    renderIntelTable();
+    renderCommunityTable();
+    renderPatrolTable();
+    renderRecordTable();
+    renderLawTable();
+    renderServiceTable();
+    renderTrafficTable();
 };
 
 // ==================== 统计分析和执法监督功能 ====================
@@ -3696,7 +3815,555 @@ function renderSupervisionTable() {
     `).join('');
 }
 
+// 刷新执法监督数据
+function refreshSupervision() {
+    renderSupervisionTable();
+    showMsg("数据已刷新");
+}
+
+// 新增考评
+function addEvaluation() {
+    currentModal = 'addEvaluation';
+    openModal('新增绩效考评', `
+        <div class="form-item"><label>考评人员 <span class="required">*</span>：</label><input type="text" class="input-text" id="evalPerson"></div>
+        <div class="form-item"><label>得分 <span class="required">*</span>：</label><input type="number" class="input-text" id="evalScore" min="0" max="100" value="80"></div>
+        <div class="form-item"><label>评级：</label>
+            <select class="select-box" id="evalRank">
+                <option>优秀</option>
+                <option>良好</option>
+                <option>合格</option>
+                <option>不合格</option>
+            </select>
+        </div>
+        <div class="form-item"><label>考评月份：</label>
+            <input type="month" class="input-text" id="evalMonth" value="${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}">
+        </div>
+    `);
+}
+
+// 编辑考评
+function editEvaluation(person) {
+    currentModal = 'editEvaluation';
+    editId = person;
+    const item = data.supervision.evaluations.find(e => e.person === person);
+    if (item) {
+        openModal('编辑绩效考评', `
+            <div class="form-item"><label>考评人员：</label><input type="text" class="input-text" id="evalPerson" value="${item.person}" readonly></div>
+            <div class="form-item"><label>得分：</label><input type="number" class="input-text" id="evalScore" min="0" max="100" value="${item.score}"></div>
+            <div class="form-item"><label>评级：</label>
+                <select class="select-box" id="evalRank">
+                    <option ${item.rank === '优秀' ? 'selected' : ''}>优秀</option>
+                    <option ${item.rank === '良好' ? 'selected' : ''}>良好</option>
+                    <option ${item.rank === '合格' ? 'selected' : ''}>合格</option>
+                    <option ${item.rank === '不合格' ? 'selected' : ''}>不合格</option>
+                </select>
+            </div>
+            <div class="form-item"><label>考评月份：</label>
+                <input type="month" class="input-text" id="evalMonth" value="${item.month}">
+            </div>
+        `);
+    }
+}
+
 // 刷新统计数据
+function refreshStatistics() {
+    showMsg("统计数据已刷新");
+}
+
+// 导出统计报表
+function exportStatistics() {
+    const csv = '今日接警,今日立案,在办案件,已结案件\n' + 
+        data.statistics.todayAlarms + ',' + 
+        data.statistics.todayCases + ',' + 
+        data.statistics.pendingCases + ',' + 
+        data.statistics.closedCases;
+    const blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '警情统计报表.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    showMsg("统计报表导出成功");
+    addLog('导出统计', '警情统计报表');
+}
+
+// 查看案件详情
+function viewCaseDetail(id) {
+    const item = data.cases.find(c => c.id === id);
+    if (item) {
+        openModal('案件详情', `
+            <div class="form-item"><label>案件编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>案件类别：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>涉案人员：</label><span>${item.person}</span></div>
+            <div class="form-item"><label>立案时间：</label><span>${item.time}</span></div>
+            <div class="form-item"><label>案件状态：</label><span class="${getStatusClass(item.caseStatus || item.progress)}">${item.caseStatus || item.progress}</span></div>
+            <div class="form-item"><label>办案单位：</label><span>${item.investigator || ''}</span></div>
+            <div class="form-item"><label>办理进度：</label><span>${item.progress}</span></div>
+            <div class="form-item"><label>证据清单：</label><span>${(item.evidence || []).join('、') || '暂无'}</span></div>
+            <div class="form-item"><label>办理时间线：</label>
+                <ul style="padding-left:20px;margin:0;">
+                    ${(item.timeline || []).map(t => `<li>${t}</li>`).join('')}
+                </ul>
+            </div>
+        `);
+    }
+}
+
+// 查看人员详情
+function viewPersonDetail(id) {
+    const item = data.persons.find(p => p.id === id);
+    if (item) {
+        openModal('重点人员详情', `
+            <div class="form-item"><label>人员编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>姓名：</label><span>${item.name}</span></div>
+            <div class="form-item"><label>身份证号：</label><span>${item.idCard}</span></div>
+            <div class="form-item"><label>管控等级：</label><span class="${getStatusClass(item.level)}">${item.level}</span></div>
+            <div class="form-item"><label>风险等级：</label><span class="${getStatusClass(item.riskLevel || '')}">${item.riskLevel || ''}</span></div>
+            <div class="form-item"><label>居住地址：</label><span>${item.address}</span></div>
+            <div class="form-item"><label>备注：</label><span>${item.notes || '暂无'}</span></div>
+            <div class="form-item"><label>关联人员：</label><span>${(item.relatedPersons || []).join('、') || '暂无'}</span></div>
+            <div class="form-item"><label>轨迹记录：</label>
+                <ul style="padding-left:20px;margin:0;">
+                    ${(item.trackRecords || []).map(t => `<li>${t}</li>`).join('')}
+                </ul>
+            </div>
+        `);
+    }
+}
+
+// 查看车辆详情
+function viewCarDetail(plate) {
+    const item = data.cars.find(c => c.plate === plate);
+    if (item) {
+        openModal('车辆详情', `
+            <div class="form-item"><label>车牌号码：</label><span>${item.plate}</span></div>
+            <div class="form-item"><label>品牌：</label><span>${item.brand || ''}</span></div>
+            <div class="form-item"><label>车辆类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>颜色：</label><span>${item.color || ''}</span></div>
+            <div class="form-item"><label>车主姓名：</label><span>${item.owner}</span></div>
+            <div class="form-item"><label>登记状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+            <div class="form-item"><label>风险等级：</label><span class="${getStatusClass(item.riskLevel || '')}">${item.riskLevel || ''}</span></div>
+            <div class="form-item"><label>轨迹记录：</label>
+                <ul style="padding-left:20px;margin:0;">
+                    ${(item.trackRecords || []).map(t => `<li>${t}</li>`).join('')}
+                </ul>
+            </div>
+        `);
+    }
+}
+
+// 指挥调度中心功能
+let commandData = {
+    dispatches: [
+        {id: 'DD20250525001', type: '紧急处警', center: '指挥中心一组', police: '巡警三队', location: '红旗路与建设街交口', status: '处置中', time: '2025-05-25 09:35'},
+        {id: 'DD20250524002', type: '案件支援', center: '指挥中心二组', police: '刑侦一队', location: '开发区工业园区', status: '已完成', time: '2025-05-24 15:20'}
+    ]
+};
+
+function searchDispatch() {
+    showMsg("调度查询功能");
+}
+
+function addDispatch() {
+    currentModal = 'addDispatch';
+    openModal('新增调度', `
+        <div class="form-item"><label>警情编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="dispatchId"></div>
+        <div class="form-item"><label>调度类型：</label>
+            <select class="select-box" id="dispatchType">
+                <option>紧急处警</option>
+                <option>案件支援</option>
+                <option>巡逻盘查</option>
+                <option>交通管制</option>
+            </select>
+        </div>
+        <div class="form-item"><label>指挥中心：</label><input type="text" class="input-text" id="dispatchCenter" value="指挥中心一组"></div>
+        <div class="form-item"><label>指派警力：</label><input type="text" class="input-text" id="dispatchPolice" value="巡警一组"></div>
+        <div class="form-item"><label>现场位置：</label><input type="text" class="input-text" id="dispatchLocation"></div>
+    `);
+}
+
+function viewDispatch(id) {
+    const item = commandData.dispatches.find(d => d.id === id);
+    if (item) {
+        openModal('调度详情', `
+            <div class="form-item"><label>警情编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>调度类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>指挥中心：</label><span>${item.center}</span></div>
+            <div class="form-item"><label>指派警力：</label><span>${item.police}</span></div>
+            <div class="form-item"><label>现场位置：</label><span>${item.location}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+            <div class="form-item"><label>创建时间：</label><span>${item.time}</span></div>
+        `);
+    }
+}
+
+function completeDispatch(id) {
+    const item = commandData.dispatches.find(d => d.id === id);
+    if (item) {
+        item.status = '已完成';
+        showMsg("调度已完成");
+        addLog('完成调度', id);
+    }
+}
+
+// 情报研判分析功能
+let intelligenceData = {
+    items: [
+        {id: 'QB20250525001', type: '人员情报', summary: '重点人员张某近期活动异常', source: '社区网格员', risk: '高风险', status: '待研判', time: '2025-05-25 08:45'},
+        {id: 'QB20250524002', type: '案件情报', summary: '近期盗窃案件线索', source: '视频监控', risk: '中风险', status: '已处置', time: '2025-05-24 11:30'}
+    ]
+};
+
+function searchIntelligence() {
+    showMsg("情报分析功能");
+}
+
+function addIntelligence() {
+    currentModal = 'addIntelligence';
+    openModal('新增情报', `
+        <div class="form-item"><label>情报编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="intelId"></div>
+        <div class="form-item"><label>情报类型：</label>
+            <select class="select-box" id="intelType">
+                <option>人员情报</option>
+                <option>案件情报</option>
+                <option>舆情情报</option>
+            </select>
+        </div>
+        <div class="form-item"><label>情报摘要：</label><input type="text" class="input-text" id="intelSummary"></div>
+        <div class="form-item"><label>情报来源：</label><input type="text" class="input-text" id="intelSource" value="社区网格员"></div>
+        <div class="form-item"><label>风险等级：</label>
+            <select class="select-box" id="intelRisk">
+                <option>高风险</option>
+                <option>中风险</option>
+                <option>低风险</option>
+            </select>
+        </div>
+    `);
+}
+
+function analyzeIntelligence(id) {
+    const item = intelligenceData.items.find(i => i.id === id);
+    if (item) {
+        item.status = '研判中';
+        showMsg("正在进行研判分析...");
+        setTimeout(() => {
+            item.status = '已处置';
+            showMsg("研判完成，已处置");
+            addLog('研判情报', id);
+        }, 1500);
+    }
+}
+
+function deleteIntelligence(id) {
+    if (confirm('确定要删除该情报吗？')) {
+        const idx = intelligenceData.items.findIndex(i => i.id === id);
+        if (idx > -1) {
+            intelligenceData.items.splice(idx, 1);
+            showMsg("删除成功");
+            addLog('删除情报', id);
+        }
+    }
+}
+
+// 社区警务管理功能
+let communityData = {
+    visits: [
+        {community: '和平社区', police: '王警官', type: '重点人员走访', target: '李某', content: '了解近期思想动态', status: '已完成', time: '2025-05-24'},
+        {community: '幸福社区', police: '张警官', type: '纠纷调解', target: '邻里纠纷', content: '噪音扰民问题调解', status: '进行中', time: '2025-05-25'}
+    ]
+};
+
+function searchCommunity() {
+    showMsg("社区查询功能");
+}
+
+function addVisit() {
+    currentModal = 'addVisit';
+    openModal('新增走访', `
+        <div class="form-item"><label>社区名称：</label>
+            <select class="select-box" id="visitCommunity">
+                <option>和平社区</option>
+                <option>幸福社区</option>
+                <option>阳光社区</option>
+            </select>
+        </div>
+        <div class="form-item"><label>包片民警：</label><input type="text" class="input-text" id="visitPolice" value="王警官"></div>
+        <div class="form-item"><label>走访类型：</label><input type="text" class="input-text" id="visitType" value="重点人员走访"></div>
+        <div class="form-item"><label>走访对象：</label><input type="text" class="input-text" id="visitTarget"></div>
+        <div class="form-item"><label>走访内容：</label><textarea class="input-text" id="visitContent" style="height:60px;"></textarea></div>
+    `);
+}
+
+// 智慧巡逻防控功能
+let patrolData = {
+    patrols: [
+        {id: 'XL20250525001', area: '商业中心', police: '巡逻一组', type: '步巡', time: '2025-05-25 08:00', status: '巡逻中', checkins: 5},
+        {id: 'XL20250524002', area: '居民区', police: '巡逻二组', type: '车巡', time: '2025-05-24 20:00', status: '已结束', checkins: 8}
+    ]
+};
+
+function searchPatrol() {
+    showMsg("巡逻查询功能");
+}
+
+function addPatrol() {
+    currentModal = 'addPatrol';
+    openModal('新建巡逻', `
+        <div class="form-item"><label>巡逻编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="patrolId"></div>
+        <div class="form-item"><label>巡逻区域：</label><input type="text" class="input-text" id="patrolArea" value="商业中心"></div>
+        <div class="form-item"><label>巡逻民警：</label><input type="text" class="input-text" id="patrolPolice" value="巡逻一组"></div>
+        <div class="form-item"><label>巡逻方式：</label>
+            <select class="select-box" id="patrolType">
+                <option>步巡</option>
+                <option>车巡</option>
+                <option>视频巡逻</option>
+            </select>
+        </div>
+    `);
+}
+
+// 电子笔录制作功能
+let recordData = {
+    records: [
+        {id: 'BL20250525001', caseId: 'JA20250525001', type: '询问笔录', target: '证人王某', police: '李警官', status: '已完成', time: '2025-05-25'},
+        {id: 'BL20250524002', caseId: 'JA20250524002', type: '报案笔录', target: '报警人张某', police: '王警官', status: '制作中', time: '2025-05-24'}
+    ]
+};
+
+function searchRecord() {
+    showMsg("笔录查询功能");
+}
+
+function addRecord() {
+    currentModal = 'addRecord';
+    openModal('新建笔录', `
+        <div class="form-item"><label>笔录编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="recordId"></div>
+        <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="recordCaseId"></div>
+        <div class="form-item"><label>笔录类型：</label>
+            <select class="select-box" id="recordType">
+                <option>询问笔录</option>
+                <option>讯问笔录</option>
+                <option>报案笔录</option>
+            </select>
+        </div>
+        <div class="form-item"><label>被询问人：</label><input type="text" class="input-text" id="recordTarget"></div>
+        <div class="form-item"><label>制作民警：</label><input type="text" class="input-text" id="recordPolice" value="李警官"></div>
+    `);
+}
+
+// 执法监督管理功能
+let lawSupervisionData = {
+    cases: [
+        {id: 'JA20250525001', name: '盗窃案件', police: '张警官', deadline: '30天', remaining: 25, status: '办理中', supervision: '正常'},
+        {id: 'JA20250510002', name: '治安案件', police: '李警官', deadline: '7天', remaining: 1, status: '办理中', supervision: '预警'}
+    ]
+};
+
+function searchLawSupervision() {
+    showMsg("执法监督查询功能");
+}
+
+function superviseCase(id) {
+    const item = lawSupervisionData.cases.find(c => c.id === id);
+    if (item) {
+        item.supervision = '督办中';
+        showMsg("已启动督办");
+        addLog('督办案件', id);
+    }
+}
+
+// 便民服务大厅功能
+let serviceData = {
+    services: [
+        {id: 'BW20250525001', type: '身份证补办', applicant: '赵某', phone: '13800138001', time: '2025-05-25', status: '办理中', police: '刘警官'},
+        {id: 'BW20250524002', type: '户籍迁移', applicant: '孙某', phone: '13900139002', time: '2025-05-24', status: '已办结', police: '王警官'}
+    ]
+};
+
+function searchService() {
+    showMsg("服务查询功能");
+}
+
+function addService() {
+    currentModal = 'addService';
+    openModal('新增业务', `
+        <div class="form-item"><label>业务编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="serviceId"></div>
+        <div class="form-item"><label>业务类型：</label>
+            <select class="select-box" id="serviceType">
+                <option>户籍业务</option>
+                <option>身份证业务</option>
+                <option>无犯罪记录</option>
+            </select>
+        </div>
+        <div class="form-item"><label>申请人：</label><input type="text" class="input-text" id="serviceApplicant"></div>
+        <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="servicePhone"></div>
+        <div class="form-item"><label>办理民警：</label><input type="text" class="input-text" id="servicePolice" value="刘警官"></div>
+    `);
+}
+
+function completeService(id) {
+    const item = serviceData.services.find(s => s.id === id);
+    if (item) {
+        item.status = '已办结';
+        showMsg("业务已办结");
+        addLog('办结业务', id);
+    }
+}
+
+// 交通管理服务功能
+let trafficData = {
+    services: [
+        {id: 'JT20250525001', plate: '冀A12345', type: '违法处理', party: '钱某', time: '2025-05-25', status: '已处理', police: '交警张警官'},
+        {id: 'JT20250524002', plate: '冀B67890', type: '事故处理', party: '周某', time: '2025-05-24', status: '处理中', police: '交警李警官'}
+    ]
+};
+
+function searchTraffic() {
+    showMsg("交通查询功能");
+}
+
+function addTrafficService() {
+    currentModal = 'addTrafficService';
+    openModal('新增交通业务', `
+        <div class="form-item"><label>业务编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="trafficId"></div>
+        <div class="form-item"><label>车牌号码：</label><input type="text" class="input-text" id="trafficPlate"></div>
+        <div class="form-item"><label>业务类型：</label>
+            <select class="select-box" id="trafficType">
+                <option>违法处理</option>
+                <option>事故处理</option>
+                <option>车辆管理</option>
+            </select>
+        </div>
+        <div class="form-item"><label>当事人：</label><input type="text" class="input-text" id="trafficParty"></div>
+        <div class="form-item"><label>处理民警：</label><input type="text" class="input-text" id="trafficPolice" value="交警张警官"></div>
+    `);
+}
+
+function printTrafficService(id) {
+    showMsg("正在打印单据...");
+    setTimeout(() => {
+        showMsg("打印完成");
+        addLog('打印单据', id);
+    }, 1000);
+}
+
+// 完善saveForm函数，添加对新功能的支持
+function updateSaveForm() {
+    const originalSaveForm = saveForm;
+    window.saveForm = async function() {
+        try {
+            if (currentModal === 'addDispatch') {
+                const id = document.getElementById('dispatchId').value;
+                if (!id) { showMsg("请填写警情编号"); return; }
+                const now = new Date().toLocaleString('zh-CN').replace(/\//g, '-').replace(/年|月|日/g, '-');
+                commandData.dispatches.unshift({
+                    id: id,
+                    type: document.getElementById('dispatchType').value,
+                    center: document.getElementById('dispatchCenter').value,
+                    police: document.getElementById('dispatchPolice').value,
+                    location: document.getElementById('dispatchLocation').value,
+                    status: '处置中',
+                    time: now
+                });
+                addLog('新增调度', id);
+            } else if (currentModal === 'addIntelligence') {
+                const id = document.getElementById('intelId').value;
+                if (!id) { showMsg("请填写情报编号"); return; }
+                const now = new Date().toLocaleString('zh-CN').replace(/\//g, '-').replace(/年|月|日/g, '-');
+                intelligenceData.items.unshift({
+                    id: id,
+                    type: document.getElementById('intelType').value,
+                    summary: document.getElementById('intelSummary').value,
+                    source: document.getElementById('intelSource').value,
+                    risk: document.getElementById('intelRisk').value,
+                    status: '待研判',
+                    time: now
+                });
+                addLog('新增情报', id);
+            } else if (currentModal === 'addVisit') {
+                const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
+                communityData.visits.unshift({
+                    community: document.getElementById('visitCommunity').value,
+                    police: document.getElementById('visitPolice').value,
+                    type: document.getElementById('visitType').value,
+                    target: document.getElementById('visitTarget').value,
+                    content: document.getElementById('visitContent').value,
+                    status: '进行中',
+                    time: now
+                });
+                addLog('新增走访', document.getElementById('visitTarget').value);
+            } else if (currentModal === 'addPatrol') {
+                const id = document.getElementById('patrolId').value;
+                if (!id) { showMsg("请填写巡逻编号"); return; }
+                const now = new Date().toLocaleString('zh-CN').replace(/\//g, '-').replace(/年|月|日/g, '-');
+                patrolData.patrols.unshift({
+                    id: id,
+                    area: document.getElementById('patrolArea').value,
+                    police: document.getElementById('patrolPolice').value,
+                    type: document.getElementById('patrolType').value,
+                    time: now,
+                    status: '巡逻中',
+                    checkins: 0
+                });
+                addLog('新增巡逻', id);
+            } else if (currentModal === 'addRecord') {
+                const id = document.getElementById('recordId').value;
+                if (!id) { showMsg("请填写笔录编号"); return; }
+                const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
+                recordData.records.unshift({
+                    id: id,
+                    caseId: document.getElementById('recordCaseId').value,
+                    type: document.getElementById('recordType').value,
+                    target: document.getElementById('recordTarget').value,
+                    police: document.getElementById('recordPolice').value,
+                    status: '制作中',
+                    time: now
+                });
+                addLog('新增笔录', id);
+            } else if (currentModal === 'addService') {
+                const id = document.getElementById('serviceId').value;
+                if (!id) { showMsg("请填写业务编号"); return; }
+                const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
+                serviceData.services.unshift({
+                    id: id,
+                    type: document.getElementById('serviceType').value,
+                    applicant: document.getElementById('serviceApplicant').value,
+                    phone: document.getElementById('servicePhone').value,
+                    time: now,
+                    status: '办理中',
+                    police: document.getElementById('servicePolice').value
+                });
+                addLog('新增业务', id);
+            } else if (currentModal === 'addTrafficService') {
+                const id = document.getElementById('trafficId').value;
+                if (!id) { showMsg("请填写业务编号"); return; }
+                const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
+                trafficData.services.unshift({
+                    id: id,
+                    plate: document.getElementById('trafficPlate').value,
+                    type: document.getElementById('trafficType').value,
+                    party: document.getElementById('trafficParty').value,
+                    time: now,
+                    status: '处理中',
+                    police: document.getElementById('trafficPolice').value
+                });
+                addLog('新增交通业务', id);
+            } else {
+                await originalSaveForm();
+                return;
+            }
+            closeModal();
+            showMsg("保存成功");
+        } catch(e) {
+            console.error(e);
+            showMsg("保存失败，请检查输入");
+        }
+    };
+}
+
+// 调用更新函数
+updateSaveForm();
 function refreshStatistics() {
     showMsg('统计数据已刷新');
 }

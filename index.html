@@ -29,31 +29,42 @@
                 }
             });
 
-            // 检测开发者工具打开
+            // 检测开发者工具打开 - 更稳定的版本
             var devtools = {
                 open: false,
                 orientation: null
             };
-            var threshold = 160;
+            var threshold = 200; // 提高阈值，减少手机端误判
+            var falsePositiveCount = 0;
+            
+            function isMobile() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+            
             setInterval(function() {
+                // 移动端完全禁用开发者工具检测，避免误判
+                if (isMobile()) {
+                    return;
+                }
+                
                 var widthThreshold = window.outerWidth - window.innerWidth > threshold;
                 var heightThreshold = window.outerHeight - window.innerHeight > threshold;
-                var orientation = widthThreshold ? 'vertical' : 'horizontal';
-
-                if (!(heightThreshold && widthThreshold) &&
-                    ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) ||
-                     widthThreshold || heightThreshold)) {
-                    if (!devtools.open || devtools.orientation !== orientation) {
-                        devtools.open = true;
-                        devtools.orientation = orientation;
-                        alert('请关闭开发者工具！');
-                        window.location.reload();
+                
+                if (widthThreshold || heightThreshold) {
+                    falsePositiveCount++;
+                    // 连续3次检测到才认为是真的打开了开发者工具
+                    if (falsePositiveCount >= 3) {
+                        if (!devtools.open) {
+                            devtools.open = true;
+                            alert('请关闭开发者工具！');
+                            window.location.reload();
+                        }
                     }
                 } else {
+                    falsePositiveCount = 0;
                     devtools.open = false;
-                    devtools.orientation = null;
                 }
-            }, 1000);
+            }, 2000); // 降低检测频率
         })();
     </script>
     <style>

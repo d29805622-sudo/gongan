@@ -3530,6 +3530,7 @@ function renderCommandTable() {
             <td>${item.time}</td>
             <td>
                 <button class="btn btn-edit" onclick="viewDispatch('${item.id}')">查看</button>
+                <button class="btn btn-edit" onclick="editDispatch('${item.id}')">编辑</button>
                 ${item.status !== '已完成' ? `<button class="btn btn-success" onclick="completeDispatch('${item.id}')">完成</button>` : ''}
                 <button class="btn btn-del" onclick="deleteDispatch('${item.id}')">删除</button>
             </td>
@@ -3572,6 +3573,7 @@ function renderCommunityTable() {
             <td>${item.time}</td>
             <td>
                 <button class="btn btn-edit" onclick="viewCommunityDetail(${index})">查看</button>
+                <button class="btn btn-edit" onclick="editVisit(${index})">编辑</button>
                 <button class="btn btn-del" onclick="deleteVisit(${index})">删除</button>
             </td>
         </tr>
@@ -3592,6 +3594,7 @@ function renderPatrolTable() {
             <td>${item.checkins}</td>
             <td>
                 <button class="btn btn-edit" onclick="viewPatrolDetail('${item.id}')">查看</button>
+                <button class="btn btn-edit" onclick="editPatrol('${item.id}')">编辑</button>
                 <button class="btn btn-del" onclick="deletePatrol('${item.id}')">删除</button>
             </td>
         </tr>
@@ -3633,6 +3636,7 @@ function renderLawTable() {
             <td><span class="${getStatusClass(item.supervision)}">${item.supervision}</span></td>
             <td>
                 <button class="btn btn-edit" onclick="viewLawDetail('${item.id}')">查看</button>
+                <button class="btn btn-edit" onclick="editLawCase('${item.id}')">编辑</button>
                 <button class="btn btn-edit" onclick="superviseCase('${item.id}')">督办</button>
                 <button class="btn btn-del" onclick="deleteLawCase('${item.id}')">删除</button>
             </td>
@@ -3654,6 +3658,7 @@ function renderServiceTable() {
             <td>${item.police}</td>
             <td>
                 <button class="btn btn-edit" onclick="viewServiceDetail('${item.id}')">查看</button>
+                <button class="btn btn-edit" onclick="editService('${item.id}')">编辑</button>
                 ${item.status === '办理中' ? `<button class="btn btn-success" onclick="completeService('${item.id}')">办结</button>` : ''}
                 <button class="btn btn-del" onclick="deleteService('${item.id}')">删除</button>
             </td>
@@ -3675,6 +3680,7 @@ function renderTrafficTable() {
             <td>${item.police}</td>
             <td>
                 <button class="btn btn-edit" onclick="viewTrafficDetail('${item.id}')">查看</button>
+                <button class="btn btn-edit" onclick="editTrafficService('${item.id}')">编辑</button>
                 ${item.status === '已处理' ? `<button class="btn btn-export" onclick="printTrafficService('${item.id}')">打印</button>` : ''}
                 <button class="btn btn-del" onclick="deleteTrafficService('${item.id}')">删除</button>
             </td>
@@ -4349,6 +4355,92 @@ function updateSaveForm() {
                     addLog('编辑市场主体', editId);
                     renderMarketTable();
                 }
+            } else if (currentModal === 'editDispatch') {
+                const item = commandData.dispatches.find(d => d.id === editId);
+                if (item) {
+                    item.type = document.getElementById('editDispatchType').value;
+                    item.center = document.getElementById('editDispatchCenter').value;
+                    item.police = document.getElementById('editDispatchPolice').value;
+                    item.location = document.getElementById('editDispatchLocation').value;
+                    item.status = document.getElementById('editDispatchStatus').value;
+                    
+                    addLog('编辑调度', editId);
+                    renderCommandTable();
+                }
+            } else if (currentModal === 'editVisit') {
+                const item = communityData.visits[editId];
+                if (item) {
+                    item.community = document.getElementById('editVisitCommunity').value;
+                    item.police = document.getElementById('editVisitPolice').value;
+                    item.type = document.getElementById('editVisitType').value;
+                    item.target = document.getElementById('editVisitTarget').value;
+                    item.content = document.getElementById('editVisitContent').value;
+                    item.status = document.getElementById('editVisitStatus').value;
+                    
+                    addLog('编辑走访', item.target);
+                    renderCommunityTable();
+                }
+            } else if (currentModal === 'editPatrol') {
+                const item = patrolData.patrols.find(p => p.id === editId);
+                if (item) {
+                    item.area = document.getElementById('editPatrolArea').value;
+                    item.police = document.getElementById('editPatrolPolice').value;
+                    item.type = document.getElementById('editPatrolType').value;
+                    item.checkins = parseInt(document.getElementById('editPatrolCheckins').value) || 0;
+                    item.status = document.getElementById('editPatrolStatus').value;
+                    
+                    addLog('编辑巡逻', editId);
+                    renderPatrolTable();
+                }
+            } else if (currentModal === 'editRecord') {
+                const item = recordData.records.find(r => r.id === editId);
+                if (item) {
+                    item.caseId = document.getElementById('editRecordCaseId').value;
+                    item.type = document.getElementById('editRecordType').value;
+                    item.target = document.getElementById('editRecordTarget').value;
+                    item.police = document.getElementById('editRecordPolice').value;
+                    item.status = document.getElementById('editRecordStatus').value;
+                    
+                    addLog('编辑笔录', editId);
+                    renderRecordTable();
+                }
+            } else if (currentModal === 'editLawCase') {
+                const item = lawSupervisionData.cases.find(c => c.id === editId);
+                if (item) {
+                    item.name = document.getElementById('editLawCaseName').value;
+                    item.police = document.getElementById('editLawCasePolice').value;
+                    item.deadline = document.getElementById('editLawCaseDeadline').value;
+                    item.remaining = parseInt(document.getElementById('editLawCaseRemaining').value) || 0;
+                    item.status = document.getElementById('editLawCaseStatus').value;
+                    item.supervision = document.getElementById('editLawCaseSupervision').value;
+                    
+                    addLog('编辑执法案件', editId);
+                    renderLawTable();
+                }
+            } else if (currentModal === 'editService') {
+                const item = serviceData.services.find(s => s.id === editId);
+                if (item) {
+                    item.type = document.getElementById('editServiceType').value;
+                    item.applicant = document.getElementById('editServiceApplicant').value;
+                    item.phone = document.getElementById('editServicePhone').value;
+                    item.police = document.getElementById('editServicePolice').value;
+                    item.status = document.getElementById('editServiceStatus').value;
+                    
+                    addLog('编辑便民服务', editId);
+                    renderServiceTable();
+                }
+            } else if (currentModal === 'editTrafficService') {
+                const item = trafficData.services.find(t => t.id === editId);
+                if (item) {
+                    item.plate = document.getElementById('editTrafficPlate').value;
+                    item.type = document.getElementById('editTrafficType').value;
+                    item.party = document.getElementById('editTrafficParty').value;
+                    item.police = document.getElementById('editTrafficPolice').value;
+                    item.status = document.getElementById('editTrafficStatus').value;
+                    
+                    addLog('编辑交通服务', editId);
+                    renderTrafficTable();
+                }
             } else {
                 await originalSaveForm();
                 return;
@@ -4724,6 +4816,161 @@ function deleteTrafficService(id) {
             renderTrafficTable();
         }
     }
+}
+
+// 所有模块的编辑函数
+function editDispatch(id) {
+    const item = commandData.dispatches.find(d => d.id === id);
+    if (!item) return;
+    currentModal = 'editDispatch';
+    editId = id;
+    openModal('编辑调度', `
+        <div class="form-item"><label>调度编号：</label><input type="text" class="input-text" id="editDispatchId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>调度类型：</label><input type="text" class="input-text" id="editDispatchType" value="${item.type}"></div>
+        <div class="form-item"><label>指挥中心：</label><input type="text" class="input-text" id="editDispatchCenter" value="${item.center}"></div>
+        <div class="form-item"><label>负责民警：</label><input type="text" class="input-text" id="editDispatchPolice" value="${item.police}"></div>
+        <div class="form-item"><label>地点：</label><input type="text" class="input-text" id="editDispatchLocation" value="${item.location}"></div>
+        <div class="form-item"><label>状态：</label>
+            <select class="select-box" id="editDispatchStatus">
+                <option value="待处理" ${item.status === '待处理' ? 'selected' : ''}>待处理</option>
+                <option value="处理中" ${item.status === '处理中' ? 'selected' : ''}>处理中</option>
+                <option value="已完成" ${item.status === '已完成' ? 'selected' : ''}>已完成</option>
+            </select>
+        </div>
+    `);
+}
+
+function editVisit(index) {
+    const item = communityData.visits[index];
+    if (!item) return;
+    currentModal = 'editVisit';
+    editId = index;
+    openModal('编辑走访记录', `
+        <div class="form-item"><label>社区名称：</label><input type="text" class="input-text" id="editVisitCommunity" value="${item.community}"></div>
+        <div class="form-item"><label>包片民警：</label><input type="text" class="input-text" id="editVisitPolice" value="${item.police}"></div>
+        <div class="form-item"><label>走访类型：</label><input type="text" class="input-text" id="editVisitType" value="${item.type}"></div>
+        <div class="form-item"><label>走访对象：</label><input type="text" class="input-text" id="editVisitTarget" value="${item.target}"></div>
+        <div class="form-item"><label>走访内容：</label><textarea class="input-text" id="editVisitContent">${item.content}</textarea></div>
+        <div class="form-item"><label>状态：</label>
+            <select class="select-box" id="editVisitStatus">
+                <option value="待开始" ${item.status === '待开始' ? 'selected' : ''}>待开始</option>
+                <option value="进行中" ${item.status === '进行中' ? 'selected' : ''}>进行中</option>
+                <option value="已完成" ${item.status === '已完成' ? 'selected' : ''}>已完成</option>
+            </select>
+        </div>
+    `);
+}
+
+function editPatrol(id) {
+    const item = patrolData.patrols.find(p => p.id === id);
+    if (!item) return;
+    currentModal = 'editPatrol';
+    editId = id;
+    openModal('编辑巡逻记录', `
+        <div class="form-item"><label>巡逻编号：</label><input type="text" class="input-text" id="editPatrolId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>巡逻区域：</label><input type="text" class="input-text" id="editPatrolArea" value="${item.area}"></div>
+        <div class="form-item"><label>巡逻民警：</label><input type="text" class="input-text" id="editPatrolPolice" value="${item.police}"></div>
+        <div class="form-item"><label>巡逻方式：</label><input type="text" class="input-text" id="editPatrolType" value="${item.type}"></div>
+        <div class="form-item"><label>签到次数：</label><input type="number" class="input-text" id="editPatrolCheckins" value="${item.checkins}"></div>
+        <div class="form-item"><label>状态：</label>
+            <select class="select-box" id="editPatrolStatus">
+                <option value="待开始" ${item.status === '待开始' ? 'selected' : ''}>待开始</option>
+                <option value="巡逻中" ${item.status === '巡逻中' ? 'selected' : ''}>巡逻中</option>
+                <option value="已结束" ${item.status === '已结束' ? 'selected' : ''}>已结束</option>
+            </select>
+        </div>
+    `);
+}
+
+function editRecord(id) {
+    const item = recordData.records.find(r => r.id === id);
+    if (!item) return;
+    currentModal = 'editRecord';
+    editId = id;
+    openModal('编辑笔录', `
+        <div class="form-item"><label>笔录编号：</label><input type="text" class="input-text" id="editRecordId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="editRecordCaseId" value="${item.caseId || ''}"></div>
+        <div class="form-item"><label>笔录类型：</label><input type="text" class="input-text" id="editRecordType" value="${item.type}"></div>
+        <div class="form-item"><label>被询问人：</label><input type="text" class="input-text" id="editRecordTarget" value="${item.target}"></div>
+        <div class="form-item"><label>制作民警：</label><input type="text" class="input-text" id="editRecordPolice" value="${item.police}"></div>
+        <div class="form-item"><label>状态：</label>
+            <select class="select-box" id="editRecordStatus">
+                <option value="制作中" ${item.status === '制作中' ? 'selected' : ''}>制作中</option>
+                <option value="已完成" ${item.status === '已完成' ? 'selected' : ''}>已完成</option>
+            </select>
+        </div>
+    `);
+}
+
+function editLawCase(id) {
+    const item = lawSupervisionData.cases.find(c => c.id === id);
+    if (!item) return;
+    currentModal = 'editLawCase';
+    editId = id;
+    openModal('编辑执法监督案件', `
+        <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="editLawCaseId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>案件名称：</label><input type="text" class="input-text" id="editLawCaseName" value="${item.name}"></div>
+        <div class="form-item"><label>主办民警：</label><input type="text" class="input-text" id="editLawCasePolice" value="${item.police}"></div>
+        <div class="form-item"><label>办理期限：</label><input type="text" class="input-text" id="editLawCaseDeadline" value="${item.deadline}"></div>
+        <div class="form-item"><label>剩余天数：</label><input type="number" class="input-text" id="editLawCaseRemaining" value="${item.remaining}"></div>
+        <div class="form-item"><label>状态：</label>
+            <select class="select-box" id="editLawCaseStatus">
+                <option value="待处理" ${item.status === '待处理' ? 'selected' : ''}>待处理</option>
+                <option value="办理中" ${item.status === '办理中' ? 'selected' : ''}>办理中</option>
+                <option value="已完成" ${item.status === '已完成' ? 'selected' : ''}>已完成</option>
+            </select>
+        </div>
+        <div class="form-item"><label>监督状态：</label>
+            <select class="select-box" id="editLawCaseSupervision">
+                <option value="正常" ${item.supervision === '正常' ? 'selected' : ''}>正常</option>
+                <option value="预警" ${item.supervision === '预警' ? 'selected' : ''}>预警</option>
+                <option value="督办中" ${item.supervision === '督办中' ? 'selected' : ''}>督办中</option>
+                <option value="异常" ${item.supervision === '异常' ? 'selected' : ''}>异常</option>
+            </select>
+        </div>
+    `);
+}
+
+function editService(id) {
+    const item = serviceData.services.find(s => s.id === id);
+    if (!item) return;
+    currentModal = 'editService';
+    editId = id;
+    openModal('编辑便民服务', `
+        <div class="form-item"><label>业务编号：</label><input type="text" class="input-text" id="editServiceId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>业务类型：</label><input type="text" class="input-text" id="editServiceType" value="${item.type}"></div>
+        <div class="form-item"><label>申请人：</label><input type="text" class="input-text" id="editServiceApplicant" value="${item.applicant}"></div>
+        <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="editServicePhone" value="${item.phone}"></div>
+        <div class="form-item"><label>办理民警：</label><input type="text" class="input-text" id="editServicePolice" value="${item.police}"></div>
+        <div class="form-item"><label>状态：</label>
+            <select class="select-box" id="editServiceStatus">
+                <option value="待办理" ${item.status === '待办理' ? 'selected' : ''}>待办理</option>
+                <option value="办理中" ${item.status === '办理中' ? 'selected' : ''}>办理中</option>
+                <option value="已办结" ${item.status === '已办结' ? 'selected' : ''}>已办结</option>
+            </select>
+        </div>
+    `);
+}
+
+function editTrafficService(id) {
+    const item = trafficData.services.find(t => t.id === id);
+    if (!item) return;
+    currentModal = 'editTrafficService';
+    editId = id;
+    openModal('编辑交通服务', `
+        <div class="form-item"><label>业务编号：</label><input type="text" class="input-text" id="editTrafficServiceId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>车牌号码：</label><input type="text" class="input-text" id="editTrafficPlate" value="${item.plate}"></div>
+        <div class="form-item"><label>业务类型：</label><input type="text" class="input-text" id="editTrafficType" value="${item.type}"></div>
+        <div class="form-item"><label>当事人：</label><input type="text" class="input-text" id="editTrafficParty" value="${item.party}"></div>
+        <div class="form-item"><label>处理民警：</label><input type="text" class="input-text" id="editTrafficPolice" value="${item.police}"></div>
+        <div class="form-item"><label>状态：</label>
+            <select class="select-box" id="editTrafficStatus">
+                <option value="待处理" ${item.status === '待处理' ? 'selected' : ''}>待处理</option>
+                <option value="处理中" ${item.status === '处理中' ? 'selected' : ''}>处理中</option>
+                <option value="已处理" ${item.status === '已处理' ? 'selected' : ''}>已处理</option>
+            </select>
+        </div>
+    `);
 }
 
 function refreshStatistics() {

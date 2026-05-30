@@ -3531,6 +3531,7 @@ function renderCommandTable() {
             <td>
                 <button class="btn btn-edit" onclick="viewDispatch('${item.id}')">查看</button>
                 ${item.status !== '已完成' ? `<button class="btn btn-success" onclick="completeDispatch('${item.id}')">完成</button>` : ''}
+                <button class="btn btn-del" onclick="deleteDispatch('${item.id}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -3571,7 +3572,7 @@ function renderCommunityTable() {
             <td>${item.time}</td>
             <td>
                 <button class="btn btn-edit" onclick="viewCommunityDetail(${index})">查看</button>
-                <button class="btn btn-add" onclick="addVisit()">新增</button>
+                <button class="btn btn-del" onclick="deleteVisit(${index})">删除</button>
             </td>
         </tr>
     `).join('');
@@ -3591,6 +3592,7 @@ function renderPatrolTable() {
             <td>${item.checkins}</td>
             <td>
                 <button class="btn btn-edit" onclick="viewPatrolDetail('${item.id}')">查看</button>
+                <button class="btn btn-del" onclick="deletePatrol('${item.id}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -3611,6 +3613,7 @@ function renderRecordTable() {
             <td>
                 <button class="btn btn-edit" onclick="viewRecordDetail('${item.id}')">查看</button>
                 ${item.status === '已完成' ? `<button class="btn btn-export" onclick="exportRecord('${item.id}')">导出</button>` : `<button class="btn btn-edit" onclick="editRecord('${item.id}')">编辑</button>`}
+                <button class="btn btn-del" onclick="deleteRecord('${item.id}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -3631,6 +3634,7 @@ function renderLawTable() {
             <td>
                 <button class="btn btn-edit" onclick="viewLawDetail('${item.id}')">查看</button>
                 <button class="btn btn-edit" onclick="superviseCase('${item.id}')">督办</button>
+                <button class="btn btn-del" onclick="deleteLawCase('${item.id}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -3651,6 +3655,7 @@ function renderServiceTable() {
             <td>
                 <button class="btn btn-edit" onclick="viewServiceDetail('${item.id}')">查看</button>
                 ${item.status === '办理中' ? `<button class="btn btn-success" onclick="completeService('${item.id}')">办结</button>` : ''}
+                <button class="btn btn-del" onclick="deleteService('${item.id}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -3671,6 +3676,7 @@ function renderTrafficTable() {
             <td>
                 <button class="btn btn-edit" onclick="viewTrafficDetail('${item.id}')">查看</button>
                 ${item.status === '已处理' ? `<button class="btn btn-export" onclick="printTrafficService('${item.id}')">打印</button>` : ''}
+                <button class="btn btn-del" onclick="deleteTrafficService('${item.id}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -4634,6 +4640,89 @@ function viewTrafficDetail(id) {
             <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
             <div class="form-item"><label>处理民警：</label><span>${item.police}</span></div>
         `);
+    }
+}
+
+// 所有模块的删除函数
+function deleteDispatch(id) {
+    if (confirm('确定要删除这个调度吗？')) {
+        const idx = commandData.dispatches.findIndex(d => d.id === id);
+        if (idx > -1) {
+            commandData.dispatches.splice(idx, 1);
+            showMsg('删除成功');
+            addLog('删除调度', id);
+            renderCommandTable();
+        }
+    }
+}
+
+function deleteVisit(index) {
+    if (confirm('确定要删除这个走访记录吗？')) {
+        const item = communityData.visits[index];
+        communityData.visits.splice(index, 1);
+        showMsg('删除成功');
+        addLog('删除走访', item.target);
+        renderCommunityTable();
+    }
+}
+
+function deletePatrol(id) {
+    if (confirm('确定要删除这个巡逻记录吗？')) {
+        const idx = patrolData.patrols.findIndex(p => p.id === id);
+        if (idx > -1) {
+            patrolData.patrols.splice(idx, 1);
+            showMsg('删除成功');
+            addLog('删除巡逻', id);
+            renderPatrolTable();
+        }
+    }
+}
+
+function deleteRecord(id) {
+    if (confirm('确定要删除这个笔录吗？')) {
+        const idx = recordData.records.findIndex(r => r.id === id);
+        if (idx > -1) {
+            recordData.records.splice(idx, 1);
+            showMsg('删除成功');
+            addLog('删除笔录', id);
+            renderRecordTable();
+        }
+    }
+}
+
+function deleteLawCase(id) {
+    if (confirm('确定要删除这个执法监督案件吗？')) {
+        const idx = lawSupervisionData.cases.findIndex(c => c.id === id);
+        if (idx > -1) {
+            lawSupervisionData.cases.splice(idx, 1);
+            showMsg('删除成功');
+            addLog('删除执法案件', id);
+            renderLawTable();
+        }
+    }
+}
+
+function deleteService(id) {
+    if (confirm('确定要删除这个服务记录吗？')) {
+        const idx = serviceData.services.findIndex(s => s.id === id);
+        if (idx > -1) {
+            serviceData.services.splice(idx, 1);
+            showMsg('删除成功');
+            addLog('删除服务', id);
+            renderServiceTable();
+        }
+    }
+}
+
+function deleteTrafficService(id) {
+    if (confirm('确定要删除这个交通服务记录吗？')) {
+        const idx = trafficData.services.findIndex(t => t.id === id);
+        if (idx > -1) {
+            trafficData.services.splice(idx, 1);
+            showMsg('删除成功');
+            addLog('删除交通服务', id);
+            renderTrafficTable();
+        }
     }
 }
 

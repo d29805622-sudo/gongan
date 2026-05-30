@@ -3937,6 +3937,7 @@ function completeDispatch(id) {
         item.status = '已完成';
         showMsg("调度已完成");
         addLog('完成调度', id);
+        renderCommandTable();
     }
 }
 
@@ -3979,11 +3980,13 @@ function analyzeIntelligence(id) {
     const item = intelligenceData.items.find(i => i.id === id);
     if (item) {
         item.status = '研判中';
+        renderIntelTable();
         showMsg("正在进行研判分析...");
         setTimeout(() => {
             item.status = '已处置';
             showMsg("研判完成，已处置");
             addLog('研判情报', id);
+            renderIntelTable();
         }, 1500);
     }
 }
@@ -3995,6 +3998,7 @@ function deleteIntelligence(id) {
             intelligenceData.items.splice(idx, 1);
             showMsg("删除成功");
             addLog('删除情报', id);
+            renderIntelTable();
         }
     }
 }
@@ -4103,6 +4107,7 @@ function superviseCase(id) {
         item.supervision = '督办中';
         showMsg("已启动督办");
         addLog('督办案件', id);
+        renderLawTable();
     }
 }
 
@@ -4141,6 +4146,7 @@ function completeService(id) {
         item.status = '已办结';
         showMsg("业务已办结");
         addLog('办结业务', id);
+        renderServiceTable();
     }
 }
 
@@ -4200,6 +4206,7 @@ function updateSaveForm() {
                     time: now
                 });
                 addLog('新增调度', id);
+                renderCommandTable();
             } else if (currentModal === 'addIntelligence') {
                 const id = document.getElementById('intelId').value;
                 if (!id) { showMsg("请填写情报编号"); return; }
@@ -4214,6 +4221,7 @@ function updateSaveForm() {
                     time: now
                 });
                 addLog('新增情报', id);
+                renderIntelTable();
             } else if (currentModal === 'addVisit') {
                 const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
                 communityData.visits.unshift({
@@ -4226,6 +4234,7 @@ function updateSaveForm() {
                     time: now
                 });
                 addLog('新增走访', document.getElementById('visitTarget').value);
+                renderCommunityTable();
             } else if (currentModal === 'addPatrol') {
                 const id = document.getElementById('patrolId').value;
                 if (!id) { showMsg("请填写巡逻编号"); return; }
@@ -4240,6 +4249,7 @@ function updateSaveForm() {
                     checkins: 0
                 });
                 addLog('新增巡逻', id);
+                renderPatrolTable();
             } else if (currentModal === 'addRecord') {
                 const id = document.getElementById('recordId').value;
                 if (!id) { showMsg("请填写笔录编号"); return; }
@@ -4254,6 +4264,7 @@ function updateSaveForm() {
                     time: now
                 });
                 addLog('新增笔录', id);
+                renderRecordTable();
             } else if (currentModal === 'addService') {
                 const id = document.getElementById('serviceId').value;
                 if (!id) { showMsg("请填写业务编号"); return; }
@@ -4268,6 +4279,7 @@ function updateSaveForm() {
                     police: document.getElementById('servicePolice').value
                 });
                 addLog('新增业务', id);
+                renderServiceTable();
             } else if (currentModal === 'addTrafficService') {
                 const id = document.getElementById('trafficId').value;
                 if (!id) { showMsg("请填写业务编号"); return; }
@@ -4282,6 +4294,7 @@ function updateSaveForm() {
                     police: document.getElementById('trafficPolice').value
                 });
                 addLog('新增交通业务', id);
+                renderTrafficTable();
             } else if (currentModal === 'addMarket') {
                 const id = document.getElementById('marketId').value;
                 if (!id || id.length !== 18) {

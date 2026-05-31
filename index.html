@@ -3516,10 +3516,11 @@ function startSessionCheck() {
 }
 
 // 新增各模块渲染函数
-function renderCommandTable() {
+function renderCommandTable(data) {
     const tbody = document.getElementById('commandTableBody');
     if (!tbody) return;
-    tbody.innerHTML = commandData.dispatches.map(item => `
+    const displayData = data || commandData.dispatches;
+    tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.type}</td>
@@ -3538,10 +3539,11 @@ function renderCommandTable() {
     `).join('');
 }
 
-function renderIntelTable() {
+function renderIntelTable(data) {
     const tbody = document.getElementById('intelTableBody');
     if (!tbody) return;
-    tbody.innerHTML = intelligenceData.items.map(item => `
+    const displayData = data || intelligenceData.items;
+    tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.type}</td>
@@ -3559,10 +3561,13 @@ function renderIntelTable() {
     `).join('');
 }
 
-function renderCommunityTable() {
+function renderCommunityTable(data) {
     const tbody = document.getElementById('communityTableBody');
     if (!tbody) return;
-    tbody.innerHTML = communityData.visits.map((item, index) => `
+    const displayData = data || communityData.visits;
+    tbody.innerHTML = displayData.map((item, index) => {
+        const originalIndex = data ? communityData.visits.indexOf(item) : index;
+        return `
         <tr>
             <td>${item.community}</td>
             <td>${item.police}</td>
@@ -3572,18 +3577,20 @@ function renderCommunityTable() {
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
             <td>${item.time}</td>
             <td>
-                <button class="btn btn-edit" onclick="viewCommunityDetail(${index})">查看</button>
-                <button class="btn btn-edit" onclick="editVisit(${index})">编辑</button>
-                <button class="btn btn-del" onclick="deleteVisit(${index})">删除</button>
+                <button class="btn btn-edit" onclick="viewCommunityDetail(${originalIndex})">查看</button>
+                <button class="btn btn-edit" onclick="editVisit(${originalIndex})">编辑</button>
+                <button class="btn btn-del" onclick="deleteVisit(${originalIndex})">删除</button>
             </td>
         </tr>
-    `).join('');
+        `;
+    }).join('');
 }
 
-function renderPatrolTable() {
+function renderPatrolTable(data) {
     const tbody = document.getElementById('patrolTableBody');
     if (!tbody) return;
-    tbody.innerHTML = patrolData.patrols.map(item => `
+    const displayData = data || patrolData.patrols;
+    tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.area}</td>
@@ -3601,10 +3608,11 @@ function renderPatrolTable() {
     `).join('');
 }
 
-function renderRecordTable() {
+function renderRecordTable(data) {
     const tbody = document.getElementById('recordTableBody');
     if (!tbody) return;
-    tbody.innerHTML = recordData.records.map(item => `
+    const displayData = data || recordData.records;
+    tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.caseId || '-'}</td>
@@ -3622,10 +3630,11 @@ function renderRecordTable() {
     `).join('');
 }
 
-function renderLawTable() {
+function renderLawTable(data) {
     const tbody = document.getElementById('lawTableBody');
     if (!tbody) return;
-    tbody.innerHTML = lawSupervisionData.cases.map(item => `
+    const displayData = data || lawSupervisionData.cases;
+    tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.name}</td>
@@ -3644,10 +3653,11 @@ function renderLawTable() {
     `).join('');
 }
 
-function renderServiceTable() {
+function renderServiceTable(data) {
     const tbody = document.getElementById('serviceTableBody');
     if (!tbody) return;
-    tbody.innerHTML = serviceData.services.map(item => `
+    const displayData = data || serviceData.services;
+    tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.type}</td>
@@ -3666,10 +3676,11 @@ function renderServiceTable() {
     `).join('');
 }
 
-function renderTrafficTable() {
+function renderTrafficTable(data) {
     const tbody = document.getElementById('trafficTableBody');
     if (!tbody) return;
-    tbody.innerHTML = trafficData.services.map(item => `
+    const displayData = data || trafficData.services;
+    tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.plate}</td>
@@ -3907,7 +3918,22 @@ let commandData = {
 };
 
 function searchDispatch() {
-    showMsg("调度查询功能");
+    const keyword = document.getElementById('commandSearch').value.toLowerCase().trim();
+    
+    let filteredData = commandData.dispatches;
+    
+    if (keyword) {
+        filteredData = commandData.dispatches.filter(item => 
+            item.id.toLowerCase().includes(keyword) || 
+            item.type.toLowerCase().includes(keyword) || 
+            item.center.toLowerCase().includes(keyword) || 
+            item.police.toLowerCase().includes(keyword) || 
+            item.location.toLowerCase().includes(keyword)
+        );
+    }
+    
+    renderCommandTable(filteredData);
+    showMsg(`查询完成，共 ${filteredData.length} 条结果`);
 }
 
 function addDispatch() {
@@ -3962,7 +3988,26 @@ let intelligenceData = {
 };
 
 function searchIntelligence() {
-    showMsg("情报分析功能");
+    const keyword = document.getElementById('intelSearch').value.toLowerCase().trim();
+    const typeFilter = document.getElementById('intelTypeFilter').value;
+    
+    let filteredData = intelligenceData.items;
+    
+    if (keyword) {
+        filteredData = filteredData.filter(item => 
+            item.id.toLowerCase().includes(keyword) || 
+            item.type.toLowerCase().includes(keyword) || 
+            item.summary.toLowerCase().includes(keyword) || 
+            item.source.toLowerCase().includes(keyword)
+        );
+    }
+    
+    if (typeFilter && typeFilter !== '全部类型') {
+        filteredData = filteredData.filter(item => item.type === typeFilter);
+    }
+    
+    renderIntelTable(filteredData);
+    showMsg(`查询完成，共 ${filteredData.length} 条结果`);
 }
 
 function addIntelligence() {
@@ -4024,7 +4069,27 @@ let communityData = {
 };
 
 function searchCommunity() {
-    showMsg("社区查询功能");
+    const keyword = document.getElementById('communitySearch').value.toLowerCase().trim();
+    const communityFilter = document.getElementById('communityFilter').value;
+    
+    let filteredData = communityData.visits;
+    
+    if (keyword) {
+        filteredData = filteredData.filter(item => 
+            item.community.toLowerCase().includes(keyword) || 
+            item.police.toLowerCase().includes(keyword) || 
+            item.type.toLowerCase().includes(keyword) || 
+            item.target.toLowerCase().includes(keyword) || 
+            item.content.toLowerCase().includes(keyword)
+        );
+    }
+    
+    if (communityFilter && communityFilter !== '全部社区') {
+        filteredData = filteredData.filter(item => item.community === communityFilter);
+    }
+    
+    renderCommunityTable(filteredData);
+    showMsg(`查询完成，共 ${filteredData.length} 条结果`);
 }
 
 function addVisit() {
@@ -4053,7 +4118,26 @@ let patrolData = {
 };
 
 function searchPatrol() {
-    showMsg("巡逻查询功能");
+    const keyword = document.getElementById('patrolSearch').value.toLowerCase().trim();
+    const statusFilter = document.getElementById('patrolStatusFilter').value;
+    
+    let filteredData = patrolData.patrols;
+    
+    if (keyword) {
+        filteredData = filteredData.filter(item => 
+            item.id.toLowerCase().includes(keyword) || 
+            item.area.toLowerCase().includes(keyword) || 
+            item.police.toLowerCase().includes(keyword) || 
+            item.type.toLowerCase().includes(keyword)
+        );
+    }
+    
+    if (statusFilter && statusFilter !== '全部状态') {
+        filteredData = filteredData.filter(item => item.status === statusFilter);
+    }
+    
+    renderPatrolTable(filteredData);
+    showMsg(`查询完成，共 ${filteredData.length} 条结果`);
 }
 
 function addPatrol() {
@@ -4081,7 +4165,27 @@ let recordData = {
 };
 
 function searchRecord() {
-    showMsg("笔录查询功能");
+    const keyword = document.getElementById('recordSearch').value.toLowerCase().trim();
+    const typeFilter = document.getElementById('recordTypeFilter').value;
+    
+    let filteredData = recordData.records;
+    
+    if (keyword) {
+        filteredData = filteredData.filter(item => 
+            item.id.toLowerCase().includes(keyword) || 
+            (item.caseId && item.caseId.toLowerCase().includes(keyword)) || 
+            item.type.toLowerCase().includes(keyword) || 
+            item.target.toLowerCase().includes(keyword) || 
+            item.police.toLowerCase().includes(keyword)
+        );
+    }
+    
+    if (typeFilter && typeFilter !== '全部类型') {
+        filteredData = filteredData.filter(item => item.type === typeFilter);
+    }
+    
+    renderRecordTable(filteredData);
+    showMsg(`查询完成，共 ${filteredData.length} 条结果`);
 }
 
 function addRecord() {
@@ -4110,7 +4214,25 @@ let lawSupervisionData = {
 };
 
 function searchLawSupervision() {
-    showMsg("执法监督查询功能");
+    const keyword = document.getElementById('lawSearch').value.toLowerCase().trim();
+    const statusFilter = document.getElementById('lawStatusFilter').value;
+    
+    let filteredData = lawSupervisionData.cases;
+    
+    if (keyword) {
+        filteredData = filteredData.filter(item => 
+            item.id.toLowerCase().includes(keyword) || 
+            item.name.toLowerCase().includes(keyword) || 
+            item.police.toLowerCase().includes(keyword)
+        );
+    }
+    
+    if (statusFilter && statusFilter !== '全部状态') {
+        filteredData = filteredData.filter(item => item.supervision === statusFilter);
+    }
+    
+    renderLawTable(filteredData);
+    showMsg(`查询完成，共 ${filteredData.length} 条结果`);
 }
 
 function superviseCase(id) {
@@ -4132,7 +4254,27 @@ let serviceData = {
 };
 
 function searchService() {
-    showMsg("服务查询功能");
+    const keyword = document.getElementById('serviceSearch').value.toLowerCase().trim();
+    const typeFilter = document.getElementById('serviceTypeFilter').value;
+    
+    let filteredData = serviceData.services;
+    
+    if (keyword) {
+        filteredData = filteredData.filter(item => 
+            item.id.toLowerCase().includes(keyword) || 
+            item.type.toLowerCase().includes(keyword) || 
+            item.applicant.toLowerCase().includes(keyword) || 
+            item.phone.includes(keyword) || 
+            item.police.toLowerCase().includes(keyword)
+        );
+    }
+    
+    if (typeFilter && typeFilter !== '全部业务') {
+        filteredData = filteredData.filter(item => item.type === typeFilter);
+    }
+    
+    renderServiceTable(filteredData);
+    showMsg(`查询完成，共 ${filteredData.length} 条结果`);
 }
 
 function addService() {
@@ -4171,7 +4313,27 @@ let trafficData = {
 };
 
 function searchTraffic() {
-    showMsg("交通查询功能");
+    const keyword = document.getElementById('trafficSearch').value.toLowerCase().trim();
+    const typeFilter = document.getElementById('trafficTypeFilter').value;
+    
+    let filteredData = trafficData.services;
+    
+    if (keyword) {
+        filteredData = filteredData.filter(item => 
+            item.id.toLowerCase().includes(keyword) || 
+            item.plate.toLowerCase().includes(keyword) || 
+            item.type.toLowerCase().includes(keyword) || 
+            item.party.toLowerCase().includes(keyword) || 
+            item.police.toLowerCase().includes(keyword)
+        );
+    }
+    
+    if (typeFilter && typeFilter !== '全部类型') {
+        filteredData = filteredData.filter(item => item.type === typeFilter);
+    }
+    
+    renderTrafficTable(filteredData);
+    showMsg(`查询完成，共 ${filteredData.length} 条结果`);
 }
 
 function addTrafficService() {
@@ -4500,7 +4662,32 @@ let marketData = {
 };
 
 function searchMarket() {
-    showMsg('查询功能已触发');
+    const keyword = document.getElementById('marketSearch').value.toLowerCase().trim();
+    const typeFilter = document.getElementById('marketTypeFilter').value;
+    const statusFilter = document.getElementById('marketStatusFilter').value;
+    
+    let filteredData = marketData.entities;
+    
+    if (keyword) {
+        filteredData = filteredData.filter(item => 
+            item.id.toLowerCase().includes(keyword) || 
+            item.name.toLowerCase().includes(keyword) || 
+            item.legalRep.toLowerCase().includes(keyword) || 
+            item.address.toLowerCase().includes(keyword) || 
+            (item.phone && item.phone.includes(keyword))
+        );
+    }
+    
+    if (typeFilter && typeFilter !== '全部类型') {
+        filteredData = filteredData.filter(item => item.type === typeFilter);
+    }
+    
+    if (statusFilter && statusFilter !== '全部状态') {
+        filteredData = filteredData.filter(item => item.status === statusFilter);
+    }
+    
+    renderMarketTable(filteredData);
+    showMsg(`查询完成，共 ${filteredData.length} 条结果`);
 }
 
 function addMarket() {
@@ -4599,10 +4786,11 @@ function deleteMarket(id) {
     }
 }
 
-function renderMarketTable() {
+function renderMarketTable(data) {
     const tbody = document.getElementById('marketTableBody');
     if (!tbody) return;
-    tbody.innerHTML = marketData.entities.map(item => `
+    const displayData = data || marketData.entities;
+    tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.name}</td>

@@ -72,15 +72,32 @@
         body{
             font-family:"Microsoft YaHei",SimSun,Arial;
             font-size:13px;
-            background:#f6f8fa;
+            background:#e8ecf2;
             color:#1a2436;
             overflow-x:hidden;
             width:100%;
             max-width:100vw;
             position:relative;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            text-rendering:optimizeLegibility;
         }
         html {
             overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        /* GPU加速 & 性能优化全局规则 */
+        .top-header,.left-menu,.content-wrap,.stat-card,.stat-chart,.supervision-card,
+        table,tr,td,th,.btn,.modal-box,.modal-mask,.login-box,.search-bar{
+            will-change:auto;
+            transform:translateZ(0);
+            backface-visibility:hidden;
+        }
+        .page-content{
+            contain:layout style paint;
+        }
+        .stat-cards,.stat-rows,.supervision-cards{
+            contain:layout style paint;
         }
         a{text-decoration:none;color:inherit;}
         ul,li{list-style:none;}
@@ -539,41 +556,210 @@
             color:#990000;
             font-weight:600;
         }
-        /* 统计分析样式 */
+        /* 统计分析样式 - 公安指挥中心Dashboard */
         .stat-cards{
-            display:flex;
-            gap:15px;
-            margin:15px 0;
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:12px;
+            margin:12px 0;
         }
         .stat-card{
-            flex:1;
             background:#fff;
-            border:1px solid #c8d2e0;
-            padding:20px;
-            text-align:center;
-            border-radius:3px;
+            border:1px solid #d0d7e2;
+            border-left:4px solid #003366;
+            padding:18px 20px;
+            border-radius:2px;
+            position:relative;
+            overflow:hidden;
+            transition:box-shadow 0.2s,transform 0.2s;
         }
-        .stat-number{
-            font-size:32px;
-            font-weight:700;
+        .stat-card:hover{
+            box-shadow:0 4px 16px rgba(0,51,102,0.12);
+            transform:translateY(-1px);
+        }
+        .stat-card.card-red{border-left-color:#c0392b;}
+        .stat-card.card-orange{border-left-color:#e67e22;}
+        .stat-card.card-green{border-left-color:#27ae60;}
+        .stat-card.card-blue{border-left-color:#2980b9;}
+        .stat-card .stat-icon{
+            position:absolute;
+            right:16px;
+            top:50%;
+            transform:translateY(-50%);
+            font-size:36px;
+            opacity:0.08;
             color:#003366;
         }
-        .stat-label{
-            font-size:13px;
-            color:#666;
-            margin-top:8px;
+        .stat-number{
+            font-size:30px;
+            font-weight:700;
+            color:#003366;
+            line-height:1.2;
         }
-        .stat-rows{
+        .stat-card.card-red .stat-number{color:#c0392b;}
+        .stat-card.card-orange .stat-number{color:#e67e22;}
+        .stat-card.card-green .stat-number{color:#27ae60;}
+        .stat-card.card-blue .stat-number{color:#2980b9;}
+        .stat-label{
+            font-size:12px;
+            color:#6b7c93;
+            margin-top:4px;
+            letter-spacing:0.5px;
+        }
+        .stat-sub{
+            font-size:10px;
+            color:#a0aec0;
+            margin-top:2px;
+        }
+        
+        /* 仪表盘双栏布局 */
+        .dashboard-grid{
+            display:grid;
+            grid-template-columns:1.4fr 1fr;
+            gap:12px;
+            margin:12px 0;
+        }
+        .dash-panel{
+            background:#fff;
+            border:1px solid #d0d7e2;
+            border-radius:2px;
+            overflow:hidden;
+        }
+        .dash-panel-header{
+            background:#f7f9fc;
+            padding:12px 16px;
+            border-bottom:1px solid #e8ecf2;
+            font-size:13px;
+            font-weight:600;
+            color:#003366;
             display:flex;
-            gap:15px;
-            margin-top:15px;
+            align-items:center;
+            gap:8px;
+        }
+        .dash-panel-header .dot{
+            width:6px;
+            height:6px;
+            border-radius:50%;
+            background:#003366;
+        }
+        .dash-panel-body{
+            padding:12px 16px;
+        }
+        
+        /* 实时滚动告警 */
+        .alert-ticker-wrap{
+            background:#fffbe6;
+            border:1px solid #ffe58f;
+            border-radius:2px;
+            padding:8px 12px;
+            margin:12px 0;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            overflow:hidden;
+        }
+        .alert-ticker-label{
+            background:#e67e22;
+            color:#fff;
+            font-size:11px;
+            padding:2px 10px;
+            border-radius:2px;
+            white-space:nowrap;
+            font-weight:600;
+        }
+        .alert-ticker-content{
+            flex:1;
+            overflow:hidden;
+            position:relative;
+            height:22px;
+        }
+        .alert-ticker-scroll{
+            white-space:nowrap;
+            animation:ticker-scroll 20s linear infinite;
+            font-size:12px;
+            color:#7a5a00;
+        }
+        @keyframes ticker-scroll{
+            0%{transform:translateX(100%);}
+            100%{transform:translateX(-100%);}
+        }
+        
+        /* 活动列表 */
+        .activity-list{
+            max-height:280px;
+            overflow-y:auto;
+        }
+        .activity-item{
+            display:flex;
+            align-items:flex-start;
+            gap:10px;
+            padding:8px 0;
+            border-bottom:1px solid #f0f2f5;
+            font-size:12px;
+        }
+        .activity-item:last-child{border-bottom:none;}
+        .activity-time{
+            color:#a0aec0;
+            font-size:11px;
+            white-space:nowrap;
+            min-width:48px;
+        }
+        .activity-dot{
+            width:8px;
+            height:8px;
+            border-radius:50%;
+            margin-top:4px;
+            flex-shrink:0;
+        }
+        .activity-dot.red{background:#c0392b;}
+        .activity-dot.orange{background:#e67e22;}
+        .activity-dot.blue{background:#2980b9;}
+        .activity-dot.green{background:#27ae60;}
+        .activity-text{flex:1;color:#2c3e50;}
+        
+        /* 快捷操作按钮组 */
+        .quick-actions{
+            display:flex;
+            gap:8px;
+            margin:12px 0;
+            flex-wrap:wrap;
+        }
+        .quick-action-btn{
+            flex:1;
+            min-width:100px;
+            padding:10px 12px;
+            background:#fff;
+            border:1px solid #d0d7e2;
+            border-radius:2px;
+            text-align:center;
+            cursor:pointer;
+            font-size:12px;
+            transition:all 0.15s;
+            color:#003366;
+        }
+        .quick-action-btn:hover{
+            background:#003366;
+            color:#fff;
+            border-color:#003366;
+        }
+        .quick-action-btn .qa-icon{
+            display:block;
+            font-size:20px;
+            margin-bottom:4px;
+        }
+        
+        /* 统计行 双栏图表 */
+        .stat-rows{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:12px;
+            margin-top:12px;
         }
         .stat-chart{
-            flex:1;
             background:#fff;
-            border:1px solid #c8d2e0;
-            padding:20px;
-            border-radius:3px;
+            border:1px solid #d0d7e2;
+            padding:16px;
+            border-radius:2px;
         }
         .chart-title{
             font-size:14px;
@@ -924,9 +1110,30 @@
                 margin:4px 0;
             }
             
+            .stat-cards{
+                grid-template-columns:repeat(2,1fr);
+            }
+            .stat-rows,.dashboard-grid{
+                grid-template-columns:1fr;
+            }
             .stat-card{
-                width:100%;
-                margin:8px 0;
+                width:auto;
+                margin:0;
+            }
+            .quick-action-btn{
+                min-width:70px;
+                padding:8px 6px;
+                font-size:10px;
+            }
+            .quick-action-btn .qa-icon{
+                font-size:16px;
+            }
+            .alert-ticker-wrap{
+                font-size:10px;
+                padding:6px 8px;
+            }
+            .activity-list{
+                max-height:200px;
             }
             
             .login-box{
@@ -1022,87 +1229,192 @@
 
 <div class="main-wrap">
     <div class="left-menu" id="leftMenu">
-        <div class="menu-first">综合业务管理</div>
-        <div class="menu-second active" onclick="switchPage('home')">综合工作台</div>
-        <div class="menu-second" onclick="switchPage('alarm')">110接警管理</div>
-        <div class="menu-second" onclick="switchPage('case')">案件备案登记</div>
-        <div class="menu-second" onclick="switchPage('command')">指挥调度中心</div>
-        <div class="menu-second" onclick="switchPage('intelligence')">情报研判分析</div>
+        <div class="menu-first">&#x1F4CA; 综合业务管理</div>
+        <div class="menu-second active" onclick="switchPage('home')">&#x1F3E0; 综合工作台</div>
+        <div class="menu-second" onclick="switchPage('alarm')">&#x1F6A8; 110接警管理</div>
+        <div class="menu-second" onclick="switchPage('case')">&#x1F4CB; 案件备案登记</div>
+        <div class="menu-second" onclick="switchPage('command')">&#x1F4E1; 指挥调度中心</div>
+        <div class="menu-second" onclick="switchPage('intelligence')">&#x1F50D; 情报研判分析</div>
         
-        <div class="menu-first">重点管控模块</div>
-        <div class="menu-second" onclick="switchPage('person')">重点人员管控</div>
-        <div class="menu-second" onclick="switchPage('car')">涉控车辆管理</div>
-        <div class="menu-second" onclick="switchPage('goods')">涉案物品登记</div>
+        <div class="menu-first">&#x1F6E1; 重点管控模块</div>
+        <div class="menu-second" onclick="switchPage('person')">&#x1F464; 重点人员管控</div>
+        <div class="menu-second" onclick="switchPage('car')">&#x1F698; 涉控车辆管理</div>
+        <div class="menu-second" onclick="switchPage('goods')">&#x1F4E6; 涉案物品登记</div>
         
-        <div class="menu-first">社区警务模块</div>
-        <div class="menu-second" onclick="switchPage('community')">社区警务管理</div>
-        <div class="menu-second" onclick="switchPage('patrol')">智慧巡逻防控</div>
+        <div class="menu-first">&#x1F3D8; 社区警务模块</div>
+        <div class="menu-second" onclick="switchPage('community')">&#x1F3E1; 社区警务管理</div>
+        <div class="menu-second" onclick="switchPage('patrol')">&#x1F6F8; 智慧巡逻防控</div>
         
-        <div class="menu-first">执法办案模块</div>
-        <div class="menu-second" onclick="switchPage('record')">电子笔录制作</div>
-        <div class="menu-second" onclick="switchPage('law')">执法监督管理</div>
+        <div class="menu-first">&#x2696; 执法办案模块</div>
+        <div class="menu-second" onclick="switchPage('record')">&#x1F58A; 电子笔录制作</div>
+        <div class="menu-second" onclick="switchPage('law')">&#x1F4DC; 执法监督管理</div>
         
-        <div class="menu-first">便民服务模块</div>
-        <div class="menu-second" onclick="switchPage('service')">便民服务大厅</div>
-        <div class="menu-second" onclick="switchPage('traffic')">交通管理服务</div>
-        <div class="menu-second" onclick="switchPage('market')">市场主体管理</div>
+        <div class="menu-first">&#x1F3DB; 便民服务模块</div>
+        <div class="menu-second" onclick="switchPage('service')">&#x1F3E2; 便民服务大厅</div>
+        <div class="menu-second" onclick="switchPage('traffic')">&#x1F6E3; 交通管理服务</div>
+        <div class="menu-second" onclick="switchPage('market')">&#x1F3EC; 市场主体管理</div>
         
-        <div class="menu-first">统计分析模块</div>
-        <div class="menu-second" onclick="switchPage('statistics')">警情分析报表</div>
-        <div class="menu-second" onclick="switchPage('supervision')">执法监督考评</div>
+        <div class="menu-first">&#x1F4C8; 统计分析模块</div>
+        <div class="menu-second" onclick="switchPage('statistics')">&#x1F4CA; 警情分析报表</div>
+        <div class="menu-second" onclick="switchPage('supervision')">&#x1F4CB; 执法监督考评</div>
         
-        <div class="menu-first">系统运维管理</div>
-        <div class="menu-second" onclick="switchPage('log')">操作日志审计</div>
-        <div class="menu-second" onclick="switchPage('sys')">权限分配管理</div>
+        <div class="menu-first">&#x2699; 系统运维管理</div>
+        <div class="menu-second" onclick="switchPage('log')">&#x1F4DD; 操作日志审计</div>
+        <div class="menu-second" onclick="switchPage('sys')">&#x1F511; 权限分配管理</div>
     </div>
 
     <div class="content-wrap">
-        <!-- 综合工作台 -->
+        <!-- 综合工作台 - 公安指挥中心仪表盘 -->
         <div class="page-content active" id="home">
-            <div class="title-txt">警务综合数据工作台</div>
-            <div class="search-bar">
-                <input type="text" class="input-text" placeholder="输入关键词快速检索" id="keySearch">
-                <select class="select-box" id="typeSearch">
-                    <option value="">全部事件类型</option>
-                    <option value="治安事件">治安事件</option>
-                    <option value="邻里纠纷">邻里纠纷</option>
-                    <option value="治安巡查">治安巡查</option>
-                    <option value="寻衅滋事">寻衅滋事</option>
-                    <option value="盗窃案件">盗窃案件</option>
-                </select>
-                <select class="select-box" id="statSearch">
-                    <option value="">全部处理状态</option>
-                    <option value="待处理">待处理</option>
-                    <option value="处理中">处理中</option>
-                    <option value="已办结">已办结</option>
-                </select>
-                <button class="btn btn-search" onclick="combineSearch()">查询检索</button>
-                <button class="btn btn-add" onclick="openAddModal()">新增记录</button>
-                <button class="btn btn-edit" onclick="openEditModal()">编辑</button>
-                <button class="btn btn-del" onclick="delCheck()">删除</button>
-                <button class="btn btn-export" onclick="exportFile()">导出报表</button>
-                <button class="btn btn-close" onclick="resetEvents()">重置</button>
+            <div class="title-txt">警务综合指挥工作台</div>
+            
+            <!-- KPI统计卡片 -->
+            <div class="stat-cards">
+                <div class="stat-card card-red">
+                    <div class="stat-icon">&#x1F4E3;</div>
+                    <div class="stat-number" id="kpiTodayAlarms">5</div>
+                    <div class="stat-label">今日接警</div>
+                    <div class="stat-sub">较昨日 ↑2</div>
+                </div>
+                <div class="stat-card card-orange">
+                    <div class="stat-icon">&#x2696;</div>
+                    <div class="stat-number" id="kpiTodayCases">2</div>
+                    <div class="stat-label">今日立案</div>
+                    <div class="stat-sub">待审核 1 件</div>
+                </div>
+                <div class="stat-card card-blue">
+                    <div class="stat-icon">&#x1F4CB;</div>
+                    <div class="stat-number" id="kpiPendingCases">12</div>
+                    <div class="stat-label">在办案件</div>
+                    <div class="stat-sub">即将到期 3 件</div>
+                </div>
+                <div class="stat-card card-green">
+                    <div class="stat-icon">&#x2705;</div>
+                    <div class="stat-number" id="kpiClosedCases">85</div>
+                    <div class="stat-label">已结案件</div>
+                    <div class="stat-sub">本月结案率 87%</div>
+                </div>
             </div>
-            <table id="homeTable">
-                <thead>
-                    <tr>
-                        <th style="width: 40px;">选择</th>
-                        <th>事件编号</th>
-                        <th>事件类型</th>
-                        <th>事发地点</th>
-                        <th>处理状态</th>
-                        <th>操作管理</th>
-                    </tr>
-                </thead>
-                <tbody id="homeTableBody">
-                </tbody>
-            </table>
-            <div class="page-area">
-                <span class="page-btn" onclick="prevPage()">上一页</span>
-                <span class="page-btn active" data-page="1" onclick="setPage(1)">1</span>
-                <span class="page-btn" data-page="2" onclick="setPage(2)">2</span>
-                <span class="page-btn" data-page="3" onclick="setPage(3)">3</span>
-                <span class="page-btn" onclick="nextPage()">下一页</span>
+            
+            <!-- 实时告警滚动条 -->
+            <div class="alert-ticker-wrap">
+                <div class="alert-ticker-label">实时警情</div>
+                <div class="alert-ticker-content">
+                    <div class="alert-ticker-scroll">
+                        【2025-05-25 14:30】和平社区发生邻里纠纷，已派警处置 | 
+                        【2025-05-25 13:15】建设路与新华街交叉口交通事故，交警已到场 | 
+                        【2025-05-25 11:42】阳光小区疑似入室盗窃，刑警正在勘查 | 
+                        【2025-05-25 09:08】重点人员张某轨迹异常，情报部门已介入
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 快捷操作入口 -->
+            <div class="quick-actions">
+                <div class="quick-action-btn" onclick="switchPage('alarm')">
+                    <span class="qa-icon">&#x1F6A8;</span>接警登记
+                </div>
+                <div class="quick-action-btn" onclick="switchPage('case')">
+                    <span class="qa-icon">&#x1F4DD;</span>案件备案
+                </div>
+                <div class="quick-action-btn" onclick="switchPage('command')">
+                    <span class="qa-icon">&#x1F4E1;</span>指挥调度
+                </div>
+                <div class="quick-action-btn" onclick="switchPage('intelligence')">
+                    <span class="qa-icon">&#x1F50D;</span>情报研判
+                </div>
+                <div class="quick-action-btn" onclick="switchPage('person')">
+                    <span class="qa-icon">&#x1F464;</span>人员管控
+                </div>
+                <div class="quick-action-btn" onclick="switchPage('patrol')">
+                    <span class="qa-icon">&#x1F6F8;</span>巡逻防控
+                </div>
+            </div>
+            
+            <!-- 双栏布局：事件列表 + 动态面板 -->
+            <div class="dashboard-grid">
+                <!-- 左侧：事件列表 -->
+                <div class="dash-panel">
+                    <div class="dash-panel-header">
+                        <span class="dot"></span>近期警情事件列表
+                    </div>
+                    <div class="dash-panel-body" style="padding:8px;">
+                        <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+                            <input type="text" class="input-text" placeholder="关键词检索" id="keySearch" style="flex:1;min-width:120px;">
+                            <select class="select-box" id="typeSearch" style="margin:0;">
+                                <option value="">全部类型</option>
+                                <option value="治安事件">治安事件</option>
+                                <option value="邻里纠纷">邻里纠纷</option>
+                                <option value="治安巡查">治安巡查</option>
+                                <option value="盗窃案件">盗窃案件</option>
+                            </select>
+                            <button class="btn btn-search" onclick="combineSearch()">查询</button>
+                            <button class="btn btn-add" onclick="openAddModal()">新增</button>
+                            <button class="btn btn-del" onclick="delCheck()">删除</button>
+                        </div>
+                        <table id="homeTable" style="margin:0;">
+                            <thead>
+                                <tr>
+                                    <th style="width:30px;">选</th>
+                                    <th>事件编号</th>
+                                    <th>事件类型</th>
+                                    <th>事发地点</th>
+                                    <th>处理状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="homeTableBody"></tbody>
+                        </table>
+                        <div class="page-area" style="margin:8px 0 0 0;">
+                            <span class="page-btn" onclick="prevPage()">上一页</span>
+                            <span class="page-btn active" data-page="1" onclick="setPage(1)">1</span>
+                            <span class="page-btn" data-page="2" onclick="setPage(2)">2</span>
+                            <span class="page-btn" data-page="3" onclick="setPage(3)">3</span>
+                            <span class="page-btn" onclick="nextPage()">下一页</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 右侧：动态面板 -->
+                <div class="dash-panel">
+                    <div class="dash-panel-header">
+                        <span class="dot" style="background:#e67e22;"></span>系统实时动态
+                    </div>
+                    <div class="dash-panel-body">
+                        <div class="activity-list" id="activityFeed">
+                            <div class="activity-item">
+                                <span class="activity-time">14:30</span>
+                                <span class="activity-dot red"></span>
+                                <span class="activity-text">和平社区邻里纠纷 - 已派警处置</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-time">13:15</span>
+                                <span class="activity-dot orange"></span>
+                                <span class="activity-text">建设路交通事故 - 交警到场处理</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-time">11:42</span>
+                                <span class="activity-dot red"></span>
+                                <span class="activity-text">阳光小区疑似盗窃 - 刑警勘查中</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-time">09:08</span>
+                                <span class="activity-dot blue"></span>
+                                <span class="activity-text">张某轨迹异常预警 - 情报已介入</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-time">08:30</span>
+                                <span class="activity-dot green"></span>
+                                <span class="activity-text">巡逻一组完成早班交接 - 签到正常</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-time">07:45</span>
+                                <span class="activity-dot blue"></span>
+                                <span class="activity-text">系统自动备份完成 - 数据同步正常</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1253,21 +1565,29 @@
                 <button class="btn btn-export" onclick="exportStatistics()">导出报表</button>
             </div>
             <div class="stat-cards">
-                <div class="stat-card">
+                <div class="stat-card card-red">
+                    <div class="stat-icon">&#x1F4E3;</div>
                     <div class="stat-number">5</div>
                     <div class="stat-label">今日接警</div>
+                    <div class="stat-sub">较昨日 ↑2</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card card-orange">
+                    <div class="stat-icon">&#x2696;</div>
                     <div class="stat-number">2</div>
                     <div class="stat-label">今日立案</div>
+                    <div class="stat-sub">待审核 1 件</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card card-blue">
+                    <div class="stat-icon">&#x1F4CB;</div>
                     <div class="stat-number">12</div>
                     <div class="stat-label">在办案件</div>
+                    <div class="stat-sub">本月新增 5 件</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card card-green">
+                    <div class="stat-icon">&#x2705;</div>
                     <div class="stat-number">85</div>
                     <div class="stat-label">已结案件</div>
+                    <div class="stat-sub">结案率 87.6%</div>
                 </div>
             </div>
             <div class="stat-rows">
@@ -2265,23 +2585,29 @@ function getStatusClass(status) {
 function renderHomeTable() {
     const tbody = document.getElementById('homeTableBody');
     
-    // 计算分页数据
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const pageData = data.events.slice(startIndex, endIndex);
     
-    tbody.innerHTML = pageData.map(item => `
-        <tr class="${selectedEventId === item.id ? 'selected-row' : ''}" onclick="selectEvent('${item.id}', event)">
+    // 使用DocumentFragment减少重排
+    const frag = document.createDocumentFragment();
+    pageData.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = selectedEventId === item.id ? 'selected-row' : '';
+        tr.onclick = function(e) { selectEvent(item.id, e); };
+        tr.innerHTML = `
             <td><input type="checkbox" ${selectedEventId === item.id ? 'checked' : ''} onclick="event.stopPropagation(); selectEvent('${item.id}', event)"></td>
             <td>${item.id}</td>
             <td>${item.type}</td>
             <td>${item.address}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
             <td><button class="btn btn-edit" onclick="event.stopPropagation(); editEvent('${item.id}')">编辑</button></td>
-        </tr>
-    `).join('');
+        `;
+        frag.appendChild(tr);
+    });
+    tbody.innerHTML = '';
+    tbody.appendChild(frag);
     
-    // 更新页码按钮
     updatePageBtn();
 }
 
@@ -2768,7 +3094,8 @@ function closeModal() {
 function combineSearch() {
     const key = document.getElementById('keySearch').value.toLowerCase().trim();
     const type = document.getElementById('typeSearch').value;
-    const stat = document.getElementById('statSearch').value;
+    const statEl = document.getElementById('statSearch');
+    const stat = statEl ? statEl.value : '';
     
     // 从原始数据筛选
     data.events = originalData.events.filter(item => {
@@ -3532,16 +3859,22 @@ function updatePageBtn(){
     pageContainer.innerHTML = pageHtml;
 }
 
-// 实时时间
-setInterval(()=>{
-    let d = new Date();
-    let str = d.getFullYear()+"-"+(d.getMonth()+1).toString().padStart(2,'0')+"-"+d.getDate()
-    +" "+d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0')+":"+d.getSeconds().toString().padStart(2,'0');
-    const nowTimeElement = document.getElementById("nowTime");
-    if (nowTimeElement) {
-        nowTimeElement.innerText = str;
+// 实时时间 - 使用requestAnimationFrame实现流畅更新
+let lastTimeUpdate = 0;
+function updateClock(timestamp) {
+    if (timestamp - lastTimeUpdate >= 1000) {
+        lastTimeUpdate = timestamp;
+        let d = new Date();
+        let str = d.getFullYear()+"-"+(d.getMonth()+1).toString().padStart(2,'0')+"-"+d.getDate()
+        +" "+d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0')+":"+d.getSeconds().toString().padStart(2,'0');
+        const nowTimeElement = document.getElementById("nowTime");
+        if (nowTimeElement) {
+            nowTimeElement.innerText = str;
+        }
     }
-},1000);
+    requestAnimationFrame(updateClock);
+}
+requestAnimationFrame(updateClock);
 
 // 定期检查会话
 let sessionCheckInterval = null;

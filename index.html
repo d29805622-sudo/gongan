@@ -610,6 +610,141 @@
         .watch-list{ max-height:200px;overflow-y:auto; }
         .watch-item{ display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f0f2f5;font-size:12px; }
         .watch-tag{ font-size:10px;padding:1px 6px;border-radius:8px;white-space:nowrap;background:#e8edf3;color:#555; }
+        .watch-tag.danger{background:#fee2e2;color:#c0392b;}
+        .watch-tag.warning{background:#fff3cd;color:#856404;}
+        .watch-tag.info{background:#dbeafe;color:#2980b9;}
+        .watch-tag.success{background:#d1fae5;color:#27ae60;}
+        .watch-tag.purple{background:#f3e8ff;color:#7b2cbf;}
+
+        /* 态势感知栏 */
+        .situation-bar{ display:flex;gap:15px;background:#f8fafc;border:1px solid #e8ecf2;padding:10px 15px;border-radius:3px;margin-bottom:15px; }
+        .situation-item{ display:flex;align-items:center;gap:8px;font-size:12px; }
+        .situation-label{ color:#666;font-weight:500; }
+        .situation-status{ font-size:11px;padding:2px 8px;border-radius:10px; }
+        .situation-status.online{ background:#d1fae5;color:#065f46; }
+        .situation-status.offline{ background:#fee2e2;color:#991b1b; }
+
+        /* 工作台头部 */
+        .workbench-header{ display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;flex-wrap:wrap;gap:12px;padding:12px 15px;background:#fff;border:1px solid #e8ecf2;border-radius:3px; }
+        .workbench-title{ font-size:18px;font-weight:600;color:#003366;margin-bottom:4px; }
+        .workbench-user{ font-size:12px;color:#666; }
+        .duty-group{ color:#c0392b;font-weight:500; }
+        .workbench-quick-actions{ display:flex;gap:8px; }
+        .quick-action-btn{ padding:8px 16px;font-size:12px;border:1px solid #d0d7e2;background:#fff;color:#003366;border-radius:3px;cursor:pointer;transition:all 0.2s; }
+        .quick-action-btn:hover{ background:#003366;color:#fff;border-color:#003366; }
+        .quick-action-btn.primary{ background:#003366;color:#fff;border-color:#003366; }
+        .quick-icon{ margin-right:5px; }
+
+        /* 核心数据网格 */
+        .core-data-grid{ display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:15px; }
+        .core-data-card{ background:#fff;border:1px solid #d0d7e2;border-radius:3px;overflow:hidden; }
+        .core-data-card.emergency{border-top:3px solid #c0392b;}
+        .core-data-card.case{border-top:3px solid #2980b9;}
+        .core-data-card.police{border-top:3px solid #27ae60;}
+        .core-data-card.risk{border-top:3px solid #e67e22;}
+        .core-data-header{ background:#f8fafc;padding:10px 12px;border-bottom:1px solid #e8ecf2;display:flex;align-items:center;gap:8px; }
+        .core-data-icon{ font-size:16px; }
+        .core-data-title{ font-size:13px;font-weight:600;color:#003366; }
+        .core-data-body{ padding:12px;display:flex;gap:12px; }
+        .core-data-main{ flex:1; }
+        .data-number{ font-size:32px;font-weight:700;line-height:1.2; }
+        .data-number.emergency-color{color:#c0392b;}
+        .data-number.case-color{color:#2980b9;}
+        .data-number.police-color{color:#27ae60;}
+        .data-number.risk-color{color:#e67e22;}
+        .data-label{ font-size:12px;color:#666;margin:4px 0; }
+        .data-trend{ font-size:11px;padding:2px 6px;border-radius:3px;display:inline-block; }
+        .data-trend.up{background:#fee2e2;color:#991b1b;}
+        .data-trend.down{background:#d1fae5;color:#065f46;}
+        .data-trend.normal{background:#d1fae5;color:#065f46;}
+        .data-trend.warning{background:#fff3cd;color:#92400e;}
+        .core-data-detail{ width:80px;border-left:1px solid #e8ecf2;padding-left:12px; }
+        .data-row{ display:flex;justify-content:space-between;font-size:11px;color:#666;padding:3px 0; }
+        .data-row span:last-child{font-weight:600;}
+        .red{color:#c0392b;}
+        .orange{color:#e67e22;}
+        .green{color:#27ae60;}
+        .blue{color:#2980b9;}
+        .gray{color:#666;}
+        .yellow{color:#d97706;}
+
+        /* 主工作区域 */
+        .main-work-area{ display:grid;grid-template-columns:280px 1fr 280px;gap:12px; }
+        .work-column{ display:flex;flex-direction:column;gap:12px; }
+        .work-panel{ background:#fff;border:1px solid #d0d7e2;border-radius:3px; }
+        .panel-header{ background:#f8fafc;padding:10px 12px;border-bottom:1px solid #e8ecf2;font-size:13px;font-weight:600;color:#003366;display:flex;align-items:center;gap:8px; }
+        .panel-header.warning{background:#fef3c7;}
+        .panel-header.info{background:#dbeafe;}
+        .panel-icon{ font-size:14px; }
+        .panel-badge{ font-size:10px;padding:1px 6px;border-radius:8px;font-weight:normal; }
+        .panel-badge.danger{background:#c0392b;color:#fff;}
+        .panel-badge.warning{background:#e67e22;color:#fff;}
+        .panel-badge.info{background:#2980b9;color:#fff;}
+        .panel-actions{ margin-left:auto;display:flex;gap:6px;align-items:center; }
+        .panel-search{ width:120px;height:26px;border:1px solid #d0d7e2;padding:0 8px;font-size:11px;border-radius:2px; }
+        .panel-select{ height:26px;border:1px solid #d0d7e2;font-size:11px;padding:0 4px;border-radius:2px; }
+        .panel-btn{ padding:4px 10px;font-size:11px;border:1px solid #d0d7e2;background:#fff;color:#003366;border-radius:2px;cursor:pointer; }
+        .panel-btn.primary{ background:#003366;color:#fff;border-color:#003366; }
+        .panel-body{ padding:12px; }
+
+        /* 待办事项样式 */
+        .todo-item{ display:flex;align-items:center;gap:10px;padding:10px 6px;border-bottom:1px solid #f0f2f5;cursor:pointer;transition:background 0.15s; }
+        .todo-item:hover{ background:#f8fafc; }
+        .todo-item:last-of-type{ border-bottom:none; }
+        .priority{ width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+        .priority.high{ background:#c0392b; }
+        .priority.medium{ background:#e67e22; }
+        .priority.low{ background:#27ae60; }
+        .todo-content{ flex:1; }
+        .todo-title{ font-size:12px;font-weight:500;color:#2c3e50;margin-bottom:2px; }
+        .todo-desc{ font-size:11px;color:#888; }
+        .todo-time{ font-size:10px;color:#a0aec0;white-space:nowrap; }
+
+        /* 风险预警样式 */
+        .warning-item{ display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #f0f2f5; }
+        .warning-item:last-of-type{ border-bottom:none; }
+        .warning-level{ width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0; }
+        .warning-level.high{ background:#c0392b; }
+        .warning-level.medium{ background:#e67e22; }
+        .warning-content{ flex:1; }
+        .warning-title{ font-size:12px;font-weight:500;color:#2c3e50;margin-bottom:2px; }
+        .warning-info{ font-size:11px;color:#888; }
+
+        /* 工作台表格 */
+        .work-table{ width:100%;border-collapse:collapse;font-size:11px; }
+        .work-table th{ background:#f8fafc;padding:8px 6px;border-bottom:1px solid #e8ecf2;font-weight:600;color:#003366;text-align:center; }
+        .work-table td{ padding:8px 6px;border-bottom:1px solid #f0f2f5;text-align:center; }
+
+        /* 通知公告样式 */
+        .notice-item{ padding:10px 8px;border-left:3px solid #003366;background:#f8fafc;margin-bottom:8px;border-radius:0 3px 3px 0; }
+        .notice-item:last-of-type{ margin-bottom:0; }
+        .notice-title{ font-size:12px;color:#2c3e50;font-weight:500;margin-bottom:3px;line-height:1.4; }
+        .notice-meta{ font-size:11px;color:#888; }
+
+        /* 日历助手样式 */
+        .calendar-mini{ font-size:12px;width:100%; }
+        .cal-head{ display:flex;justify-content:space-between;align-items:center;margin-bottom:8px; }
+        .cal-title{ font-weight:600;color:#003366; }
+        .cal-nav{ cursor:pointer;padding:2px 6px;border-radius:2px;color:#666; }
+        .cal-nav:hover{ background:#e8ecf2; }
+        .cal-weekdays{ display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:10px;color:#888;padding:4px 0;border-bottom:1px solid #eee; }
+        .cal-days{ display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px; }
+        .cal-day{ padding:4px 2px;cursor:pointer;border-radius:2px;color:#333; }
+        .cal-day:hover{ background:#e8ecf2; }
+        .cal-day.today{ background:#003366;color:#fff;font-weight:bold; }
+        .cal-day.other-month{ color:#ccc; }
+        .cal-day.empty{}
+
+        /* 排班信息 */
+        .schedule-info{ margin-top:12px;border-top:1px solid #e8ecf2;padding-top:10px; }
+        .schedule-title{ font-size:12px;font-weight:600;color:#003366;margin-bottom:8px; }
+        .schedule-list{ font-size:11px;color:#555; }
+        .schedule-item{ display:flex;justify-content:space-between;padding:4px 0; }
+        .schedule-item .day{ color:#888; }
+        .schedule-item .team{ font-weight:500; }
+
+        .panel-more{ display:block;text-align:center;padding:8px;font-size:12px;color:#2980b9;text-decoration:none;border-top:1px solid #f0f2f5;margin-top:8px; }
+        .panel-more:hover{ color:#003366; }
 
         /* 统计卡片（统计页面使用） */
         .stat-cards{
@@ -1144,188 +1279,483 @@
 
 <div class="main-wrap">
     <div class="left-menu" id="leftMenu">
-        <div class="menu-first">&#x1F4CA; 综合业务管理</div>
+        <div class="menu-first">&#x1F4E1; 情报指挥中心</div>
         <div class="menu-second active" onclick="switchPage('home')">&#x1F3E0; 综合工作台</div>
-        <div class="menu-second" onclick="switchPage('alarm')">&#x1F6A8; 110接警管理</div>
-        <div class="menu-second" onclick="switchPage('case')">&#x1F4CB; 案件备案登记</div>
-        <div class="menu-second" onclick="switchPage('command')">&#x1F4E1; 指挥调度中心</div>
+        <div class="menu-second" onclick="switchPage('alarm')">&#x1F6A8; 110接处警平台</div>
+        <div class="menu-second" onclick="switchPage('command')">&#x1F4DF; 指挥调度中心</div>
         <div class="menu-second" onclick="switchPage('intelligence')">&#x1F50D; 情报研判分析</div>
+        <div class="menu-second" onclick="switchPage('combined')">&#x1F4A5; 合成作战平台</div>
         
-        <div class="menu-first">&#x1F6E1; 重点管控模块</div>
+        <div class="menu-first">&#x2696; 执法办案管理</div>
+        <div class="menu-second" onclick="switchPage('case')">&#x1F4CB; 案件办理管理</div>
+        <div class="menu-second" onclick="switchPage('record')">&#x1F58A; 电子笔录制作</div>
+        <div class="menu-second" onclick="switchPage('file')">&#x1F4DA; 电子卷宗管理</div>
+        <div class="menu-second" onclick="switchPage('goods')">&#x1F4E6; 涉案财物管理</div>
+        <div class="menu-second" onclick="switchPage('law')">&#x1F4DC; 执法监督考评</div>
+        
+        <div class="menu-first">&#x1F6E1; 重点要素管控</div>
         <div class="menu-second" onclick="switchPage('person')">&#x1F464; 重点人员管控</div>
         <div class="menu-second" onclick="switchPage('car')">&#x1F698; 涉控车辆管理</div>
-        <div class="menu-second" onclick="switchPage('goods')">&#x1F4E6; 涉案物品登记</div>
         
-        <div class="menu-first">&#x1F3D8; 社区警务模块</div>
+        <div class="menu-first">&#x1F3D8; 基层警务管理</div>
         <div class="menu-second" onclick="switchPage('community')">&#x1F3E1; 社区警务管理</div>
         <div class="menu-second" onclick="switchPage('patrol')">&#x1F6F8; 智慧巡逻防控</div>
+        <div class="menu-second" onclick="switchPage('duty')">&#x1F4C5; 勤务排班管理</div>
         
-        <div class="menu-first">&#x2696; 执法办案模块</div>
-        <div class="menu-second" onclick="switchPage('record')">&#x1F58A; 电子笔录制作</div>
-        <div class="menu-second" onclick="switchPage('law')">&#x1F4DC; 执法监督管理</div>
-        
-        <div class="menu-first">&#x1F3DB; 便民服务模块</div>
+        <div class="menu-first">&#x1F3DB; 民生服务管理</div>
         <div class="menu-second" onclick="switchPage('service')">&#x1F3E2; 便民服务大厅</div>
         <div class="menu-second" onclick="switchPage('traffic')">&#x1F6E3; 交通管理服务</div>
         <div class="menu-second" onclick="switchPage('market')">&#x1F3EC; 市场主体管理</div>
+        <div class="menu-second" onclick="switchPage('petition')">&#x1F4DD; 信访事项管理</div>
         
-        <div class="menu-first">&#x1F4C8; 统计分析模块</div>
-        <div class="menu-second" onclick="switchPage('statistics')">&#x1F4CA; 警情分析报表</div>
-        <div class="menu-second" onclick="switchPage('supervision')">&#x1F4CB; 执法监督考评</div>
+        <div class="menu-first">&#x1F4C8; 统计分析考核</div>
+        <div class="menu-second" onclick="switchPage('statistics')">&#x1F4CA; 警情数据统计</div>
+        <div class="menu-second" onclick="switchPage('assessment')">&#x1F3AF; 绩效考核管理</div>
         
         <div class="menu-first">&#x2699; 系统运维管理</div>
         <div class="menu-second" onclick="switchPage('log')">&#x1F4DD; 操作日志审计</div>
-        <div class="menu-second" onclick="switchPage('sys')">&#x1F511; 权限分配管理</div>
+        <div class="menu-second" onclick="switchPage('sys')">&#x1F511; 账号权限管理</div>
     </div>
 
     <div class="content-wrap">
-        <!-- 综合工作台 - 公安综合应用平台门户 -->
+        <!-- 综合工作台 - 公安综合应用平台门户（情指行一体化） -->
         <div class="page-content active" id="home">
-            <div class="title-txt">个人工作台</div>
-            
-            <!-- 第一行：待办事项 + 通知公告 -->
-            <div class="portal-grid">
-                <div class="portal-card">
-                    <div class="portal-header">待办事项 <span class="badge">3 条待处理</span></div>
-                    <div class="portal-body">
-                        <div class="todo-item" onclick="switchPage('case')">
-                            <span class="todo-priority high"></span>
-                            <span class="todo-content">涉密案件审批 - 需要您审核确认</span>
-                            <span class="todo-time">今天 14:20</span>
-                        </div>
-                        <div class="todo-item" onclick="switchPage('case')">
-                            <span class="todo-priority medium"></span>
-                            <span class="todo-content">车辆扣押申请审核 - 张三提交的申请</span>
-                            <span class="todo-time">今天 11:05</span>
-                        </div>
-                        <div class="todo-item" onclick="switchPage('sys')">
-                            <span class="todo-priority low"></span>
-                            <span class="todo-content">月度工作报告 - 请于本周内提交</span>
-                            <span class="todo-time">昨天 16:30</span>
-                        </div>
-                        <div class="todo-more"><a href="#">查看全部待办 &raquo;</a></div>
-                    </div>
+            <!-- 顶部态势感知区域 -->
+            <div class="situation-bar">
+                <div class="situation-item">
+                    <span class="situation-label">情指行一体化</span>
+                    <span class="situation-status online">运行正常</span>
                 </div>
-                
-                <div class="portal-card">
-                    <div class="portal-header">&#x1F4F0; 通知公告 <span class="badge">2 条新消息</span></div>
-                    <div class="portal-body">
-                        <div class="notice-item">
-                            <div class="notice-title">关于开展夏季治安整治专项行动的通知</div>
-                            <div class="notice-time">2025-05-24 发布 | 指挥中心</div>
-                        </div>
-                        <div class="notice-item">
-                            <div class="notice-title">系统升级维护公告（2025年5月25日）</div>
-                            <div class="notice-time">2025-05-23 发布 | 技术保障科</div>
-                        </div>
-                        <div class="notice-item">
-                            <div class="notice-title">关于加强数据安全管理的紧急通知</div>
-                            <div class="notice-time">2025-05-22 发布 | 政治部</div>
-                        </div>
-                        <div class="todo-more"><a href="#">查看全部公告 &raquo;</a></div>
-                    </div>
+                <div class="situation-item">
+                    <span class="situation-label">合成作战平台</span>
+                    <span class="situation-status online">已激活</span>
+                </div>
+                <div class="situation-item">
+                    <span class="situation-label">智慧110系统</span>
+                    <span class="situation-status online">服务中</span>
+                </div>
+                <div class="situation-item">
+                    <span class="situation-label">数据赋能中台</span>
+                    <span class="situation-status online">待命中</span>
                 </div>
             </div>
             
-            <!-- 第二行：快捷入口 + 日历 -->
-            <div class="portal-grid">
-                <div class="portal-card">
-                    <div class="portal-header">&#x2699; 常用系统快捷入口</div>
-                    <div class="portal-body">
-                        <div class="shortcut-grid">
-                            <div class="shortcut-item" onclick="switchPage('alarm')"><span class="shortcut-icon">&#x1F6A8;</span><span class="shortcut-label">110接警</span></div>
-                            <div class="shortcut-item" onclick="switchPage('case')"><span class="shortcut-icon">&#x1F4CB;</span><span class="shortcut-label">案件管理</span></div>
-                            <div class="shortcut-item" onclick="switchPage('command')"><span class="shortcut-icon">&#x1F4E1;</span><span class="shortcut-label">指挥调度</span></div>
-                            <div class="shortcut-item" onclick="switchPage('intelligence')"><span class="shortcut-icon">&#x1F50D;</span><span class="shortcut-label">情报研判</span></div>
-                            <div class="shortcut-item" onclick="switchPage('person')"><span class="shortcut-icon">&#x1F464;</span><span class="shortcut-label">人员管控</span></div>
-                            <div class="shortcut-item" onclick="switchPage('car')"><span class="shortcut-icon">&#x1F698;</span><span class="shortcut-label">车辆管控</span></div>
-                            <div class="shortcut-item" onclick="switchPage('community')"><span class="shortcut-icon">&#x1F3ED;</span><span class="shortcut-label">社区警务</span></div>
-                            <div class="shortcut-item" onclick="switchPage('patrol')"><span class="shortcut-icon">&#x1F6F8;</span><span class="shortcut-label">巡逻防控</span></div>
-                            <div class="shortcut-item" onclick="switchPage('record')"><span class="shortcut-icon">&#x1F58A;</span><span class="shortcut-label">电子笔录</span></div>
-                            <div class="shortcut-item" onclick="switchPage('law')"><span class="shortcut-icon">&#x1F4DC;</span><span class="shortcut-label">执法监督</span></div>
-                            <div class="shortcut-item" onclick="switchPage('service')"><span class="shortcut-icon">&#x1F3EC;</span><span class="shortcut-label">便民服务</span></div>
-                            <div class="shortcut-item" onclick="switchPage('traffic')"><span class="shortcut-icon">&#x1F6E3;</span><span class="shortcut-label">交通管理</span></div>
-                            <div class="shortcut-item" onclick="switchPage('market')"><span class="shortcut-icon">&#x1F3EC;</span><span class="shortcut-label">市场主体</span></div>
+            <!-- 个人工作台欢迎区 -->
+            <div class="workbench-header">
+                <div class="workbench-welcome">
+                    <div class="workbench-title">综合警务工作台</div>
+                    <div class="workbench-user">
+                        <span id="workUserName">超级管理员</span> | <span id="workDateText"></span> | 值班组：<span class="duty-group">指挥中心一组</span>
+                    </div>
+                </div>
+                <div class="workbench-quick-actions">
+                    <button class="quick-action-btn primary" onclick="switchPage('alarm')">
+                        <span class="quick-icon">&#x1F6A8;</span> 110接警
+                    </button>
+                    <button class="quick-action-btn" onclick="switchPage('command')">
+                        <span class="quick-icon">&#x1F4DF;</span> 指挥调度
+                    </button>
+                    <button class="quick-action-btn" onclick="switchPage('combined')">
+                        <span class="quick-icon">&#x1F4A5;</span> 合成作战
+                    </button>
+                    <button class="quick-action-btn" onclick="switchPage('intelligence')">
+                        <span class="quick-icon">&#x1F50D;</span> 情报研判
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 今日警务核心数据 -->
+            <div class="core-data-grid">
+                <div class="core-data-card emergency">
+                    <div class="core-data-header">
+                        <span class="core-data-icon">&#x1F6A8;</span>
+                        <span class="core-data-title">110警情态势</span>
+                    </div>
+                    <div class="core-data-body">
+                        <div class="core-data-main">
+                            <div class="data-number emergency-color">5</div>
+                            <div class="data-label">今日接警</div>
+                            <div class="data-trend up">较昨日 +2</div>
+                        </div>
+                        <div class="core-data-detail">
+                            <div class="data-row"><span>待派警</span><span class="red">1</span></div>
+                            <div class="data-row"><span>处警中</span><span class="orange">2</span></div>
+                            <div class="data-row"><span>已处置</span><span class="green">2</span></div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="portal-card">
-                    <div class="portal-header">&#x1F4C5; 日历助手</div>
-                    <div class="portal-body">
-                        <div class="calendar-mini" id="miniCalendar"></div>
+                <div class="core-data-card case">
+                    <div class="core-data-header">
+                        <span class="core-data-icon">&#x1F4CB;</span>
+                        <span class="core-data-title">案件办理态势</span>
+                    </div>
+                    <div class="core-data-body">
+                        <div class="core-data-main">
+                            <div class="data-number case-color">12</div>
+                            <div class="data-label">在办案件</div>
+                            <div class="data-trend warning">即将到期 3 件</div>
+                        </div>
+                        <div class="core-data-detail">
+                            <div class="data-row"><span>刑事案件</span><span class="blue">5</span></div>
+                            <div class="data-row"><span>行政案件</span><span class="blue">7</span></div>
+                            <div class="data-row"><span>本月结案</span><span class="green">85</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="core-data-card police">
+                    <div class="core-data-header">
+                        <span class="core-data-icon">&#x1F46E;</span>
+                        <span class="core-data-title">勤务指挥态势</span>
+                    </div>
+                    <div class="core-data-body">
+                        <div class="core-data-main">
+                            <div class="data-number police-color">126</div>
+                            <div class="data-label">在线警力</div>
+                            <div class="data-trend normal">全部在岗</div>
+                        </div>
+                        <div class="core-data-detail">
+                            <div class="data-row"><span>街面巡逻</span><span class="green">45</span></div>
+                            <div class="data-row"><span>派出所</span><span class="blue">62</span></div>
+                            <div class="data-row"><span>其他警种</span><span class="gray">19</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="core-data-card risk">
+                    <div class="core-data-header">
+                        <span class="core-data-icon">&#x26A0;</span>
+                        <span class="core-data-title">风险预警态势</span>
+                    </div>
+                    <div class="core-data-body">
+                        <div class="core-data-main">
+                            <div class="data-number risk-color">8</div>
+                            <div class="data-label">预警总数</div>
+                            <div class="data-trend down">已化解 5</div>
+                        </div>
+                        <div class="core-data-detail">
+                            <div class="data-row"><span>红色预警</span><span class="red">2</span></div>
+                            <div class="data-row"><span>橙色预警</span><span class="orange">3</span></div>
+                            <div class="data-row"><span>黄色预警</span><span class="yellow">3</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <!-- 第三行：常用功能 + 关注列表 -->
-            <div class="portal-grid">
-                <div class="portal-card">
-                    <div class="portal-header">&#x2699; 常用操作功能</div>
-                    <div class="portal-body">
-                        <div class="func-btns">
-                            <button class="func-btn" onclick="openAddModal()">+ 新增记录</button>
-                            <button class="func-btn" onclick="combineSearch()">🔍 综合查询</button>
-                            <button class="func-btn" onclick="exportFile()">📤 导出报表</button>
-                            <button class="func-btn" onclick="resetEvents()">↺ 重置筛选</button>
+            <!-- 主工作区域：三栏布局 -->
+            <div class="main-work-area">
+                <!-- 左栏：待办事项 + 重点关注 -->
+                <div class="work-column left">
+                    <div class="work-panel">
+                        <div class="panel-header">
+                            <span class="panel-icon">&#x2714;</span>
+                            待办事项
+                            <span class="panel-badge danger">3</span>
                         </div>
-                        
-                        <div style="margin-top:12px;">
-                            <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
-                                <input type="text" class="input-text" placeholder="关键词检索" id="keySearch" style="flex:1;">
-                                <select class="select-box" id="typeSearch" style="margin:0;"><option value="">全部类型</option><option value="治安事件">治安事件</option><option value="邻里纠纷">邻里纠纷</option><option value="盗窃案件">盗窃案件</option></select>
-                                <button class="btn btn-search" onclick="combineSearch()">查询</button>
+                        <div class="panel-body">
+                            <div class="todo-item" onclick="switchPage('case')">
+                                <span class="priority high"></span>
+                                <div class="todo-content">
+                                    <div class="todo-title">涉密案件审批</div>
+                                    <div class="todo-desc">需您审核确认</div>
+                                </div>
+                                <div class="todo-time">今天 14:20</div>
                             </div>
-                            <table id="homeTable" style="margin:0;">
-                                <thead><tr><th style="width:30px;">选</th><th>事件编号</th><th>类型</th><th>地点</th><th>状态</th><th>操作</th></tr></thead>
+                            <div class="todo-item" onclick="switchPage('goods')">
+                                <span class="priority medium"></span>
+                                <div class="todo-content">
+                                    <div class="todo-title">涉案财物登记</div>
+                                    <div class="todo-desc">张三提交 - 待审核</div>
+                                </div>
+                                <div class="todo-time">今天 11:05</div>
+                            </div>
+                            <div class="todo-item" onclick="switchPage('petition')">
+                                <span class="priority medium"></span>
+                                <div class="todo-content">
+                                    <div class="todo-title">信访事项反馈</div>
+                                    <div class="todo-desc">群众信访 - 待处理</div>
+                                </div>
+                                <div class="todo-time">今天 09:15</div>
+                            </div>
+                            <div class="todo-item" onclick="switchPage('law')">
+                                <span class="priority low"></span>
+                                <div class="todo-content">
+                                    <div class="todo-title">执法监督周报</div>
+                                    <div class="todo-desc">请于本周五前提交</div>
+                                </div>
+                                <div class="todo-time">昨天 16:30</div>
+                            </div>
+                            <a class="panel-more" href="#" onclick="event.preventDefault(); showMsg('查看全部待办');">查看全部待办 &raquo;</a>
+                        </div>
+                    </div>
+                    
+                    <div class="work-panel">
+                        <div class="panel-header warning">
+                            <span class="panel-icon">&#x26A0;</span>
+                            风险预警
+                            <span class="panel-badge warning">2</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="warning-item high">
+                                <span class="warning-level">高</span>
+                                <div class="warning-content">
+                                    <div class="warning-title">重点人员轨迹异常</div>
+                                    <div class="warning-info">李某 - 离开常驻区域 | <span class="red">需关注</span></div>
+                                </div>
+                            </div>
+                            <div class="warning-item medium">
+                                <span class="warning-level">中</span>
+                                <div class="warning-content">
+                                    <div class="warning-title">场所安全隐患</div>
+                                    <div class="warning-info">某网吧消防检查不合格 | <span class="orange">待整改</span></div>
+                                </div>
+                            </div>
+                            <a class="panel-more" href="#" onclick="event.preventDefault(); switchPage('law');">查看全部预警 &raquo;</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 中栏：警情列表 + 快捷入口 -->
+                <div class="work-column center">
+                    <div class="work-panel">
+                        <div class="panel-header">
+                            <span class="panel-icon">&#x1F4CB;</span>
+                            近期警情事件
+                            <div class="panel-actions">
+                                <input type="text" class="panel-search" placeholder="关键词检索..." id="keySearch" onkeyup="if(event.key==='Enter')combineSearch()">
+                                <select class="panel-select" id="typeSearch">
+                                    <option value="">全部类型</option>
+                                    <option value="治安事件">治安事件</option>
+                                    <option value="邻里纠纷">邻里纠纷</option>
+                                    <option value="盗窃案件">盗窃案件</option>
+                                </select>
+                                <button class="panel-btn" onclick="combineSearch()">查询</button>
+                                <button class="panel-btn primary" onclick="openAddModal()">新增</button>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="padding:0;">
+                            <table class="work-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:30px;">选</th>
+                                        <th>事件编号</th>
+                                        <th>类型</th>
+                                        <th>地点</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
                                 <tbody id="homeTableBody"></tbody>
                             </table>
-                            <div class="page-area" style="margin:8px 0 0 0;">
+                            <div class="page-area">
                                 <span class="page-btn" onclick="prevPage()">上一页</span>
-                                <span class="page-btn active" data-page="1" onclick="setPage(1)">1</span>
-                                <span class="page-btn" data-page="2" onclick="setPage(2)">2</span>
-                                <span class="page-btn" data-page="3" onclick="setPage(3)">3</span>
+                                <span class="page-btn active">1</span>
                                 <span class="page-btn" onclick="nextPage()">下一页</span>
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="work-panel">
+                        <div class="panel-header">
+                            <span class="panel-icon">&#x2699;</span>
+                            核心业务快捷入口
+                        </div>
+                        <div class="panel-body">
+                            <div class="shortcut-grid">
+                                <div class="shortcut-item" onclick="switchPage('alarm')">
+                                    <span class="shortcut-icon">&#x1F6A8;</span>
+                                    <span class="shortcut-label">110接警</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('command')">
+                                    <span class="shortcut-icon">&#x1F4DF;</span>
+                                    <span class="shortcut-label">指挥调度</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('intelligence')">
+                                    <span class="shortcut-icon">&#x1F50D;</span>
+                                    <span class="shortcut-label">情报研判</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('combined')">
+                                    <span class="shortcut-icon">&#x1F4A5;</span>
+                                    <span class="shortcut-label">合成作战</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('case')">
+                                    <span class="shortcut-icon">&#x1F4CB;</span>
+                                    <span class="shortcut-label">案件办理</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('record')">
+                                    <span class="shortcut-icon">&#x1F58A;</span>
+                                    <span class="shortcut-label">电子笔录</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('file')">
+                                    <span class="shortcut-icon">&#x1F4DA;</span>
+                                    <span class="shortcut-label">电子卷宗</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('goods')">
+                                    <span class="shortcut-icon">&#x1F4E6;</span>
+                                    <span class="shortcut-label">涉案财物</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('person')">
+                                    <span class="shortcut-icon">&#x1F464;</span>
+                                    <span class="shortcut-label">重点人员</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('car')">
+                                    <span class="shortcut-icon">&#x1F698;</span>
+                                    <span class="shortcut-label">涉控车辆</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('community')">
+                                    <span class="shortcut-icon">&#x1F3E1;</span>
+                                    <span class="shortcut-label">社区警务</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('patrol')">
+                                    <span class="shortcut-icon">&#x1F6F8;</span>
+                                    <span class="shortcut-label">巡逻防控</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('duty')">
+                                    <span class="shortcut-icon">&#x1F4C5;</span>
+                                    <span class="shortcut-label">勤务管理</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('law')">
+                                    <span class="shortcut-icon">&#x1F4DC;</span>
+                                    <span class="shortcut-label">执法监督</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('service')">
+                                    <span class="shortcut-icon">&#x1F3E2;</span>
+                                    <span class="shortcut-label">便民服务</span>
+                                </div>
+                                <div class="shortcut-item" onclick="switchPage('traffic')">
+                                    <span class="shortcut-icon">&#x1F6E3;</span>
+                                    <span class="shortcut-label">交通管理</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="portal-card">
-                    <div class="portal-header">&#x1F441; 关注动态</div>
-                    <div class="portal-body">
-                        <div class="watch-list">
-                            <div class="watch-item">
-                                <span class="watch-tag" style="background:#fee2e2;color:#c0392b;">警情</span>
-                                <span>和平社区邻里纠纷 - 处置中</span>
+                <!-- 右栏：通知公告 + 关注动态 + 日历 -->
+                <div class="work-column right">
+                    <div class="work-panel">
+                        <div class="panel-header info">
+                            <span class="panel-icon">&#x1F4F0;</span>
+                            通知公告
+                            <span class="panel-badge info">2</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="notice-item">
+                                <div class="notice-title">关于开展夏季治安打击整治专项行动的通知</div>
+                                <div class="notice-meta">2025-05-24 | 指挥中心</div>
                             </div>
-                            <div class="watch-item">
-                                <span class="watch-tag" style="background:#fee2e2;color:#c0392b;">案件</span>
-                                <span>阳光小区盗窃案 - 侦查中</span>
+                            <div class="notice-item">
+                                <div class="notice-title">警务综合应用平台系统升级维护公告</div>
+                                <div class="notice-meta">2025-05-23 | 科技信息科</div>
                             </div>
-                            <div class="watch-item">
-                                <span class="watch-tag" style="background:#fff3cd;color:#856404;">人员</span>
-                                <span>张某轨迹异常 - 已关注</span>
+                            <div class="notice-item">
+                                <div class="notice-title">关于加强警情数据安全管理的紧急通知</div>
+                                <div class="notice-meta">2025-05-22 | 警务保障部</div>
                             </div>
-                            <div class="watch-item">
-                                <span class="watch-tag" style="background:#dbeafe;color:#2980b9;">巡逻</span>
-                                <span>建设路夜间巡查 - 正常</span>
+                            <div class="notice-item">
+                                <div class="notice-title">2025年度第二期警务执法培训报名通知</div>
+                                <div class="notice-meta">2025-05-20 | 教育训练科</div>
                             </div>
-                            <div class="watch-item">
-                                <span class="watch-tag" style="background:#d1fae5;color:#27ae60;">办结</span>
-                                <span>幸福社区户籍迁移 - 已完成</span>
+                            <a class="panel-more" href="#" onclick="event.preventDefault(); showMsg('查看历史公告');">查看全部公告 &raquo;</a>
+                        </div>
+                    </div>
+                    
+                    <div class="work-panel">
+                        <div class="panel-header">
+                            <span class="panel-icon">&#x1F441;</span>
+                            关注动态
+                        </div>
+                        <div class="panel-body">
+                            <div class="watch-list">
+                                <div class="watch-item">
+                                    <span class="watch-tag danger">警情</span>
+                                    <span>和平社区邻里纠纷 - 处置中</span>
+                                </div>
+                                <div class="watch-item">
+                                    <span class="watch-tag danger">案件</span>
+                                    <span>阳光小区盗窃案 - 侦查中</span>
+                                </div>
+                                <div class="watch-item">
+                                    <span class="watch-tag warning">人员</span>
+                                    <span>张某轨迹异常 - 已关注</span>
+                                </div>
+                                <div class="watch-item">
+                                    <span class="watch-tag info">巡逻</span>
+                                    <span>建设路夜间巡查 - 正常</span>
+                                </div>
+                                <div class="watch-item">
+                                    <span class="watch-tag success">办结</span>
+                                    <span>幸福社区户籍迁移 - 已完成</span>
+                                </div>
+                                <div class="watch-item">
+                                    <span class="watch-tag purple">勤务</span>
+                                    <span>五一安保任务 - 执行中</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="work-panel">
+                        <div class="panel-header">
+                            <span class="panel-icon">&#x1F4C5;</span>
+                            日历助手
+                        </div>
+                        <div class="panel-body">
+                            <div class="calendar-mini" id="miniCalendar"></div>
+                            <div class="schedule-info">
+                                <div class="schedule-title">本周排班</div>
+                                <div class="schedule-list">
+                                    <div class="schedule-item"><span class="day">周一</span><span class="team">指挥中心一组</span></div>
+                                    <div class="schedule-item"><span class="day">周二</span><span class="team">指挥中心一组</span></div>
+                                    <div class="schedule-item"><span class="day">周三</span><span class="team">指挥中心二组</span></div>
+                                    <div class="schedule-item"><span class="day">周四</span><span class="team">指挥中心二组</span></div>
+                                    <div class="schedule-item"><span class="day">周五</span><span class="team">指挥中心三组</span></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        </div>
 
-        <!-- 110接警管理 -->
+        <!-- 110接处警平台 -->
         <div class="page-content" id="alarm">
-            <div class="title-txt">110接警处警管理</div>
+            <div class="title-txt">110接处警管理平台</div>
+            
+            <!-- 接警数据概览 -->
+            <div class="stat-cards">
+                <div class="stat-card card-red">
+                    <div style="font-size:28px;font-weight:700;color:#c0392b;">5</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">今日接警</div>
+                    <div style="font-size:10px;color:#999;margin-top:2px;">排队处理 1 件</div>
+                </div>
+                <div class="stat-card card-orange">
+                    <div style="font-size:28px;font-weight:700;color:#e67e22;">3</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">处警中</div>
+                    <div style="font-size:10px;color:#999;margin-top:2px;">待反馈 2 件</div>
+                </div>
+                <div class="stat-card card-blue">
+                    <div style="font-size:28px;font-weight:700;color:#2980b9;">12</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">本月累计</div>
+                    <div style="font-size:10px;color:#999;margin-top:2px;">平均响应 6 分钟</div>
+                </div>
+                <div class="stat-card card-green">
+                    <div style="font-size:28px;font-weight:700;color:#27ae60;">10</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">已办结</div>
+                    <div style="font-size:10px;color:#999;margin-top:2px;">群众满意度 95%</div>
+                </div>
+            </div>
+            
             <div class="search-bar">
-                <input type="text" class="input-text" placeholder="报警人搜索" id="alarmSearch">
+                <input type="text" class="input-text" placeholder="接警编号/报警人/地址搜索" id="alarmSearch">
+                <select class="select-box" id="alarmStatusFilter">
+                    <option value="">全部状态</option>
+                    <option value="待派警">待派警</option>
+                    <option value="处警中">处警中</option>
+                    <option value="已处置">已处置</option>
+                </select>
                 <button class="btn btn-search" onclick="searchAlarm()">搜索</button>
                 <button class="btn btn-add" onclick="addAlarm()">新增接警</button>
                 <button class="btn btn-close" onclick="resetAlarms()">重置</button>
@@ -1334,14 +1764,14 @@
                 <thead>
                     <tr>
                         <th>接警编号</th>
-                        <th>报案人</th>
-                        <th>受害人</th>
+                        <th>报警人</th>
+                        <th>联系电话</th>
                         <th>报警类型</th>
                         <th>事发地点</th>
                         <th>报警时间</th>
                         <th>处警人员</th>
                         <th>处置状态</th>
-                        <th>操作</th>
+                        <th>操作管理</th>
                     </tr>
                 </thead>
                 <tbody id="alarmTableBody">
@@ -1349,11 +1779,38 @@
             </table>
         </div>
 
-        <!-- 案件备案登记 -->
+        <!-- 案件办理管理 -->
         <div class="page-content" id="case">
-            <div class="title-txt">刑事案件&行政案件备案</div>
+            <div class="title-txt">刑事案件与行政案件办理管理</div>
+            
+            <!-- 案件数据统计 -->
+            <div class="stat-cards">
+                <div class="stat-card card-orange">
+                    <div style="font-size:28px;font-weight:700;color:#e67e22;">12</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">在办案件</div>
+                </div>
+                <div class="stat-card card-blue">
+                    <div style="font-size:28px;font-weight:700;color:#2980b9;">85</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">已结案件</div>
+                </div>
+                <div class="stat-card card-red">
+                    <div style="font-size:28px;font-weight:700;color:#c0392b;">3</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">即将到期</div>
+                </div>
+                <div class="stat-card card-green">
+                    <div style="font-size:28px;font-weight:700;color:#27ae60;">92分</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">执法质量</div>
+                </div>
+            </div>
+            
             <div class="search-bar">
-                <input type="text" class="input-text" placeholder="案件搜索" id="caseSearch">
+                <input type="text" class="input-text" placeholder="案件编号/名称/涉案人员搜索" id="caseSearch">
+                <select class="select-box" id="caseStatusFilter">
+                    <option value="">全部状态</option>
+                    <option value="立案侦查">立案侦查</option>
+                    <option value="起诉阶段">起诉阶段</option>
+                    <option value="已结案">已结案</option>
+                </select>
                 <button class="btn btn-search" onclick="searchCase()">搜索</button>
                 <button class="btn btn-add" onclick="addCase()">新增案件</button>
                 <button class="btn btn-close" onclick="resetCases()">重置</button>
@@ -1362,13 +1819,13 @@
                 <thead>
                     <tr>
                         <th>案件编号</th>
+                        <th>案件名称</th>
                         <th>案件类别</th>
                         <th>涉案人员</th>
                         <th>立案时间</th>
                         <th>案件状态</th>
-                        <th>办案单位</th>
-                        <th>操作</th>
-                        <th>操作</th>
+                        <th>主办单位</th>
+                        <th>操作管理</th>
                     </tr>
                 </thead>
                 <tbody id="caseTableBody">
@@ -1891,43 +2348,237 @@
             </table>
         </div>
 
-        <!-- 市场主体管理 -->
-        <div class="page-content" id="market">
-            <div class="title-txt">市场主体管理</div>
-            <div class="search-bar">
-                <input type="text" class="input-text" id="marketSearch" placeholder="企业名称/统一社会信用代码">
-                <select class="select-box" id="marketTypeFilter">
-                    <option>全部类型</option>
-                    <option>有限责任公司</option>
-                    <option>股份有限公司</option>
-                    <option>个体工商户</option>
-                    <option>合伙企业</option>
-                    <option>农民专业合作社</option>
-                </select>
-                <select class="select-box" id="marketStatusFilter">
-                    <option>全部状态</option>
-                    <option>存续</option>
-                    <option>在业</option>
-                    <option>吊销</option>
-                    <option>注销</option>
-                </select>
-                <button class="btn btn-search" onclick="searchMarket()">查询</button>
-                <button class="btn btn-add" onclick="addMarket()">新增主体</button>
+        <!-- 合成作战平台 -->
+        <div class="page-content" id="combined">
+            <div class="title-txt">多警种合成作战指挥平台</div>
+            
+            <!-- 作战平台统计 -->
+            <div class="stat-cards">
+                <div class="stat-card card-red">
+                    <div style="font-size:28px;font-weight:700;color:#c0392b;">3</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">在办作战任务</div>
+                </div>
+                <div class="stat-card card-orange">
+                    <div style="font-size:28px;font-weight:700;color:#e67e22;">5</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">参与警种</div>
+                </div>
+                <div class="stat-card card-blue">
+                    <div style="font-size:28px;font-weight:700;color:#2980b9;">42</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">情报线索</div>
+                </div>
+                <div class="stat-card card-green">
+                    <div style="font-size:28px;font-weight:700;color:#27ae60;">12</div>
+                    <div style="font-size:12px;color:#666;margin-top:4px;">已完成任务</div>
+                </div>
             </div>
-            <table id="marketTable">
+            
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="作战任务编号/名称搜索" id="combinedSearch">
+                <select class="select-box" id="combinedStatusFilter">
+                    <option value="">全部状态</option>
+                    <option value="待启动">待启动</option>
+                    <option value="执行中">执行中</option>
+                    <option value="已完成">已完成</option>
+                </select>
+                <button class="btn btn-search" onclick="searchCombined()">搜索</button>
+                <button class="btn btn-add" onclick="addCombined()">新建作战任务</button>
+                <button class="btn btn-close" onclick="resetCombined()">重置</button>
+            </div>
+            <table>
                 <thead>
                     <tr>
-                        <th>统一社会信用代码</th>
-                        <th>企业名称</th>
-                        <th>企业类型</th>
-                        <th>法定代表人</th>
-                        <th>经营场所</th>
-                        <th>成立日期</th>
-                        <th>状态</th>
-                        <th>操作</th>
+                        <th>任务编号</th>
+                        <th>任务名称</th>
+                        <th>牵头警种</th>
+                        <th>协作单位</th>
+                        <th>任务等级</th>
+                        <th>启动时间</th>
+                        <th>指挥人员</th>
+                        <th>任务状态</th>
+                        <th>操作管理</th>
                     </tr>
                 </thead>
-                <tbody id="marketTableBody">
+                <tbody id="combinedTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 电子卷宗管理 -->
+        <div class="page-content" id="file">
+            <div class="title-txt">电子卷宗档案管理系统</div>
+            
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="卷宗编号/关联案件/办案单位搜索" id="fileSearch">
+                <select class="select-box" id="fileTypeFilter">
+                    <option value="">全部类型</option>
+                    <option value="刑事案件">刑事案件</option>
+                    <option value="行政案件">行政案件</option>
+                    <option value="接处警">接处警卷宗</option>
+                </select>
+                <button class="btn btn-search" onclick="searchFile()">查询</button>
+                <button class="btn btn-add" onclick="addFile()">新增卷宗</button>
+                <button class="btn btn-close" onclick="resetFiles()">重置</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>卷宗编号</th>
+                        <th>卷宗名称</th>
+                        <th>关联案件</th>
+                        <th>卷宗类型</th>
+                        <th>归档日期</th>
+                        <th>归档单位</th>
+                        <th>保管期限</th>
+                        <th>卷宗状态</th>
+                        <th>操作管理</th>
+                    </tr>
+                </thead>
+                <tbody id="fileTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 涉案财物管理 -->
+        <div class="page-content" id="goods">
+            <div class="title-txt">涉案财物与证据管理</div>
+            
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="物品编号/名称/案件搜索" id="goodsSearch">
+                <select class="select-box" id="goodsTypeFilter">
+                    <option value="">全部类型</option>
+                    <option value="现金">现金</option>
+                    <option value="车辆">车辆</option>
+                    <option value="电子设备">电子设备</option>
+                    <option value="证件">证件</option>
+                    <option value="违禁品">违禁品</option>
+                    <option value="其他">其他物证</option>
+                </select>
+                <button class="btn btn-search" onclick="searchGoods()">查询</button>
+                <button class="btn btn-add" onclick="addGoods()">新增物品</button>
+                <button class="btn btn-close" onclick="resetGoods()">重置</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>物品编号</th>
+                        <th>物品名称</th>
+                        <th>物品类型</th>
+                        <th>数量</th>
+                        <th>关联案件</th>
+                        <th>入库时间</th>
+                        <th>保管场所</th>
+                        <th>保管状态</th>
+                        <th>操作管理</th>
+                    </tr>
+                </thead>
+                <tbody id="goodsTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 勤务排班管理 -->
+        <div class="page-content" id="duty">
+            <div class="title-txt">勤务排班与值班管理</div>
+            
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="值班人员/班组搜索" id="dutySearch">
+                <select class="select-box" id="dutyTypeFilter">
+                    <option value="">全部班次</option>
+                    <option value="早班">早班</option>
+                    <option value="中班">中班</option>
+                    <option value="夜班">夜班</option>
+                    <option value="全天">全天值班</option>
+                </select>
+                <button class="btn btn-search" onclick="searchDuty()">查询</button>
+                <button class="btn btn-add" onclick="addDuty()">新增排班</button>
+                <button class="btn btn-close" onclick="resetDuty()">重置</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>值班日期</th>
+                        <th>班次</th>
+                        <th>值班领导</th>
+                        <th>值班人员</th>
+                        <th>值班电话</th>
+                        <th>值班单位</th>
+                        <th>备勤人员</th>
+                        <th>值班状态</th>
+                        <th>操作管理</th>
+                    </tr>
+                </thead>
+                <tbody id="dutyTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 信访事项管理 -->
+        <div class="page-content" id="petition">
+            <div class="title-txt">信访事项受理办理</div>
+            
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="信访人/事项编号/标题搜索" id="petitionSearch">
+                <select class="select-box" id="petitionStatusFilter">
+                    <option value="">全部状态</option>
+                    <option value="待受理">待受理</option>
+                    <option value="办理中">办理中</option>
+                    <option value="已办结">已办结</option>
+                    <option value="已答复">已答复</option>
+                </select>
+                <button class="btn btn-search" onclick="searchPetition()">搜索</button>
+                <button class="btn btn-add" onclick="addPetition()">新增信访</button>
+                <button class="btn btn-close" onclick="resetPetition()">重置</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>事项编号</th>
+                        <th>信访人</th>
+                        <th>联系电话</th>
+                        <th>事项标题</th>
+                        <th>事项类型</th>
+                        <th>受理时间</th>
+                        <th>承办单位</th>
+                        <th>办理状态</th>
+                        <th>操作管理</th>
+                    </tr>
+                </thead>
+                <tbody id="petitionTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 绩效考核管理 -->
+        <div class="page-content" id="assessment">
+            <div class="title-txt">民警绩效考核管理系统</div>
+            
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="民警姓名/警号/单位搜索" id="assessmentSearch">
+                <select class="select-box" id="assessmentTypeFilter">
+                    <option value="">全部周期</option>
+                    <option value="月度考核">月度考核</option>
+                    <option value="季度考核">季度考核</option>
+                    <option value="年度考核">年度考核</option>
+                </select>
+                <button class="btn btn-search" onclick="searchAssessment()">查询</button>
+                <button class="btn btn-add" onclick="addAssessment()">新增考核</button>
+                <button class="btn btn-close" onclick="resetAssessment()">重置</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>考核编号</th>
+                        <th>民警姓名</th>
+                        <th>警号</th>
+                        <th>所属单位</th>
+                        <th>考核周期</th>
+                        <th>考核得分</th>
+                        <th>考核等级</th>
+                        <th>考核状态</th>
+                        <th>操作管理</th>
+                    </tr>
+                </thead>
+                <tbody id="assessmentTableBody">
                 </tbody>
             </table>
         </div>
@@ -2089,6 +2740,41 @@ let data = {
         ],
         pendingAudits: 3,
         issues: 1
+    },
+    combined: {
+        tasks: [
+            {id: 'ZZ202601', name: '夏季治安打击整治行动', leadUnit: '刑侦支队', partnerUnits: '交警/治安/网安', level: '一级', startTime: '2026-05-15', commander: '张大队长', status: '执行中'},
+            {id: 'ZZ202602', name: '重点人员联合布控', leadUnit: '指挥中心', partnerUnits: '情报/刑侦/派出所', level: '二级', startTime: '2026-05-10', commander: '李主任', status: '执行中'},
+            {id: 'ZZ202603', name: '禁毒专项行动', leadUnit: '禁毒支队', partnerUnits: '刑侦/交警/巡特警', level: '一级', startTime: '2026-05-08', commander: '王支队长', status: '待启动'}
+        ]
+    },
+    fileData: {
+        files: [
+            {id: 'JZ2026001', name: '盗窃案卷宗', caseId: 'XA2026021', type: '刑事案件', archiveDate: '2026-05-18', unit: '刑侦大队', period: '永久', status: '已归档'},
+            {id: 'JZ2026002', name: '寻衅滋事案卷宗', caseId: 'XA2026022', type: '行政案件', archiveDate: '2026-05-15', unit: '治安大队', period: '长期', status: '查阅中'},
+            {id: 'JZ2026003', name: '接处警卷宗', caseId: 'JJ2026051801', type: '接处警', archiveDate: '2026-05-20', unit: '城东派出所', period: '30年', status: '已归档'}
+        ]
+    },
+    duty: {
+        rosters: [
+            {date: '2026-05-20', shift: '全天', leader: '张所长', staff: '王警官、李警官', phone: '110-001', unit: '城东派出所', backup: '赵警官、孙警官', status: '值班中'},
+            {date: '2026-05-21', shift: '早班', leader: '李副所长', staff: '王警官、周警官', phone: '110-002', unit: '城西派出所', backup: '钱警官、吴警官', status: '待值班'},
+            {date: '2026-05-20', shift: '夜班', leader: '王教导员', staff: '陈警官、刘警官', phone: '110-003', unit: '指挥中心', backup: '郑警官、周警官', status: '待值班'}
+        ]
+    },
+    petition: {
+        items: [
+            {id: 'XF202601', petitioner: '陈先生', phone: '138****5678', title: '关于户籍迁移问题的咨询', type: '咨询建议', acceptDate: '2026-05-18', unit: '户籍科', status: '办理中'},
+            {id: 'XF202602', petitioner: '王女士', phone: '139****9012', title: '邻里噪声扰民问题投诉', type: '投诉请求', acceptDate: '2026-05-15', unit: '社区警务室', status: '已办结'},
+            {id: 'XF202603', petitioner: '赵先生', phone: '135****3456', title: '身份证办理进度查询', type: '咨询建议', acceptDate: '2026-05-19', unit: '便民服务中心', status: '已答复'}
+        ]
+    },
+    assessment: {
+        records: [
+            {id: 'KH20260501', name: '张三', policeId: '110001', unit: '刑侦大队', period: '月度考核', score: 95, rank: '优秀', status: '已评定'},
+            {id: 'KH20260502', name: '李四', policeId: '110002', unit: '社区警务', period: '月度考核', score: 88, rank: '良好', status: '已评定'},
+            {id: 'KH20260503', name: '王五', policeId: '110003', unit: '指挥中心', period: '月度考核', score: 92, rank: '优秀', status: '评定中'}
+        ]
     }
 };
 
@@ -2101,7 +2787,12 @@ let originalData = {
     cars: [...data.cars],
     goods: [...data.goods],
     logs: [...data.logs],
-    users: [...data.users]
+    users: [...data.users],
+    combined: {...data.combined, tasks: [...data.combined.tasks]},
+    fileData: {...data.fileData, files: [...data.fileData.files]},
+    duty: {...data.duty, rosters: [...data.duty.rosters]},
+    petition: {...data.petition, items: [...data.petition.items]},
+    assessment: {...data.assessment, records: [...data.assessment.records]}
 };
 
 // 从localStorage加载数据
@@ -2375,6 +3066,13 @@ async function loadData() {
         if (loadedData.serviceData) serviceData = loadedData.serviceData;
         if (loadedData.trafficData) trafficData = loadedData.trafficData;
         if (loadedData.marketData) marketData = loadedData.marketData;
+        
+        // 新模块
+        if (loadedData.combined) data.combined = loadedData.combined;
+        if (loadedData.fileData) data.fileData = loadedData.fileData;
+        if (loadedData.duty) data.duty = loadedData.duty;
+        if (loadedData.petition) data.petition = loadedData.petition;
+        if (loadedData.assessment) data.assessment = loadedData.assessment;
     }
     
     backupOriginalData();
@@ -2399,6 +3097,11 @@ function backupOriginalData() {
     originalData.serviceData = JSON.parse(JSON.stringify(serviceData));
     originalData.trafficData = JSON.parse(JSON.stringify(trafficData));
     originalData.marketData = JSON.parse(JSON.stringify(marketData));
+    originalData.combined = {...data.combined, tasks: [...data.combined.tasks]};
+    originalData.fileData = {...data.fileData, files: [...data.fileData.files]};
+    originalData.duty = {...data.duty, rosters: [...data.duty.rosters]};
+    originalData.petition = {...data.petition, items: [...data.petition.items]};
+    originalData.assessment = {...data.assessment, records: [...data.assessment.records]};
 }
 
 // 批量保存标识，用于减少localStorage写入
@@ -2441,7 +3144,12 @@ function saveData() {
             lawSupervisionData: lawSupervisionData,
             serviceData: serviceData,
             trafficData: trafficData,
-            marketData: marketData
+            marketData: marketData,
+            combined: data.combined,
+            fileData: data.fileData,
+            duty: data.duty,
+            petition: data.petition,
+            assessment: data.assessment
         };
         const jsonStr = JSON.stringify(allData);
         const encrypted = ENCRYPTION_KEY ? encryptData(jsonStr, ENCRYPTION_KEY) : jsonStr;
@@ -4074,6 +4782,11 @@ window.onload = async function(){
     renderServiceTable();
     renderTrafficTable();
     renderMarketTable();
+    renderCombinedTable();
+    renderFileTable();
+    renderDutyTable();
+    renderPetitionTable();
+    renderAssessmentTable();
 };
 
 // ==================== 统计分析和执法监督功能 ====================
@@ -5883,6 +6596,699 @@ async function syncNow() {
     } else {
         showMsg('同步失败，请检查配置');
     }
+}
+
+// ==================== 合成作战模块 ====================
+function renderCombinedTable(data) {
+    const tbody = document.getElementById('combinedTableBody');
+    if (!tbody) return;
+    const displayData = data || (window._combinedFiltered || null);
+    let items = displayData || (data.combined ? data.combined.tasks : []);
+    // 兼容逻辑：优先使用传入数据
+    if (data && Array.isArray(data)) {
+        items = data;
+    } else if (!displayData && window._combinedFiltered === undefined) {
+        items = window._combinedRaw || [];
+    }
+    try {
+        if (window._combinedRaw === undefined) {
+            window._combinedRaw = [];
+        }
+    } catch(e){}
+    // 读取默认数据
+    try {
+        if (!items || items.length === 0) {
+            items = [
+                {id: 'ZZ202601', name: '夏季治安打击整治行动', leadUnit: '刑侦支队', partnerUnits: '交警/治安/网安', level: '一级', startTime: '2026-05-15', commander: '张大队长', status: '执行中'},
+                {id: 'ZZ202602', name: '重点人员联合布控', leadUnit: '指挥中心', partnerUnits: '情报/刑侦/派出所', level: '二级', startTime: '2026-05-10', commander: '李主任', status: '执行中'},
+                {id: 'ZZ202603', name: '禁毒专项行动', leadUnit: '禁毒支队', partnerUnits: '刑侦/交警/巡特警', level: '一级', startTime: '2026-05-08', commander: '王支队长', status: '待启动'}
+            ];
+            window._combinedRaw = items;
+        }
+    } catch(e){}
+    tbody.innerHTML = items.map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.leadUnit}</td>
+            <td>${item.partnerUnits}</td>
+            <td>${item.level}</td>
+            <td>${item.startTime}</td>
+            <td>${item.commander}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>
+                <button class="btn btn-edit" onclick="editCombined('${item.id}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteCombined('${item.id}')">删除</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function searchCombined() {
+    const keyword = document.getElementById('combinedSearch').value.toLowerCase().trim();
+    const statusFilter = document.getElementById('combinedStatusFilter').value;
+    const allData = window._combinedRaw || [];
+    let filtered = allData;
+    if (keyword) {
+        filtered = filtered.filter(item => 
+            (item.id && item.id.toLowerCase().includes(keyword)) || 
+            (item.name && item.name.toLowerCase().includes(keyword)) ||
+            (item.commander && item.commander.toLowerCase().includes(keyword)) ||
+            (item.leadUnit && item.leadUnit.toLowerCase().includes(keyword))
+        );
+    }
+    if (statusFilter && statusFilter !== '全部状态') {
+        filtered = filtered.filter(item => item.status === statusFilter);
+    }
+    window._combinedFiltered = filtered;
+    renderCombinedTable(filtered);
+    showMsg(`查询完成，共 ${filtered.length} 条结果`);
+}
+
+function resetCombined() {
+    const searchInput = document.getElementById('combinedSearch');
+    if (searchInput) searchInput.value = '';
+    const statusSel = document.getElementById('combinedStatusFilter');
+    if (statusSel) statusSel.value = '';
+    window._combinedFiltered = null;
+    renderCombinedTable();
+    showMsg('已重置筛选条件');
+}
+
+function addCombined() {
+    currentModal = 'addCombined';
+    openModal('新建作战任务', `
+        <div class="form-item"><label>任务编号<span class="required">*</span>：</label><input type="text" class="input-text" id="combinedTaskId" placeholder="如 ZZ202604"></div>
+        <div class="form-item"><label>任务名称<span class="required">*</span>：</label><input type="text" class="input-text" id="combinedTaskName" placeholder="请输入任务名称"></div>
+        <div class="form-item"><label>牵头单位：</label><input type="text" class="input-text" id="combinedLeadUnit" placeholder="请输入牵头单位"></div>
+        <div class="form-item"><label>协作单位：</label><input type="text" class="input-text" id="combinedPartner" placeholder="协作单位，用/分隔"></div>
+        <div class="form-item"><label>任务等级：</label>
+            <select class="select-box" id="combinedLevel">
+                <option>一级</option><option>二级</option><option>三级</option><option>四级</option>
+            </select>
+        </div>
+        <div class="form-item"><label>启动时间：</label><input type="date" class="input-text" id="combinedStartTime"></div>
+        <div class="form-item"><label>指挥人员：</label><input type="text" class="input-text" id="combinedCommander" placeholder="请输入指挥人员姓名"></div>
+        <div class="form-item"><label>任务状态：</label>
+            <select class="select-box" id="combinedStatus">
+                <option>待启动</option><option>执行中</option><option>已完成</option>
+            </select>
+        </div>
+    `);
+}
+
+function editCombined(id) {
+    currentModal = 'editCombined';
+    editId = id;
+    const items = window._combinedRaw || [];
+    const item = items.find(i => i.id === id);
+    if (item) {
+        openModal('编辑作战任务', `
+            <div class="form-item"><label>任务编号：</label><input type="text" class="input-text" id="combinedTaskId" value="${item.id}" readonly></div>
+            <div class="form-item"><label>任务名称：</label><input type="text" class="input-text" id="combinedTaskName" value="${item.name}"></div>
+            <div class="form-item"><label>牵头单位：</label><input type="text" class="input-text" id="combinedLeadUnit" value="${item.leadUnit}"></div>
+            <div class="form-item"><label>协作单位：</label><input type="text" class="input-text" id="combinedPartner" value="${item.partnerUnits}"></div>
+            <div class="form-item"><label>任务等级：</label>
+                <select class="select-box" id="combinedLevel">
+                    <option ${item.level === '一级' ? 'selected' : ''}>一级</option>
+                    <option ${item.level === '二级' ? 'selected' : ''}>二级</option>
+                    <option ${item.level === '三级' ? 'selected' : ''}>三级</option>
+                    <option ${item.level === '四级' ? 'selected' : ''}>四级</option>
+                </select>
+            </div>
+            <div class="form-item"><label>启动时间：</label><input type="date" class="input-text" id="combinedStartTime" value="${item.startTime}"></div>
+            <div class="form-item"><label>指挥人员：</label><input type="text" class="input-text" id="combinedCommander" value="${item.commander}"></div>
+            <div class="form-item"><label>任务状态：</label>
+                <select class="select-box" id="combinedStatus">
+                    <option ${item.status === '待启动' ? 'selected' : ''}>待启动</option>
+                    <option ${item.status === '执行中' ? 'selected' : ''}>执行中</option>
+                    <option ${item.status === '已完成' ? 'selected' : ''}>已完成</option>
+                </select>
+            </div>
+        `);
+    }
+}
+
+function deleteCombined(id) {
+    if (confirm('确定要删除该作战任务？')) {
+        const items = window._combinedRaw || [];
+        const idx = items.findIndex(i => i.id === id);
+        if (idx > -1) {
+            items.splice(idx, 1);
+            window._combinedRaw = items;
+            showMsg('删除成功');
+            renderCombinedTable();
+        }
+    }
+}
+
+// ==================== 电子卷宗模块 ====================
+function renderFileTable(data) {
+    const tbody = document.getElementById('fileTableBody');
+    if (!tbody) return;
+    const items = Array.isArray(data) ? data : (window._fileRaw || []);
+    if (items.length === 0 && window._fileRaw === undefined) {
+        window._fileRaw = [
+            {id: 'JZ2026001', name: '盗窃案卷宗', caseId: 'XA2026021', type: '刑事案件', archiveDate: '2026-05-18', unit: '刑侦大队', period: '永久', status: '已归档'},
+            {id: 'JZ2026002', name: '寻衅滋事案卷宗', caseId: 'XA2026022', type: '行政案件', archiveDate: '2026-05-15', unit: '治安大队', period: '长期', status: '查阅中'},
+            {id: 'JZ2026003', name: '接处警卷宗', caseId: 'JJ2026051801', type: '接处警', archiveDate: '2026-05-20', unit: '城东派出所', period: '30年', status: '已归档'}
+        ];
+    }
+    const display = Array.isArray(data) ? data : (window._fileFiltered || window._fileRaw || []);
+    tbody.innerHTML = (display || []).map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.caseId}</td>
+            <td>${item.type}</td>
+            <td>${item.archiveDate}</td>
+            <td>${item.unit}</td>
+            <td>${item.period}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>
+                <button class="btn btn-edit" onclick="editFile('${item.id}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteFile('${item.id}')">删除</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function searchFile() {
+    const keyword = document.getElementById('fileSearch').value.toLowerCase().trim();
+    const typeFilter = document.getElementById('fileTypeFilter').value;
+    const allData = window._fileRaw || [];
+    let filtered = allData;
+    if (keyword) {
+        filtered = filtered.filter(item => 
+            (item.id && item.id.toLowerCase().includes(keyword)) || 
+            (item.name && item.name.toLowerCase().includes(keyword)) ||
+            (item.caseId && item.caseId.toLowerCase().includes(keyword)) ||
+            (item.unit && item.unit.toLowerCase().includes(keyword))
+        );
+    }
+    if (typeFilter && typeFilter !== '全部类型') {
+        filtered = filtered.filter(item => item.type === typeFilter);
+    }
+    window._fileFiltered = filtered;
+    renderFileTable(filtered);
+    showMsg(`查询完成，共 ${filtered.length} 条结果`);
+}
+
+function resetFiles() {
+    const searchInput = document.getElementById('fileSearch');
+    if (searchInput) searchInput.value = '';
+    const typeSel = document.getElementById('fileTypeFilter');
+    if (typeSel) typeSel.value = '';
+    window._fileFiltered = null;
+    renderFileTable();
+    showMsg('已重置筛选条件');
+}
+
+function addFile() {
+    currentModal = 'addFile';
+    openModal('新增卷宗', `
+        <div class="form-item"><label>卷宗编号<span class="required">*</span>：</label><input type="text" class="input-text" id="fileTaskId" placeholder="如 JZ2026004"></div>
+        <div class="form-item"><label>卷宗名称<span class="required">*</span>：</label><input type="text" class="input-text" id="fileName" placeholder="请输入卷宗名称"></div>
+        <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="fileCaseId" placeholder="请输入案件编号"></div>
+        <div class="form-item"><label>卷宗类型：</label>
+            <select class="select-box" id="fileType">
+                <option>刑事案件</option><option>行政案件</option><option>接处警</option>
+            </select>
+        </div>
+        <div class="form-item"><label>归档日期：</label><input type="date" class="input-text" id="fileDate"></div>
+        <div class="form-item"><label>归档单位：</label><input type="text" class="input-text" id="fileUnit" placeholder="请输入归档单位"></div>
+        <div class="form-item"><label>保管期限：</label>
+            <select class="select-box" id="filePeriod">
+                <option>永久</option><option>长期</option><option>30年</option><option>20年</option><option>10年</option>
+            </select>
+        </div>
+        <div class="form-item"><label>卷宗状态：</label>
+            <select class="select-box" id="fileStatus">
+                <option>待归档</option><option>已归档</option><option>查阅中</option><option>借阅中</option>
+            </select>
+        </div>
+    `);
+}
+
+function editFile(id) {
+    currentModal = 'editFile';
+    editId = id;
+    const items = window._fileRaw || [];
+    const item = items.find(i => i.id === id);
+    if (item) {
+        openModal('编辑卷宗', `
+            <div class="form-item"><label>卷宗编号：</label><input type="text" class="input-text" id="fileTaskId" value="${item.id}" readonly></div>
+            <div class="form-item"><label>卷宗名称：</label><input type="text" class="input-text" id="fileName" value="${item.name}"></div>
+            <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="fileCaseId" value="${item.caseId}"></div>
+            <div class="form-item"><label>卷宗类型：</label>
+                <select class="select-box" id="fileType">
+                    <option ${item.type === '刑事案件' ? 'selected' : ''}>刑事案件</option>
+                    <option ${item.type === '行政案件' ? 'selected' : ''}>行政案件</option>
+                    <option ${item.type === '接处警' ? 'selected' : ''}>接处警</option>
+                </select>
+            </div>
+            <div class="form-item"><label>归档日期：</label><input type="date" class="input-text" id="fileDate" value="${item.archiveDate}"></div>
+            <div class="form-item"><label>归档单位：</label><input type="text" class="input-text" id="fileUnit" value="${item.unit}"></div>
+            <div class="form-item"><label>保管期限：</label>
+                <select class="select-box" id="filePeriod">
+                    <option ${item.period === '永久' ? 'selected' : ''}>永久</option>
+                    <option ${item.period === '长期' ? 'selected' : ''}>长期</option>
+                    <option ${item.period === '30年' ? 'selected' : ''}>30年</option>
+                    <option ${item.period === '20年' ? 'selected' : ''}>20年</option>
+                    <option ${item.period === '10年' ? 'selected' : ''}>10年</option>
+                </select>
+            </div>
+            <div class="form-item"><label>卷宗状态：</label>
+                <select class="select-box" id="fileStatus">
+                    <option ${item.status === '待归档' ? 'selected' : ''}>待归档</option>
+                    <option ${item.status === '已归档' ? 'selected' : ''}>已归档</option>
+                    <option ${item.status === '查阅中' ? 'selected' : ''}>查阅中</option>
+                    <option ${item.status === '借阅中' ? 'selected' : ''}>借阅中</option>
+                </select>
+            </div>
+        `);
+    }
+}
+
+function deleteFile(id) {
+    if (confirm('确定要删除该卷宗记录？')) {
+        const items = window._fileRaw || [];
+        const idx = items.findIndex(i => i.id === id);
+        if (idx > -1) {
+            items.splice(idx, 1);
+            window._fileRaw = items;
+            showMsg('删除成功');
+            renderFileTable();
+        }
+    }
+}
+
+// ==================== 勤务排班模块 ====================
+function renderDutyTable(data) {
+    const tbody = document.getElementById('dutyTableBody');
+    if (!tbody) return;
+    const items = Array.isArray(data) ? data : (window._dutyRaw || []);
+    if (items.length === 0 && window._dutyRaw === undefined) {
+        window._dutyRaw = [
+            {date: '2026-05-20', shift: '全天', leader: '张所长', staff: '王警官、李警官', phone: '110-001', unit: '城东派出所', backup: '赵警官、孙警官', status: '值班中'},
+            {date: '2026-05-21', shift: '早班', leader: '李副所长', staff: '王警官、周警官', phone: '110-002', unit: '城西派出所', backup: '钱警官、吴警官', status: '待值班'},
+            {date: '2026-05-20', shift: '夜班', leader: '王教导员', staff: '陈警官、刘警官', phone: '110-003', unit: '指挥中心', backup: '郑警官、周警官', status: '待值班'}
+        ];
+    }
+    const display = Array.isArray(data) ? data : (window._dutyFiltered || window._dutyRaw || []);
+    tbody.innerHTML = (display || []).map(item => `
+        <tr>
+            <td>${item.date}</td>
+            <td>${item.shift}</td>
+            <td>${item.leader}</td>
+            <td>${item.staff}</td>
+            <td>${item.phone}</td>
+            <td>${item.unit}</td>
+            <td>${item.backup}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>
+                <button class="btn btn-edit" onclick="editDuty('${item.date}_${item.shift}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteDuty('${item.date}_${item.shift}')">删除</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function searchDuty() {
+    const keyword = document.getElementById('dutySearch').value.toLowerCase().trim();
+    const typeFilter = document.getElementById('dutyTypeFilter').value;
+    const allData = window._dutyRaw || [];
+    let filtered = allData;
+    if (keyword) {
+        filtered = filtered.filter(item => 
+            (item.leader && item.leader.includes(keyword)) || 
+            (item.staff && item.staff.includes(keyword)) ||
+            (item.unit && item.unit.toLowerCase().includes(keyword)) ||
+            (item.date && item.date.includes(keyword))
+        );
+    }
+    if (typeFilter && typeFilter !== '全部班次') {
+        filtered = filtered.filter(item => item.shift === typeFilter);
+    }
+    window._dutyFiltered = filtered;
+    renderDutyTable(filtered);
+    showMsg(`查询完成，共 ${filtered.length} 条结果`);
+}
+
+function resetDuty() {
+    const searchInput = document.getElementById('dutySearch');
+    if (searchInput) searchInput.value = '';
+    const typeSel = document.getElementById('dutyTypeFilter');
+    if (typeSel) typeSel.value = '';
+    window._dutyFiltered = null;
+    renderDutyTable();
+    showMsg('已重置筛选条件');
+}
+
+function addDuty() {
+    currentModal = 'addDuty';
+    openModal('新增排班', `
+        <div class="form-item"><label>值班日期<span class="required">*</span>：</label><input type="date" class="input-text" id="dutyDate"></div>
+        <div class="form-item"><label>班次<span class="required">*</span>：</label>
+            <select class="select-box" id="dutyShift">
+                <option>早班</option><option>中班</option><option>夜班</option><option>全天</option>
+            </select>
+        </div>
+        <div class="form-item"><label>值班领导：</label><input type="text" class="input-text" id="dutyLeader" placeholder="请输入领导姓名"></div>
+        <div class="form-item"><label>值班人员：</label><input type="text" class="input-text" id="dutyStaff" placeholder="请输入值班人员，用、分隔"></div>
+        <div class="form-item"><label>值班电话：</label><input type="text" class="input-text" id="dutyPhone" placeholder="请输入值班电话"></div>
+        <div class="form-item"><label>值班单位：</label><input type="text" class="input-text" id="dutyUnit" placeholder="请输入值班单位"></div>
+        <div class="form-item"><label>备勤人员：</label><input type="text" class="input-text" id="dutyBackup" placeholder="请输入备勤人员"></div>
+        <div class="form-item"><label>值班状态：</label>
+            <select class="select-box" id="dutyStatus">
+                <option>待值班</option><option>值班中</option><option>已结束</option>
+            </select>
+        </div>
+    `);
+}
+
+function editDuty(id) {
+    currentModal = 'editDuty';
+    editId = id;
+    const items = window._dutyRaw || [];
+    const [date, shift] = id.split('_');
+    const item = items.find(i => i.date === date && i.shift === shift);
+    if (item) {
+        openModal('编辑排班', `
+            <div class="form-item"><label>值班日期：</label><input type="date" class="input-text" id="dutyDate" value="${item.date}" readonly></div>
+            <div class="form-item"><label>班次：</label>
+                <select class="select-box" id="dutyShift" readonly>
+                    <option ${item.shift === '早班' ? 'selected' : ''}>早班</option>
+                    <option ${item.shift === '中班' ? 'selected' : ''}>中班</option>
+                    <option ${item.shift === '夜班' ? 'selected' : ''}>夜班</option>
+                    <option ${item.shift === '全天' ? 'selected' : ''}>全天</option>
+                </select>
+            </div>
+            <div class="form-item"><label>值班领导：</label><input type="text" class="input-text" id="dutyLeader" value="${item.leader}"></div>
+            <div class="form-item"><label>值班人员：</label><input type="text" class="input-text" id="dutyStaff" value="${item.staff}"></div>
+            <div class="form-item"><label>值班电话：</label><input type="text" class="input-text" id="dutyPhone" value="${item.phone}"></div>
+            <div class="form-item"><label>值班单位：</label><input type="text" class="input-text" id="dutyUnit" value="${item.unit}"></div>
+            <div class="form-item"><label>备勤人员：</label><input type="text" class="input-text" id="dutyBackup" value="${item.backup}"></div>
+            <div class="form-item"><label>值班状态：</label>
+                <select class="select-box" id="dutyStatus">
+                    <option ${item.status === '待值班' ? 'selected' : ''}>待值班</option>
+                    <option ${item.status === '值班中' ? 'selected' : ''}>值班中</option>
+                    <option ${item.status === '已结束' ? 'selected' : ''}>已结束</option>
+                </select>
+            </div>
+        `);
+    }
+}
+
+function deleteDuty(id) {
+    if (confirm('确定要删除该排班记录？')) {
+        const items = window._dutyRaw || [];
+        const [date, shift] = id.split('_');
+        const idx = items.findIndex(i => i.date === date && i.shift === shift);
+        if (idx > -1) {
+            items.splice(idx, 1);
+            window._dutyRaw = items;
+            showMsg('删除成功');
+            renderDutyTable();
+        }
+    }
+}
+
+// ==================== 信访事项管理 ====================
+function renderPetitionTable(data) {
+    const tbody = document.getElementById('petitionTableBody');
+    if (!tbody) return;
+    const items = Array.isArray(data) ? data : (window._petitionRaw || []);
+    if (items.length === 0 && window._petitionRaw === undefined) {
+        window._petitionRaw = [
+            {id: 'XF202601', petitioner: '陈先生', phone: '138****5678', title: '关于户籍迁移问题的咨询', type: '咨询建议', acceptDate: '2026-05-18', unit: '户籍科', status: '办理中'},
+            {id: 'XF202602', petitioner: '王女士', phone: '139****9012', title: '邻里噪声扰民问题投诉', type: '投诉请求', acceptDate: '2026-05-15', unit: '社区警务室', status: '已办结'},
+            {id: 'XF202603', petitioner: '赵先生', phone: '135****3456', title: '身份证办理进度查询', type: '咨询建议', acceptDate: '2026-05-19', unit: '便民服务中心', status: '已答复'}
+        ];
+    }
+    const display = Array.isArray(data) ? data : (window._petitionFiltered || window._petitionRaw || []);
+    tbody.innerHTML = (display || []).map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.petitioner}</td>
+            <td>${item.phone}</td>
+            <td>${item.title}</td>
+            <td>${item.type}</td>
+            <td>${item.acceptDate}</td>
+            <td>${item.unit}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>
+                <button class="btn btn-edit" onclick="editPetition('${item.id}')">编辑</button>
+                <button class="btn btn-del" onclick="deletePetition('${item.id}')">删除</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function searchPetition() {
+    const keyword = document.getElementById('petitionSearch').value.toLowerCase().trim();
+    const statusFilter = document.getElementById('petitionStatusFilter').value;
+    const allData = window._petitionRaw || [];
+    let filtered = allData;
+    if (keyword) {
+        filtered = filtered.filter(item => 
+            (item.id && item.id.toLowerCase().includes(keyword)) || 
+            (item.petitioner && item.petitioner.includes(keyword)) ||
+            (item.title && item.title.toLowerCase().includes(keyword)) ||
+            (item.unit && item.unit.toLowerCase().includes(keyword))
+        );
+    }
+    if (statusFilter && statusFilter !== '全部状态') {
+        filtered = filtered.filter(item => item.status === statusFilter);
+    }
+    window._petitionFiltered = filtered;
+    renderPetitionTable(filtered);
+    showMsg(`查询完成，共 ${filtered.length} 条结果`);
+}
+
+function resetPetition() {
+    const searchInput = document.getElementById('petitionSearch');
+    if (searchInput) searchInput.value = '';
+    const statusSel = document.getElementById('petitionStatusFilter');
+    if (statusSel) statusSel.value = '';
+    window._petitionFiltered = null;
+    renderPetitionTable();
+    showMsg('已重置筛选条件');
+}
+
+function addPetition() {
+    currentModal = 'addPetition';
+    openModal('新增信访事项', `
+        <div class="form-item"><label>事项编号<span class="required">*</span>：</label><input type="text" class="input-text" id="petitionId" placeholder="如 XF202604"></div>
+        <div class="form-item"><label>信访人<span class="required">*</span>：</label><input type="text" class="input-text" id="petitionPetitioner" placeholder="请输入信访人姓名"></div>
+        <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="petitionPhone" placeholder="请输入联系电话"></div>
+        <div class="form-item"><label>事项标题<span class="required">*</span>：</label><input type="text" class="input-text" id="petitionTitle" placeholder="请简要描述信访事项"></div>
+        <div class="form-item"><label>事项类型：</label>
+            <select class="select-box" id="petitionType">
+                <option>咨询建议</option><option>投诉请求</option><option>申诉举报</option><option>表扬肯定</option>
+            </select>
+        </div>
+        <div class="form-item"><label>受理时间：</label><input type="date" class="input-text" id="petitionDate"></div>
+        <div class="form-item"><label>承办单位：</label><input type="text" class="input-text" id="petitionUnit" placeholder="请输入承办单位"></div>
+        <div class="form-item"><label>办理状态：</label>
+            <select class="select-box" id="petitionStatus">
+                <option>待受理</option><option>办理中</option><option>已办结</option><option>已答复</option>
+            </select>
+        </div>
+    `);
+}
+
+function editPetition(id) {
+    currentModal = 'editPetition';
+    editId = id;
+    const items = window._petitionRaw || [];
+    const item = items.find(i => i.id === id);
+    if (item) {
+        openModal('编辑信访事项', `
+            <div class="form-item"><label>事项编号：</label><input type="text" class="input-text" id="petitionId" value="${item.id}" readonly></div>
+            <div class="form-item"><label>信访人：</label><input type="text" class="input-text" id="petitionPetitioner" value="${item.petitioner}"></div>
+            <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="petitionPhone" value="${item.phone}"></div>
+            <div class="form-item"><label>事项标题：</label><input type="text" class="input-text" id="petitionTitle" value="${item.title}"></div>
+            <div class="form-item"><label>事项类型：</label>
+                <select class="select-box" id="petitionType">
+                    <option ${item.type === '咨询建议' ? 'selected' : ''}>咨询建议</option>
+                    <option ${item.type === '投诉请求' ? 'selected' : ''}>投诉请求</option>
+                    <option ${item.type === '申诉举报' ? 'selected' : ''}>申诉举报</option>
+                    <option ${item.type === '表扬肯定' ? 'selected' : ''}>表扬肯定</option>
+                </select>
+            </div>
+            <div class="form-item"><label>受理时间：</label><input type="date" class="input-text" id="petitionDate" value="${item.acceptDate}"></div>
+            <div class="form-item"><label>承办单位：</label><input type="text" class="input-text" id="petitionUnit" value="${item.unit}"></div>
+            <div class="form-item"><label>办理状态：</label>
+                <select class="select-box" id="petitionStatus">
+                    <option ${item.status === '待受理' ? 'selected' : ''}>待受理</option>
+                    <option ${item.status === '办理中' ? 'selected' : ''}>办理中</option>
+                    <option ${item.status === '已办结' ? 'selected' : ''}>已办结</option>
+                    <option ${item.status === '已答复' ? 'selected' : ''}>已答复</option>
+                </select>
+            </div>
+        `);
+    }
+}
+
+function deletePetition(id) {
+    if (confirm('确定要删除该信访事项？')) {
+        const items = window._petitionRaw || [];
+        const idx = items.findIndex(i => i.id === id);
+        if (idx > -1) {
+            items.splice(idx, 1);
+            window._petitionRaw = items;
+            showMsg('删除成功');
+            renderPetitionTable();
+        }
+    }
+}
+
+// ==================== 绩效考核管理 ====================
+function renderAssessmentTable(data) {
+    const tbody = document.getElementById('assessmentTableBody');
+    if (!tbody) return;
+    const items = Array.isArray(data) ? data : (window._assessmentRaw || []);
+    if (items.length === 0 && window._assessmentRaw === undefined) {
+        window._assessmentRaw = [
+            {id: 'KH20260501', name: '张三', policeId: '110001', unit: '刑侦大队', period: '月度考核', score: 95, rank: '优秀', status: '已评定'},
+            {id: 'KH20260502', name: '李四', policeId: '110002', unit: '社区警务', period: '月度考核', score: 88, rank: '良好', status: '已评定'},
+            {id: 'KH20260503', name: '王五', policeId: '110003', unit: '指挥中心', period: '月度考核', score: 92, rank: '优秀', status: '评定中'}
+        ];
+    }
+    const display = Array.isArray(data) ? data : (window._assessmentFiltered || window._assessmentRaw || []);
+    tbody.innerHTML = (display || []).map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.policeId}</td>
+            <td>${item.unit}</td>
+            <td>${item.period}</td>
+            <td>${item.score}</td>
+            <td><span class="${item.rank === '优秀' ? 'stat-green' : item.rank === '良好' ? 'stat-blue' : 'stat-orange'}">${item.rank}</span></td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>
+                <button class="btn btn-edit" onclick="editAssessment('${item.id}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteAssessment('${item.id}')">删除</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function searchAssessment() {
+    const keyword = document.getElementById('assessmentSearch').value.toLowerCase().trim();
+    const typeFilter = document.getElementById('assessmentTypeFilter').value;
+    const allData = window._assessmentRaw || [];
+    let filtered = allData;
+    if (keyword) {
+        filtered = filtered.filter(item => 
+            (item.id && item.id.toLowerCase().includes(keyword)) || 
+            (item.name && item.name.includes(keyword)) ||
+            (item.policeId && item.policeId.includes(keyword)) ||
+            (item.unit && item.unit.toLowerCase().includes(keyword))
+        );
+    }
+    if (typeFilter && typeFilter !== '全部周期') {
+        filtered = filtered.filter(item => item.period === typeFilter);
+    }
+    window._assessmentFiltered = filtered;
+    renderAssessmentTable(filtered);
+    showMsg(`查询完成，共 ${filtered.length} 条结果`);
+}
+
+function resetAssessment() {
+    const searchInput = document.getElementById('assessmentSearch');
+    if (searchInput) searchInput.value = '';
+    const typeSel = document.getElementById('assessmentTypeFilter');
+    if (typeSel) typeSel.value = '';
+    window._assessmentFiltered = null;
+    renderAssessmentTable();
+    showMsg('已重置筛选条件');
+}
+
+function addAssessment() {
+    currentModal = 'addAssessment';
+    openModal('新增考核', `
+        <div class="form-item"><label>考核编号<span class="required">*</span>：</label><input type="text" class="input-text" id="assessmentId" placeholder="如 KH20260504"></div>
+        <div class="form-item"><label>民警姓名<span class="required">*</span>：</label><input type="text" class="input-text" id="assessmentName" placeholder="请输入民警姓名"></div>
+        <div class="form-item"><label>警号：</label><input type="text" class="input-text" id="assessmentPoliceId" placeholder="请输入警号"></div>
+        <div class="form-item"><label>所属单位：</label><input type="text" class="input-text" id="assessmentUnit" placeholder="请输入所属单位"></div>
+        <div class="form-item"><label>考核周期：</label>
+            <select class="select-box" id="assessmentPeriod">
+                <option>月度考核</option><option>季度考核</option><option>年度考核</option>
+            </select>
+        </div>
+        <div class="form-item"><label>考核得分：</label><input type="number" class="input-text" id="assessmentScore" placeholder="0-100" min="0" max="100"></div>
+        <div class="form-item"><label>考核等级：</label>
+            <select class="select-box" id="assessmentRank">
+                <option>优秀</option><option>良好</option><option>合格</option><option>不合格</option>
+            </select>
+        </div>
+        <div class="form-item"><label>考核状态：</label>
+            <select class="select-box" id="assessmentStatus">
+                <option>待评定</option><option>评定中</option><option>已评定</option>
+            </select>
+        </div>
+    `);
+}
+
+function editAssessment(id) {
+    currentModal = 'editAssessment';
+    editId = id;
+    const items = window._assessmentRaw || [];
+    const item = items.find(i => i.id === id);
+    if (item) {
+        openModal('编辑考核', `
+            <div class="form-item"><label>考核编号：</label><input type="text" class="input-text" id="assessmentId" value="${item.id}" readonly></div>
+            <div class="form-item"><label>民警姓名：</label><input type="text" class="input-text" id="assessmentName" value="${item.name}"></div>
+            <div class="form-item"><label>警号：</label><input type="text" class="input-text" id="assessmentPoliceId" value="${item.policeId}"></div>
+            <div class="form-item"><label>所属单位：</label><input type="text" class="input-text" id="assessmentUnit" value="${item.unit}"></div>
+            <div class="form-item"><label>考核周期：</label>
+                <select class="select-box" id="assessmentPeriod">
+                    <option ${item.period === '月度考核' ? 'selected' : ''}>月度考核</option>
+                    <option ${item.period === '季度考核' ? 'selected' : ''}>季度考核</option>
+                    <option ${item.period === '年度考核' ? 'selected' : ''}>年度考核</option>
+                </select>
+            </div>
+            <div class="form-item"><label>考核得分：</label><input type="number" class="input-text" id="assessmentScore" value="${item.score}" min="0" max="100"></div>
+            <div class="form-item"><label>考核等级：</label>
+                <select class="select-box" id="assessmentRank">
+                    <option ${item.rank === '优秀' ? 'selected' : ''}>优秀</option>
+                    <option ${item.rank === '良好' ? 'selected' : ''}>良好</option>
+                    <option ${item.rank === '合格' ? 'selected' : ''}>合格</option>
+                    <option ${item.rank === '不合格' ? 'selected' : ''}>不合格</option>
+                </select>
+            </div>
+            <div class="form-item"><label>考核状态：</label>
+                <select class="select-box" id="assessmentStatus">
+                    <option ${item.status === '待评定' ? 'selected' : ''}>待评定</option>
+                    <option ${item.status === '评定中' ? 'selected' : ''}>评定中</option>
+                    <option ${item.status === '已评定' ? 'selected' : ''}>已评定</option>
+                </select>
+            </div>
+        `);
+    }
+}
+
+function deleteAssessment(id) {
+    if (confirm('确定要删除该考核记录？')) {
+        const items = window._assessmentRaw || [];
+        const idx = items.findIndex(i => i.id === id);
+        if (idx > -1) {
+            items.splice(idx, 1);
+            window._assessmentRaw = items;
+            showMsg('删除成功');
+            renderAssessmentTable();
+        }
+    }
+}
+
+// 首页渲染和日期工具函数兼容
+if (!window.getTodayStr) {
+    window.getTodayStr = function() {
+        const d = new Date();
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    };
 }
 </script>
 </body>

@@ -746,7 +746,88 @@
         .panel-more{ display:block;text-align:center;padding:8px;font-size:12px;color:#2980b9;text-decoration:none;border-top:1px solid #f0f2f5;margin-top:8px; }
         .panel-more:hover{ color:#003366; }
 
-        /* 统计卡片（统计页面使用） */
+        /* ==================== 公安门户首页布局 ==================== */
+        /* 专栏链接区 */
+        .portal-top-row{ display:flex;gap:12px;margin-bottom:12px; }
+        .portal-special-column{ flex:1;background:#fff;border:1px solid #d0d7e2;border-radius:3px;overflow:hidden; }
+        .special-header{ background:#003366;color:#fff;padding:10px 15px;font-size:14px;font-weight:600; }
+        .special-links{ display:flex;flex-wrap:wrap;padding:10px 15px;gap:10px; }
+        .special-link{ display:inline-block;padding:6px 14px;background:#f8fafc;border:1px solid #e8ecf2;border-radius:3px;color:#003366;font-size:12px;text-decoration:none;transition:all 0.2s; }
+        .special-link:hover{ background:#003366;color:#fff;border-color:#003366; }
+        
+        /* 综合导览区 */
+        .portal-nav-area{ display:flex;gap:8px;align-items:center; }
+        .nav-item{ padding:8px 14px;background:#fff;border:1px solid #d0d7e2;border-radius:3px;font-size:12px;color:#003366;cursor:pointer;transition:all 0.2s; }
+        .nav-item:hover{ background:#003366;color:#fff;border-color:#003366; }
+        
+        /* 数据展示区 */
+        .portal-data-area{ background:#fff;border:1px solid #d0d7e2;border-radius:3px;margin-bottom:12px;overflow:hidden; }
+        .data-show-header{ background:#f8fafc;padding:10px 15px;border-bottom:1px solid #e8ecf2;display:flex;justify-content:space-between;align-items:center; }
+        .data-show-title{ font-size:14px;font-weight:600;color:#003366; }
+        .data-show-user{ font-size:12px;color:#666; }
+        .data-show-grid{ display:grid;grid-template-columns:repeat(6,1fr);gap:15px;padding:15px; }
+        .data-show-card{ text-align:center;padding:10px;border-right:1px solid #f0f2f5; }
+        .data-show-card:last-child{ border-right:none; }
+        .data-show-number{ font-size:28px;font-weight:700;line-height:1.2; }
+        .data-show-label{ font-size:12px;color:#666;margin:6px 0; }
+        .data-show-trend{ font-size:11px;color:#999; }
+        
+        /* 主内容区 */
+        .portal-main-row{ display:flex;gap:12px; }
+        .portal-left-area{ flex:2;display:flex;flex-direction:column;gap:12px; }
+        .portal-right-area{ flex:1;display:flex;flex-direction:column;gap:12px; }
+        
+        /* 信息发布区 */
+        .info-section{ background:#fff;border:1px solid #d0d7e2;border-radius:3px;overflow:hidden; }
+        .info-header{ background:#f8fafc;padding:10px 15px;border-bottom:1px solid #e8ecf2;display:flex;justify-content:space-between;align-items:center; }
+        .info-title{ font-size:14px;font-weight:600;color:#003366; }
+        .info-more{ font-size:12px;color:#2980b9;text-decoration:none; }
+        .info-more:hover{ color:#003366; }
+        .info-list{ padding:10px 15px; }
+        .info-item{ display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f8fafc; }
+        .info-item:last-child{ border-bottom:none; }
+        .info-item.important .info-text{ color:#c0392b;font-weight:500; }
+        .info-dot{ width:6px;height:6px;border-radius:50%;background:#003366;flex-shrink:0; }
+        .info-dot.red{ background:#c0392b; }
+        .info-dot.blue{ background:#2980b9; }
+        .info-text{ flex:1;font-size:13px;color:#2c3e50;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+        .info-date{ font-size:11px;color:#a0aec0;flex-shrink:0; }
+        
+        /* 业务整合功能区 */
+        .biz-section{ background:#fff;border:1px solid #d0d7e2;border-radius:3px;overflow:hidden; }
+        .biz-header{ background:#f8fafc;padding:10px 15px;border-bottom:1px solid #e8ecf2;font-size:14px;font-weight:600;color:#003366; }
+        .biz-body{ padding:12px 15px; }
+        
+        /* 值班信息 */
+        .duty-info{ font-size:12px; }
+        .duty-row{ display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f8fafc; }
+        .duty-row:last-child{ border-bottom:none; }
+        .duty-label{ color:#888; }
+        .duty-value{ color:#2c3e50;font-weight:500; }
+        
+        /* 业务系统网格 */
+        .biz-grid{ display:grid;grid-template-columns:repeat(4,1fr);gap:8px; }
+        .biz-item{ display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border:1px solid #e8ecf2;border-radius:3px;cursor:pointer;transition:all 0.2s; }
+        .biz-item:hover{ background:#003366;color:#fff;border-color:#003366; }
+        .biz-icon{ font-size:20px; }
+        .biz-label{ font-size:11px;text-align:center; }
+        
+        /* 待办任务 */
+        .todo-count{ display:inline-block;background:#c0392b;color:#fff;font-size:10px;padding:1px 6px;border-radius:8px;margin-left:5px; }
+        .todo-list{ font-size:12px; }
+        .todo-task{ display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f8fafc;cursor:pointer; }
+        .todo-task:last-child{ border-bottom:none; }
+        .todo-task:hover{ background:#f8fafc; }
+        .task-tag{ font-size:10px;padding:2px 6px;border-radius:3px;flex-shrink:0; }
+        .task-tag.urgent{ background:#fee2e2;color:#c0392b; }
+        .task-tag.normal{ background:#e8ecf2;color:#666; }
+        .task-text{ flex:1; }
+        .task-time{ font-size:11px;color:#a0aec0;flex-shrink:0; }
+        
+        /* 敏感日日历 */
+        .sensitive-calendar{ font-size:12px; }
+
+        /* ==================== 统计卡片（统计页面使用） ==================== */
         .stat-cards{
             display:grid;
             grid-template-columns:repeat(4,1fr);
@@ -1318,406 +1399,246 @@
     </div>
 
     <div class="content-wrap">
-        <!-- 综合工作台 - 公安综合应用平台门户（情指行一体化） -->
+        <!-- 综合工作台 - 公安综合应用平台门户 -->
         <div class="page-content active" id="home">
-            <!-- 顶部态势感知区域 -->
-            <div class="situation-bar">
-                <div class="situation-item">
-                    <span class="situation-label">情指行一体化</span>
-                    <span class="situation-status online">运行正常</span>
+            <!-- 第一行：专栏链接区 + 综合导览区 -->
+            <div class="portal-top-row">
+                <!-- 专栏链接区 -->
+                <div class="portal-special-column">
+                    <div class="special-header">&#x1F6A8; 情指行一体化实战专栏</div>
+                    <div class="special-links">
+                        <a href="#" onclick="event.preventDefault(); switchPage('alarm');" class="special-link">110接处警</a>
+                        <a href="#" onclick="event.preventDefault(); switchPage('command');" class="special-link">指挥调度</a>
+                        <a href="#" onclick="event.preventDefault(); switchPage('intelligence');" class="special-link">情报研判</a>
+                        <a href="#" onclick="event.preventDefault(); switchPage('combined');" class="special-link">合成作战</a>
+                        <a href="#" onclick="event.preventDefault(); switchPage('patrol');" class="special-link">智慧巡防</a>
+                    </div>
                 </div>
-                <div class="situation-item">
-                    <span class="situation-label">合成作战平台</span>
-                    <span class="situation-status online">已激活</span>
-                </div>
-                <div class="situation-item">
-                    <span class="situation-label">智慧110系统</span>
-                    <span class="situation-status online">服务中</span>
-                </div>
-                <div class="situation-item">
-                    <span class="situation-label">数据赋能中台</span>
-                    <span class="situation-status online">待命中</span>
+                
+                <!-- 综合导览区 -->
+                <div class="portal-nav-area">
+                    <div class="nav-item" onclick="showMsg('全站搜索')">&#x1F50D; 全站搜索</div>
+                    <div class="nav-item" onclick="showMsg('网站导航')">&#x1F4D1; 网站导航</div>
+                    <div class="nav-item" onclick="showMsg('通讯录')">&#x1F4DE; 通讯录</div>
+                    <div class="nav-item" onclick="showMsg('一键收发')">&#x1F4E4; 一键收发</div>
+                    <div class="nav-item" onclick="showMsg('个人中心')">&#x1F464; 个人中心</div>
                 </div>
             </div>
             
-            <!-- 个人工作台欢迎区 -->
-            <div class="workbench-header">
-                <div class="workbench-welcome">
-                    <div class="workbench-title">综合警务工作台</div>
-                    <div class="workbench-user">
-                        <span id="workUserName">超级管理员</span> | <span id="workDateText"></span> | 值班组：<span class="duty-group">指挥中心一组</span>
-                    </div>
+            <!-- 第二行：数据展示区（登录后可见） -->
+            <div class="portal-data-area">
+                <div class="data-show-header">
+                    <span class="data-show-title">&#x1F4CA; 数据展示中心</span>
+                    <span class="data-show-user">当前用户：<span id="workUserName">超级管理员</span> | 值班组：<span class="duty-group">指挥中心一组</span> | <span id="workDateText"></span></span>
                 </div>
-                <div class="workbench-quick-actions">
-                    <button class="quick-action-btn primary" onclick="switchPage('alarm')">
-                        <span class="quick-icon">&#x1F6A8;</span> 110接警
-                    </button>
-                    <button class="quick-action-btn" onclick="switchPage('command')">
-                        <span class="quick-icon">&#x1F4DF;</span> 指挥调度
-                    </button>
-                    <button class="quick-action-btn" onclick="switchPage('combined')">
-                        <span class="quick-icon">&#x1F4A5;</span> 合成作战
-                    </button>
-                    <button class="quick-action-btn" onclick="switchPage('intelligence')">
-                        <span class="quick-icon">&#x1F50D;</span> 情报研判
-                    </button>
-                </div>
-            </div>
-            
-            <!-- 今日警务核心数据 -->
-            <div class="core-data-grid">
-                <div class="core-data-card emergency">
-                    <div class="core-data-header">
-                        <span class="core-data-icon">&#x1F6A8;</span>
-                        <span class="core-data-title">110警情态势</span>
+                <div class="data-show-grid">
+                    <div class="data-show-card">
+                        <div class="data-show-number" style="color:#c0392b;">5</div>
+                        <div class="data-show-label">今日接警</div>
+                        <div class="data-show-trend">较昨日 +2</div>
                     </div>
-                    <div class="core-data-body">
-                        <div class="core-data-main">
-                            <div class="data-number emergency-color">5</div>
-                            <div class="data-label">今日接警</div>
-                            <div class="data-trend up">较昨日 +2</div>
-                        </div>
-                        <div class="core-data-detail">
-                            <div class="data-row"><span>待派警</span><span class="red">1</span></div>
-                            <div class="data-row"><span>处警中</span><span class="orange">2</span></div>
-                            <div class="data-row"><span>已处置</span><span class="green">2</span></div>
-                        </div>
+                    <div class="data-show-card">
+                        <div class="data-show-number" style="color:#e67e22;">3</div>
+                        <div class="data-show-label">处警中</div>
+                        <div class="data-show-trend">待反馈 2 件</div>
                     </div>
-                </div>
-                
-                <div class="core-data-card case">
-                    <div class="core-data-header">
-                        <span class="core-data-icon">&#x1F4CB;</span>
-                        <span class="core-data-title">案件办理态势</span>
+                    <div class="data-show-card">
+                        <div class="data-show-number" style="color:#2980b9;">12</div>
+                        <div class="data-show-label">在办案件</div>
+                        <div class="data-show-trend">即将到期 3 件</div>
                     </div>
-                    <div class="core-data-body">
-                        <div class="core-data-main">
-                            <div class="data-number case-color">12</div>
-                            <div class="data-label">在办案件</div>
-                            <div class="data-trend warning">即将到期 3 件</div>
-                        </div>
-                        <div class="core-data-detail">
-                            <div class="data-row"><span>刑事案件</span><span class="blue">5</span></div>
-                            <div class="data-row"><span>行政案件</span><span class="blue">7</span></div>
-                            <div class="data-row"><span>本月结案</span><span class="green">85</span></div>
-                        </div>
+                    <div class="data-show-card">
+                        <div class="data-show-number" style="color:#27ae60;">85</div>
+                        <div class="data-show-label">本月结案</div>
+                        <div class="data-show-trend">结案率 87.6%</div>
                     </div>
-                </div>
-                
-                <div class="core-data-card police">
-                    <div class="core-data-header">
-                        <span class="core-data-icon">&#x1F46E;</span>
-                        <span class="core-data-title">勤务指挥态势</span>
+                    <div class="data-show-card">
+                        <div class="data-show-number" style="color:#8e44ad;">126</div>
+                        <div class="data-show-label">在线警力</div>
+                        <div class="data-show-trend">全部在岗</div>
                     </div>
-                    <div class="core-data-body">
-                        <div class="core-data-main">
-                            <div class="data-number police-color">126</div>
-                            <div class="data-label">在线警力</div>
-                            <div class="data-trend normal">全部在岗</div>
-                        </div>
-                        <div class="core-data-detail">
-                            <div class="data-row"><span>街面巡逻</span><span class="green">45</span></div>
-                            <div class="data-row"><span>派出所</span><span class="blue">62</span></div>
-                            <div class="data-row"><span>其他警种</span><span class="gray">19</span></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="core-data-card risk">
-                    <div class="core-data-header">
-                        <span class="core-data-icon">&#x26A0;</span>
-                        <span class="core-data-title">风险预警态势</span>
-                    </div>
-                    <div class="core-data-body">
-                        <div class="core-data-main">
-                            <div class="data-number risk-color">8</div>
-                            <div class="data-label">预警总数</div>
-                            <div class="data-trend down">已化解 5</div>
-                        </div>
-                        <div class="core-data-detail">
-                            <div class="data-row"><span>红色预警</span><span class="red">2</span></div>
-                            <div class="data-row"><span>橙色预警</span><span class="orange">3</span></div>
-                            <div class="data-row"><span>黄色预警</span><span class="yellow">3</span></div>
-                        </div>
+                    <div class="data-show-card">
+                        <div class="data-show-number" style="color:#d35400;">8</div>
+                        <div class="data-show-label">风险预警</div>
+                        <div class="data-show-trend">已化解 5</div>
                     </div>
                 </div>
             </div>
             
-            <!-- 主工作区域：三栏布局 -->
-            <div class="main-work-area">
-                <!-- 左栏：待办事项 + 重点关注 -->
-                <div class="work-column left">
-                    <div class="work-panel">
-                        <div class="panel-header">
-                            <span class="panel-icon">&#x2714;</span>
-                            待办事项
-                            <span class="panel-badge danger">3</span>
+            <!-- 第三行：主内容区（左右布局） -->
+            <div class="portal-main-row">
+                <!-- 左侧：信息发布区 -->
+                <div class="portal-left-area">
+                    <!-- 工作要闻 -->
+                    <div class="info-section">
+                        <div class="info-header">
+                            <span class="info-title">&#x1F4F0; 工作要闻</span>
+                            <a href="#" class="info-more" onclick="event.preventDefault(); showMsg('查看更多');">更多 &raquo;</a>
                         </div>
-                        <div class="panel-body">
-                            <div class="todo-item" onclick="switchPage('case')">
-                                <span class="priority high"></span>
-                                <div class="todo-content">
-                                    <div class="todo-title">涉密案件审批</div>
-                                    <div class="todo-desc">需您审核确认</div>
-                                </div>
-                                <div class="todo-time">今天 14:20</div>
+                        <div class="info-list">
+                            <div class="info-item">
+                                <span class="info-dot"></span>
+                                <span class="info-text">全省公安机关夏季治安打击整治专项行动动员部署会召开</span>
+                                <span class="info-date">05-24</span>
                             </div>
-                            <div class="todo-item" onclick="switchPage('goods')">
-                                <span class="priority medium"></span>
-                                <div class="todo-content">
-                                    <div class="todo-title">涉案财物登记</div>
-                                    <div class="todo-desc">张三提交 - 待审核</div>
-                                </div>
-                                <div class="todo-time">今天 11:05</div>
+                            <div class="info-item">
+                                <span class="info-dot"></span>
+                                <span class="info-text">省厅领导视察指挥中心信息化建设工作</span>
+                                <span class="info-date">05-23</span>
                             </div>
-                            <div class="todo-item" onclick="switchPage('petition')">
-                                <span class="priority medium"></span>
-                                <div class="todo-content">
-                                    <div class="todo-title">信访事项反馈</div>
-                                    <div class="todo-desc">群众信访 - 待处理</div>
-                                </div>
-                                <div class="todo-time">今天 09:15</div>
-                            </div>
-                            <div class="todo-item" onclick="switchPage('law')">
-                                <span class="priority low"></span>
-                                <div class="todo-content">
-                                    <div class="todo-title">执法监督周报</div>
-                                    <div class="todo-desc">请于本周五前提交</div>
-                                </div>
-                                <div class="todo-time">昨天 16:30</div>
-                            </div>
-                            <a class="panel-more" href="#" onclick="event.preventDefault(); showMsg('查看全部待办');">查看全部待办 &raquo;</a>
-                        </div>
-                    </div>
-                    
-                    <div class="work-panel">
-                        <div class="panel-header warning">
-                            <span class="panel-icon">&#x26A0;</span>
-                            风险预警
-                            <span class="panel-badge warning">2</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="warning-item high">
-                                <span class="warning-level">高</span>
-                                <div class="warning-content">
-                                    <div class="warning-title">重点人员轨迹异常</div>
-                                    <div class="warning-info">李某 - 离开常驻区域 | <span class="red">需关注</span></div>
-                                </div>
-                            </div>
-                            <div class="warning-item medium">
-                                <span class="warning-level">中</span>
-                                <div class="warning-content">
-                                    <div class="warning-title">场所安全隐患</div>
-                                    <div class="warning-info">某网吧消防检查不合格 | <span class="orange">待整改</span></div>
-                                </div>
-                            </div>
-                            <a class="panel-more" href="#" onclick="event.preventDefault(); switchPage('law');">查看全部预警 &raquo;</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 中栏：警情列表 + 快捷入口 -->
-                <div class="work-column center">
-                    <div class="work-panel">
-                        <div class="panel-header">
-                            <span class="panel-icon">&#x1F4CB;</span>
-                            近期警情事件
-                            <div class="panel-actions">
-                                <input type="text" class="panel-search" placeholder="关键词检索..." id="keySearch" onkeyup="if(event.key==='Enter')combineSearch()">
-                                <select class="panel-select" id="typeSearch">
-                                    <option value="">全部类型</option>
-                                    <option value="治安事件">治安事件</option>
-                                    <option value="邻里纠纷">邻里纠纷</option>
-                                    <option value="盗窃案件">盗窃案件</option>
-                                </select>
-                                <button class="panel-btn" onclick="combineSearch()">查询</button>
-                                <button class="panel-btn primary" onclick="openAddModal()">新增</button>
-                            </div>
-                        </div>
-                        <div class="panel-body" style="padding:0;">
-                            <table class="work-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width:30px;">选</th>
-                                        <th>事件编号</th>
-                                        <th>类型</th>
-                                        <th>地点</th>
-                                        <th>状态</th>
-                                        <th>操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="homeTableBody"></tbody>
-                            </table>
-                            <div class="page-area">
-                                <span class="page-btn" onclick="prevPage()">上一页</span>
-                                <span class="page-btn active">1</span>
-                                <span class="page-btn" onclick="nextPage()">下一页</span>
+                            <div class="info-item">
+                                <span class="info-dot"></span>
+                                <span class="info-text">我市公安大数据智能化建设经验获全省推广</span>
+                                <span class="info-date">05-22</span>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="work-panel">
-                        <div class="panel-header">
-                            <span class="panel-icon">&#x2699;</span>
-                            核心业务快捷入口
+                    <!-- 通知通报 -->
+                    <div class="info-section">
+                        <div class="info-header">
+                            <span class="info-title">&#x1F514; 通知通报</span>
+                            <a href="#" class="info-more" onclick="event.preventDefault(); showMsg('查看更多');">更多 &raquo;</a>
                         </div>
-                        <div class="panel-body">
-                            <div class="shortcut-grid">
-                                <div class="shortcut-item" onclick="switchPage('alarm')">
-                                    <span class="shortcut-icon">&#x1F6A8;</span>
-                                    <span class="shortcut-label">110接警</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('command')">
-                                    <span class="shortcut-icon">&#x1F4DF;</span>
-                                    <span class="shortcut-label">指挥调度</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('intelligence')">
-                                    <span class="shortcut-icon">&#x1F50D;</span>
-                                    <span class="shortcut-label">情报研判</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('combined')">
-                                    <span class="shortcut-icon">&#x1F4A5;</span>
-                                    <span class="shortcut-label">合成作战</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('case')">
-                                    <span class="shortcut-icon">&#x1F4CB;</span>
-                                    <span class="shortcut-label">案件办理</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('record')">
-                                    <span class="shortcut-icon">&#x1F58A;</span>
-                                    <span class="shortcut-label">电子笔录</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('file')">
-                                    <span class="shortcut-icon">&#x1F4DA;</span>
-                                    <span class="shortcut-label">电子卷宗</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('goods')">
-                                    <span class="shortcut-icon">&#x1F4E6;</span>
-                                    <span class="shortcut-label">涉案财物</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('person')">
-                                    <span class="shortcut-icon">&#x1F464;</span>
-                                    <span class="shortcut-label">重点人员</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('car')">
-                                    <span class="shortcut-icon">&#x1F698;</span>
-                                    <span class="shortcut-label">涉控车辆</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('community')">
-                                    <span class="shortcut-icon">&#x1F3E1;</span>
-                                    <span class="shortcut-label">社区警务</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('patrol')">
-                                    <span class="shortcut-icon">&#x1F6F8;</span>
-                                    <span class="shortcut-label">巡逻防控</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('duty')">
-                                    <span class="shortcut-icon">&#x1F4C5;</span>
-                                    <span class="shortcut-label">勤务管理</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('law')">
-                                    <span class="shortcut-icon">&#x1F4DC;</span>
-                                    <span class="shortcut-label">执法监督</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('service')">
-                                    <span class="shortcut-icon">&#x1F3E2;</span>
-                                    <span class="shortcut-label">便民服务</span>
-                                </div>
-                                <div class="shortcut-item" onclick="switchPage('traffic')">
-                                    <span class="shortcut-icon">&#x1F6E3;</span>
-                                    <span class="shortcut-label">交通管理</span>
-                                </div>
+                        <div class="info-list">
+                            <div class="info-item important">
+                                <span class="info-dot red"></span>
+                                <span class="info-text">关于开展夏季治安打击整治专项行动的通知</span>
+                                <span class="info-date">05-24</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-dot"></span>
+                                <span class="info-text">警务综合应用平台系统升级维护公告</span>
+                                <span class="info-date">05-23</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-dot"></span>
+                                <span class="info-text">关于加强警情数据安全管理的紧急通知</span>
+                                <span class="info-date">05-22</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-dot"></span>
+                                <span class="info-text">2025年度第二期警务执法培训报名通知</span>
+                                <span class="info-date">05-20</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 各地动态 -->
+                    <div class="info-section">
+                        <div class="info-header">
+                            <span class="info-title">&#x1F4E2; 各地动态</span>
+                            <a href="#" class="info-more" onclick="event.preventDefault(); showMsg('查看更多');">更多 &raquo;</a>
+                        </div>
+                        <div class="info-list">
+                            <div class="info-item">
+                                <span class="info-dot blue"></span>
+                                <span class="info-text">桥西派出所成功化解一起邻里纠纷</span>
+                                <span class="info-date">05-24</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-dot blue"></span>
+                                <span class="info-text">朝阳派出所开展反诈入户宣传活动</span>
+                                <span class="info-date">05-23</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-dot blue"></span>
+                                <span class="info-text">新东派出所联合多部门调解噪声扰民纠纷</span>
+                                <span class="info-date">05-22</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- 右栏：通知公告 + 关注动态 + 日历 -->
-                <div class="work-column right">
-                    <div class="work-panel">
-                        <div class="panel-header info">
-                            <span class="panel-icon">&#x1F4F0;</span>
-                            通知公告
-                            <span class="panel-badge info">2</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="notice-item">
-                                <div class="notice-title">关于开展夏季治安打击整治专项行动的通知</div>
-                                <div class="notice-meta">2025-05-24 | 指挥中心</div>
+                <!-- 右侧：业务整合功能区 -->
+                <div class="portal-right-area">
+                    <!-- 今日值班 -->
+                    <div class="biz-section">
+                        <div class="biz-header">&#x1F4C5; 今日值班</div>
+                        <div class="biz-body">
+                            <div class="duty-info">
+                                <div class="duty-row"><span class="duty-label">带班领导</span><span class="duty-value">张局长</span></div>
+                                <div class="duty-row"><span class="duty-label">指挥长</span><span class="duty-value">李主任</span></div>
+                                <div class="duty-row"><span class="duty-label">值班员</span><span class="duty-value">王警官、赵警官</span></div>
+                                <div class="duty-row"><span class="duty-label">值班电话</span><span class="duty-value">0311-12345678</span></div>
                             </div>
-                            <div class="notice-item">
-                                <div class="notice-title">警务综合应用平台系统升级维护公告</div>
-                                <div class="notice-meta">2025-05-23 | 科技信息科</div>
-                            </div>
-                            <div class="notice-item">
-                                <div class="notice-title">关于加强警情数据安全管理的紧急通知</div>
-                                <div class="notice-meta">2025-05-22 | 警务保障部</div>
-                            </div>
-                            <div class="notice-item">
-                                <div class="notice-title">2025年度第二期警务执法培训报名通知</div>
-                                <div class="notice-meta">2025-05-20 | 教育训练科</div>
-                            </div>
-                            <a class="panel-more" href="#" onclick="event.preventDefault(); showMsg('查看历史公告');">查看全部公告 &raquo;</a>
                         </div>
                     </div>
                     
-                    <div class="work-panel">
-                        <div class="panel-header">
-                            <span class="panel-icon">&#x1F441;</span>
-                            关注动态
-                        </div>
-                        <div class="panel-body">
-                            <div class="watch-list">
-                                <div class="watch-item">
-                                    <span class="watch-tag danger">警情</span>
-                                    <span>和平社区邻里纠纷 - 处置中</span>
+                    <!-- 业务系统入口 -->
+                    <div class="biz-section">
+                        <div class="biz-header">&#x2699; 业务系统</div>
+                        <div class="biz-body">
+                            <div class="biz-grid">
+                                <div class="biz-item" onclick="switchPage('alarm')">
+                                    <span class="biz-icon">&#x1F6A8;</span>
+                                    <span class="biz-label">110接处警</span>
                                 </div>
-                                <div class="watch-item">
-                                    <span class="watch-tag danger">案件</span>
-                                    <span>阳光小区盗窃案 - 侦查中</span>
+                                <div class="biz-item" onclick="switchPage('command')">
+                                    <span class="biz-icon">&#x1F4DF;</span>
+                                    <span class="biz-label">指挥调度</span>
                                 </div>
-                                <div class="watch-item">
-                                    <span class="watch-tag warning">人员</span>
-                                    <span>张某轨迹异常 - 已关注</span>
+                                <div class="biz-item" onclick="switchPage('intelligence')">
+                                    <span class="biz-icon">&#x1F50D;</span>
+                                    <span class="biz-label">情报平台</span>
                                 </div>
-                                <div class="watch-item">
-                                    <span class="watch-tag info">巡逻</span>
-                                    <span>建设路夜间巡查 - 正常</span>
+                                <div class="biz-item" onclick="switchPage('combined')">
+                                    <span class="biz-icon">&#x1F4A5;</span>
+                                    <span class="biz-label">合成作战</span>
                                 </div>
-                                <div class="watch-item">
-                                    <span class="watch-tag success">办结</span>
-                                    <span>幸福社区户籍迁移 - 已完成</span>
+                                <div class="biz-item" onclick="switchPage('case')">
+                                    <span class="biz-icon">&#x1F4CB;</span>
+                                    <span class="biz-label">执法办案</span>
                                 </div>
-                                <div class="watch-item">
-                                    <span class="watch-tag purple">勤务</span>
-                                    <span>五一安保任务 - 执行中</span>
+                                <div class="biz-item" onclick="switchPage('person')">
+                                    <span class="biz-icon">&#x1F464;</span>
+                                    <span class="biz-label">重点人员</span>
+                                </div>
+                                <div class="biz-item" onclick="switchPage('patrol')">
+                                    <span class="biz-icon">&#x1F6F8;</span>
+                                    <span class="biz-label">智慧巡防</span>
+                                </div>
+                                <div class="biz-item" onclick="switchPage('community')">
+                                    <span class="biz-icon">&#x1F3E1;</span>
+                                    <span class="biz-label">社区警务</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="work-panel">
-                        <div class="panel-header">
-                            <span class="panel-icon">&#x1F4C5;</span>
-                            日历助手
+                    <!-- 敏感日提醒 -->
+                    <div class="biz-section">
+                        <div class="biz-header">&#x26A0; 敏感日提醒</div>
+                        <div class="biz-body">
+                            <div class="sensitive-calendar" id="sensitiveCalendar"></div>
                         </div>
-                        <div class="panel-body">
-                            <div class="calendar-mini" id="miniCalendar"></div>
-                            <div class="schedule-info">
-                                <div class="schedule-title">本周排班</div>
-                                <div class="schedule-list">
-                                    <div class="schedule-item"><span class="day">周一</span><span class="team">指挥中心一组</span></div>
-                                    <div class="schedule-item"><span class="day">周二</span><span class="team">指挥中心一组</span></div>
-                                    <div class="schedule-item"><span class="day">周三</span><span class="team">指挥中心二组</span></div>
-                                    <div class="schedule-item"><span class="day">周四</span><span class="team">指挥中心二组</span></div>
-                                    <div class="schedule-item"><span class="day">周五</span><span class="team">指挥中心三组</span></div>
+                    </div>
+                    
+                    <!-- 待办任务 -->
+                    <div class="biz-section">
+                        <div class="biz-header">&#x2705; 我的待办 <span class="todo-count">3</span></div>
+                        <div class="biz-body">
+                            <div class="todo-list">
+                                <div class="todo-task" onclick="switchPage('case')">
+                                    <span class="task-tag urgent">急</span>
+                                    <span class="task-text">涉密案件审批</span>
+                                    <span class="task-time">今天</span>
+                                </div>
+                                <div class="todo-task" onclick="switchPage('goods')">
+                                    <span class="task-tag normal">普</span>
+                                    <span class="task-text">涉案财物登记审核</span>
+                                    <span class="task-time">今天</span>
+                                </div>
+                                <div class="todo-task" onclick="switchPage('law')">
+                                    <span class="task-tag normal">普</span>
+                                    <span class="task-text">执法监督周报提交</span>
+                                    <span class="task-time">本周五</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
 
         <!-- 110接处警平台 -->

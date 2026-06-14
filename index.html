@@ -230,8 +230,8 @@
 
         .content-wrap{
             flex:1;
-            padding:25px 30px;
-            background:#f6f8fa;
+            padding:15px 20px;
+            background:#e8ecf2;
         }
         .search-bar{
             background:#fff;
@@ -2525,6 +2525,50 @@
                     </tr>
                 </thead>
                 <tbody id="assessmentTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 市场主体管理 -->
+        <div class="page-content" id="market">
+            <div class="title-txt">市场主体登记管理</div>
+            
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="统一信用代码/企业名称/法人搜索" id="marketSearch">
+                <select class="select-box" id="marketTypeFilter">
+                    <option value="">全部类型</option>
+                    <option value="有限责任公司">有限责任公司</option>
+                    <option value="股份有限公司">股份有限公司</option>
+                    <option value="个体工商户">个体工商户</option>
+                    <option value="合伙企业">合伙企业</option>
+                    <option value="农民专业合作社">农民专业合作社</option>
+                </select>
+                <select class="select-box" id="marketStatusFilter">
+                    <option value="">全部状态</option>
+                    <option value="存续">存续</option>
+                    <option value="在业">在业</option>
+                    <option value="吊销">吊销</option>
+                    <option value="注销">注销</option>
+                </select>
+                <button class="btn btn-search" onclick="searchMarket()">搜索</button>
+                <button class="btn btn-add" onclick="addMarket()">新增主体</button>
+                <button class="btn btn-close" onclick="resetMarket()">重置</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>统一信用代码</th>
+                        <th>企业名称</th>
+                        <th>企业类型</th>
+                        <th>法定代表人</th>
+                        <th>经营场所</th>
+                        <th>成立日期</th>
+                        <th>状态</th>
+                        <th>联系电话</th>
+                        <th>操作管理</th>
+                    </tr>
+                </thead>
+                <tbody id="marketTableBody">
                 </tbody>
             </table>
         </div>
@@ -7019,6 +7063,18 @@ function resetPetition() {
     if (statusSel) statusSel.value = '';
     window._petitionFiltered = null;
     renderPetitionTable();
+    showMsg('已重置筛选条件');
+}
+
+function resetMarket() {
+    const searchInput = document.getElementById('marketSearch');
+    if (searchInput) searchInput.value = '';
+    const typeSel = document.getElementById('marketTypeFilter');
+    if (typeSel) typeSel.value = '';
+    const statusSel = document.getElementById('marketStatusFilter');
+    if (statusSel) statusSel.value = '';
+    window._marketFiltered = null;
+    renderMarketTable();
     showMsg('已重置筛选条件');
 }
 

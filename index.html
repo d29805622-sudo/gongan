@@ -1836,7 +1836,19 @@ let data = {
     users: [
         {account: 'admin', password: '123456', name: '超级管理员', role: '系统运维', level: '最高全权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
         {account: 'police', password: '123456', name: '普通警员账号', role: '一线执勤', level: '查看+新增权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
-        {account: 'trainee', password: '123456', name: '实习账号', role: '实习人员', level: '仅查看权限', status: '临时开通', expireDate: '', currentSessionId: '', lastLoginTime: ''}
+        {account: 'trainee', password: '123456', name: '实习账号', role: '实习人员', level: '仅查看权限', status: '临时开通', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'zhangsan', password: '123456', name: '张三', role: '指挥中心', level: '指挥调度权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'lisi', password: '123456', name: '李四', role: '刑侦大队', level: '案件管理权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'wangwu', password: '123456', name: '王五', role: '社区警务', level: '社区管理权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'zhaoliu', password: '123456', name: '赵六', role: '情报研判', level: '情报分析权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'sunqi', password: '123456', name: '孙七', role: '交通管理', level: '交通执法权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'zhouba', password: '123456', name: '周八', role: '法制监督', level: '执法监督权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'wujiu', password: '123456', name: '吴九', role: '户籍管理', level: '便民服务权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'zhengshi', password: '123456', name: '郑十', role: '市场监督', level: '市场主体管理权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'tdzdy', password: '123456', name: '特警支队', role: '特警突击', level: '最高全权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'xck', password: '123456', name: '宣传科', role: '舆情管理', level: '查看+编辑权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'wa', password: '123456', name: '网安支队', role: '网络安全', level: '技术侦查权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'jdzd', password: '123456', name: '禁毒支队', role: '禁毒管理', level: '案件管理权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''}
     ],
     statistics: {
         todayAlarms: 5,
@@ -2062,14 +2074,12 @@ async function loadData() {
     let loadedData = null;
     const syncService = getSyncService();
     
-    // 根据同步服务加载
     if (syncService === 'jsonbin') {
         loadedData = await loadDataFromJsonBin();
     } else if (syncService === 'gist' && GIST_CONFIG.token && GIST_CONFIG.gistId) {
         loadedData = await loadDataFromGist();
     }
     
-    // 如果没有从云端加载，从 localStorage 加载
     if (!loadedData) {
         const saved = localStorage.getItem('policeData');
         const savedVersion = localStorage.getItem('policeDataVersion');
@@ -2077,7 +2087,6 @@ async function loadData() {
         
         if (saved) {
             try {
-                // 尝试解密
                 let decrypted = saved;
                 if (ENCRYPTION_KEY) {
                     const dec = decryptData(saved, ENCRYPTION_KEY);
@@ -2095,8 +2104,8 @@ async function loadData() {
         }
     }
     
-    // 加载数据
     if (loadedData) {
+        // 原有模块
         data.events = loadedData.events || data.events;
         data.alarms = loadedData.alarms || data.alarms;
         data.cases = (loadedData.cases || data.cases).map(c => ({
@@ -2132,9 +2141,19 @@ async function loadData() {
         data.users = loadedData.users || data.users;
         data.statistics = loadedData.statistics || data.statistics;
         data.supervision = loadedData.supervision || data.supervision;
+        
+        // 新增模块
+        if (loadedData.commandData) commandData = loadedData.commandData;
+        if (loadedData.intelligenceData) intelligenceData = loadedData.intelligenceData;
+        if (loadedData.communityData) communityData = loadedData.communityData;
+        if (loadedData.patrolData) patrolData = loadedData.patrolData;
+        if (loadedData.recordData) recordData = loadedData.recordData;
+        if (loadedData.lawSupervisionData) lawSupervisionData = loadedData.lawSupervisionData;
+        if (loadedData.serviceData) serviceData = loadedData.serviceData;
+        if (loadedData.trafficData) trafficData = loadedData.trafficData;
+        if (loadedData.marketData) marketData = loadedData.marketData;
     }
     
-    // 备份原始数据
     backupOriginalData();
 }
 
@@ -2148,6 +2167,15 @@ function backupOriginalData() {
     originalData.goods = [...data.goods];
     originalData.logs = [...data.logs];
     originalData.users = [...data.users];
+    originalData.commandData = JSON.parse(JSON.stringify(commandData));
+    originalData.intelligenceData = JSON.parse(JSON.stringify(intelligenceData));
+    originalData.communityData = JSON.parse(JSON.stringify(communityData));
+    originalData.patrolData = JSON.parse(JSON.stringify(patrolData));
+    originalData.recordData = JSON.parse(JSON.stringify(recordData));
+    originalData.lawSupervisionData = JSON.parse(JSON.stringify(lawSupervisionData));
+    originalData.serviceData = JSON.parse(JSON.stringify(serviceData));
+    originalData.trafficData = JSON.parse(JSON.stringify(trafficData));
+    originalData.marketData = JSON.parse(JSON.stringify(marketData));
 }
 
 // 批量保存标识，用于减少localStorage写入
@@ -2171,7 +2199,28 @@ function scheduleSave() {
 // 保存数据到localStorage和云端
 function saveData() {
     try {
-        const jsonStr = JSON.stringify(data);
+        const allData = {
+            events: data.events,
+            alarms: data.alarms,
+            cases: data.cases,
+            persons: data.persons,
+            cars: data.cars,
+            goods: data.goods,
+            logs: data.logs,
+            users: data.users,
+            statistics: data.statistics,
+            supervision: data.supervision,
+            commandData: commandData,
+            intelligenceData: intelligenceData,
+            communityData: communityData,
+            patrolData: patrolData,
+            recordData: recordData,
+            lawSupervisionData: lawSupervisionData,
+            serviceData: serviceData,
+            trafficData: trafficData,
+            marketData: marketData
+        };
+        const jsonStr = JSON.stringify(allData);
         const encrypted = ENCRYPTION_KEY ? encryptData(jsonStr, ENCRYPTION_KEY) : jsonStr;
         localStorage.setItem('policeData', encrypted);
         localStorage.setItem('policeDataVersion', '4.1');
@@ -2689,12 +2738,7 @@ function editUser(account) {
 }
 
 // ==================== 页面切换 ====================
-function switchPage(id) {
-    document.querySelectorAll('.menu-second').forEach(v=>v.classList.remove('active'));
-    event.target.classList.add('active');
-    document.querySelectorAll('.page-content').forEach(v=>v.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
+function _deprecatedSwitchPage() {}
 
 // 消息提示
 function showMsg(t){
@@ -3976,6 +4020,7 @@ function completeDispatch(id) {
         showMsg("调度已完成");
         addLog('完成调度', id);
         renderCommandTable();
+        scheduleSave();
     }
 }
 
@@ -4056,8 +4101,42 @@ function deleteIntelligence(id) {
             showMsg("删除成功");
             addLog('删除情报', id);
             renderIntelTable();
+            scheduleSave();
         }
     }
+}
+
+function editIntelligence(id) {
+    const item = intelligenceData.items.find(i => i.id === id);
+    if (!item) return;
+    currentModal = 'editIntelligence';
+    editId = id;
+    openModal('编辑情报', `
+        <div class="form-item"><label>情报编号：</label><input type="text" class="input-text" id="intelId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>情报类型：</label>
+            <select class="select-box" id="intelType">
+                <option ${item.type === '人员情报' ? 'selected' : ''}>人员情报</option>
+                <option ${item.type === '案件情报' ? 'selected' : ''}>案件情报</option>
+                <option ${item.type === '舆情情报' ? 'selected' : ''}>舆情情报</option>
+            </select>
+        </div>
+        <div class="form-item"><label>情报摘要：</label><input type="text" class="input-text" id="intelSummary" value="${item.summary}"></div>
+        <div class="form-item"><label>情报来源：</label><input type="text" class="input-text" id="intelSource" value="${item.source}"></div>
+        <div class="form-item"><label>风险等级：</label>
+            <select class="select-box" id="intelRisk">
+                <option ${item.risk === '高风险' ? 'selected' : ''}>高风险</option>
+                <option ${item.risk === '中风险' ? 'selected' : ''}>中风险</option>
+                <option ${item.risk === '低风险' ? 'selected' : ''}>低风险</option>
+            </select>
+        </div>
+        <div class="form-item"><label>研判状态：</label>
+            <select class="select-box" id="intelStatus">
+                <option ${item.status === '待研判' ? 'selected' : ''}>待研判</option>
+                <option ${item.status === '研判中' ? 'selected' : ''}>研判中</option>
+                <option ${item.status === '已处置' ? 'selected' : ''}>已处置</option>
+            </select>
+        </div>
+    `);
 }
 
 // 社区警务管理功能
@@ -4242,6 +4321,7 @@ function superviseCase(id) {
         showMsg("已启动督办");
         addLog('督办案件', id);
         renderLawTable();
+        scheduleSave();
     }
 }
 
@@ -4301,6 +4381,7 @@ function completeService(id) {
         showMsg("业务已办结");
         addLog('办结业务', id);
         renderServiceTable();
+        scheduleSave();
     }
 }
 
@@ -4566,6 +4647,18 @@ function updateSaveForm() {
                     addLog('编辑笔录', editId);
                     renderRecordTable();
                 }
+            } else if (currentModal === 'editIntelligence') {
+                const item = intelligenceData.items.find(i => i.id === editId);
+                if (item) {
+                    item.type = document.getElementById('intelType').value;
+                    item.summary = document.getElementById('intelSummary').value;
+                    item.source = document.getElementById('intelSource').value;
+                    item.risk = document.getElementById('intelRisk').value;
+                    item.status = document.getElementById('intelStatus').value;
+                    
+                    addLog('编辑情报', editId);
+                    renderIntelTable();
+                }
             } else if (currentModal === 'editLawCase') {
                 const item = lawSupervisionData.cases.find(c => c.id === editId);
                 if (item) {
@@ -4607,6 +4700,8 @@ function updateSaveForm() {
                 await originalSaveForm();
                 return;
             }
+            scheduleSave();
+            backupOriginalData();
             closeModal();
             showMsg("保存成功");
         } catch(e) {
@@ -4869,10 +4964,6 @@ function viewRecordDetail(id) {
     }
 }
 
-function editRecord(id) {
-    showMsg('编辑笔录功能');
-}
-
 function exportRecord(id) {
     showMsg('导出笔录功能');
     addLog('导出笔录', id);
@@ -4932,6 +5023,7 @@ function deleteDispatch(id) {
             showMsg('删除成功');
             addLog('删除调度', id);
             renderCommandTable();
+            scheduleSave();
         }
     }
 }
@@ -4943,6 +5035,7 @@ function deleteVisit(index) {
         showMsg('删除成功');
         addLog('删除走访', item.target);
         renderCommunityTable();
+        scheduleSave();
     }
 }
 
@@ -4954,6 +5047,7 @@ function deletePatrol(id) {
             showMsg('删除成功');
             addLog('删除巡逻', id);
             renderPatrolTable();
+            scheduleSave();
         }
     }
 }
@@ -4966,6 +5060,7 @@ function deleteRecord(id) {
             showMsg('删除成功');
             addLog('删除笔录', id);
             renderRecordTable();
+            scheduleSave();
         }
     }
 }
@@ -4978,6 +5073,7 @@ function deleteLawCase(id) {
             showMsg('删除成功');
             addLog('删除执法案件', id);
             renderLawTable();
+            scheduleSave();
         }
     }
 }
@@ -4990,6 +5086,7 @@ function deleteService(id) {
             showMsg('删除成功');
             addLog('删除服务', id);
             renderServiceTable();
+            scheduleSave();
         }
     }
 }
@@ -5002,6 +5099,7 @@ function deleteTrafficService(id) {
             showMsg('删除成功');
             addLog('删除交通服务', id);
             renderTrafficTable();
+            scheduleSave();
         }
     }
 }
@@ -5159,58 +5257,6 @@ function editTrafficService(id) {
             </select>
         </div>
     `);
-}
-
-function refreshStatistics() {
-    showMsg('统计数据已刷新');
-}
-
-// 导出统计报表
-function exportStatistics() {
-    showMsg('报表导出功能已触发');
-}
-
-// 刷新执法监督数据
-function refreshSupervision() {
-    showMsg('执法监督数据已刷新');
-}
-
-// 新增考评
-function addEvaluation() {
-    currentModal = 'addEvaluation';
-    openModal('新增执法考评', `
-        <div class="form-item"><label>考评人员 <span class="required">*</span>：</label><input type="text" class="input-text" id="evalPerson"></div>
-        <div class="form-item"><label>分数 <span class="required">*</span>：</label><input type="number" class="input-text" id="evalScore" value="80"></div>
-        <div class="form-item"><label>评级：</label>
-            <select class="select-box" id="evalRank">
-                <option value="优秀">优秀</option>
-                <option value="良好">良好</option>
-                <option value="合格">合格</option>
-            </select>
-        </div>
-        <div class="form-item"><label>考评月份：</label><input type="text" class="input-text" id="evalMonth" value="2026-05"></div>
-    `);
-}
-
-// 编辑考评
-function editEvaluation(person) {
-    const item = data.supervision.evaluations.find(e => e.person === person);
-    if (item) {
-        currentModal = 'editEvaluation';
-        editId = person;
-        openModal('编辑执法考评', `
-            <div class="form-item"><label>考评人员：</label><input type="text" class="input-text" id="evalPerson" value="${item.person}" readonly></div>
-            <div class="form-item"><label>分数：</label><input type="number" class="input-text" id="evalScore" value="${item.score}"></div>
-            <div class="form-item"><label>评级：</label>
-                <select class="select-box" id="evalRank">
-                    <option value="优秀" ${item.rank === '优秀' ? 'selected' : ''}>优秀</option>
-                    <option value="良好" ${item.rank === '良好' ? 'selected' : ''}>良好</option>
-                    <option value="合格" ${item.rank === '合格' ? 'selected' : ''}>合格</option>
-                </select>
-            </div>
-            <div class="form-item"><label>考评月份：</label><input type="text" class="input-text" id="evalMonth" value="${item.month}"></div>
-        `);
-    }
 }
 
 // 回车登录

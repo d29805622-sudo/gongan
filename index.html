@@ -556,7 +556,62 @@
             color:#990000;
             font-weight:600;
         }
-        /* 统计分析样式 - 公安指挥中心Dashboard */
+        /* 公安综合应用平台门户布局 */
+        .portal-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:10px 0; }
+        .portal-card{ background:#fff; border:1px solid #d0d7e2; border-radius:2px; overflow:hidden; }
+        .portal-header{ background:#f5f7fa; padding:10px 14px; border-bottom:1px solid #e8ecf2; font-size:13px; font-weight:600; color:#003366; display:flex; align-items:center; justify-content:space-between; }
+        .portal-header .badge{ font-size:11px; font-weight:normal; background:#c0392b; color:#fff; padding:1px 8px; border-radius:8px; }
+        .portal-body{ padding:10px 14px; }
+
+        /* 待办事项 */
+        .todo-item{ display:flex; align-items:center; gap:8px; padding:8px 6px; border-bottom:1px solid #f0f2f5; cursor:pointer; transition:background 0.15s; }
+        .todo-item:hover{ background:#f8fafc; }
+        .todo-item:last-child{ border-bottom:none; }
+        .todo-priority{ width:6px;height:6px;border-radius:50%;flex-shrink:0; }
+        .todo-priority.high{ background:#c0392b; }
+        .todo-priority.medium{ background:#e67e22; }
+        .todo-priority.low{ background:#27ae60; }
+        .todo-content{ flex:1;font-size:12px;color:#2c3e50; }
+        .todo-time{ font-size:11px;color:#a0aec0;white-space:nowrap; }
+        .todo-more{ text-align:center;padding:6px; }
+        .todo-more a{ font-size:12px;color:#2980b9;text-decoration:none; }
+
+        /* 通知公告 */
+        .notice-item{ padding:8px 6px; border-left:3px solid #003366; background:#f8fafc; margin-bottom:8px; border-radius:0 2px 2px 0; }
+        .notice-title{ font-size:12px;color:#2c3e50;font-weight:500;margin-bottom:2px; }
+        .notice-time{ font-size:11px;color:#a0aec0; }
+
+        /* 快捷入口网格 */
+        .shortcut-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+        .shortcut-item{ display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 6px;border:1px solid #e8ecf2;border-radius:2px;cursor:pointer;transition:all 0.15s;text-decoration:none;color:#2c3e50; }
+        .shortcut-item:hover{ background:#003366;color:#fff;border-color:#003366;transform:translateY(-1px); }
+        .shortcut-icon{ font-size:22px; }
+        .shortcut-label{ font-size:11px;text-align:center; }
+
+        /* 日历 */
+        .calendar-mini{ font-size:12px;width:100%; }
+        .cal-head{ display:flex;justify-content:space-between;align-items:center;margin-bottom:8px; }
+        .cal-title{ font-weight:600;color:#003366; }
+        .cal-nav{ cursor:pointer;padding:2px 6px;border-radius:2px;color:#666; }
+        .cal-weekdays{ display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:#888;padding:4px 0;border-bottom:1px solid #eee; }
+        .cal-days{ display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:12px; }
+        .cal-day{ padding:6px 2px;cursor:pointer;border-radius:2px;color:#333; }
+        .cal-day:hover{ background:#e8edf3; }
+        .cal-day.today{ background:#003366;color:#fff;font-weight:bold; }
+        .cal-day.other-month{ color:#ccc; }
+        .cal-day.empty{}
+
+        /* 常用功能按钮 */
+        .func-btns{ display:flex;gap:8px;flex-wrap:wrap; }
+        .func-btn{ flex:1;min-width:80px;padding:8px 12px;text-align:center;font-size:12px;border:1px solid #d0d7e2;border-radius:2px;cursor:pointer;background:#fff;color:#003366;transition:all 0.15s; }
+        .func-btn:hover{ background:#003366;color:#fff;border-color:#003366; }
+
+        /* 关注列表 */
+        .watch-list{ max-height:200px;overflow-y:auto; }
+        .watch-item{ display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f0f2f5;font-size:12px; }
+        .watch-tag{ font-size:10px;padding:1px 6px;border-radius:8px;white-space:nowrap;background:#e8edf3;color:#555; }
+
+        /* 统计卡片（统计页面使用） */
         .stat-cards{
             display:grid;
             grid-template-columns:repeat(4,1fr);
@@ -571,16 +626,7 @@
             border-radius:2px;
             position:relative;
             overflow:hidden;
-            transition:box-shadow 0.2s,transform 0.2s;
         }
-        .stat-card:hover{
-            box-shadow:0 4px 16px rgba(0,51,102,0.12);
-            transform:translateY(-1px);
-        }
-        .stat-card.card-red{border-left-color:#c0392b;}
-        .stat-card.card-orange{border-left-color:#e67e22;}
-        .stat-card.card-green{border-left-color:#27ae60;}
-        .stat-card.card-blue{border-left-color:#2980b9;}
         .stat-card .stat-icon{
             position:absolute;
             right:16px;
@@ -590,6 +636,10 @@
             opacity:0.08;
             color:#003366;
         }
+        .stat-card.card-red{border-left-color:#c0392b;}
+        .stat-card.card-orange{border-left-color:#e67e22;}
+        .stat-card.card-green{border-left-color:#27ae60;}
+        .stat-card.card-blue{border-left-color:#2980b9;}
         .stat-number{
             font-size:30px;
             font-weight:700;
@@ -604,150 +654,13 @@
             font-size:12px;
             color:#6b7c93;
             margin-top:4px;
-            letter-spacing:0.5px;
         }
         .stat-sub{
             font-size:10px;
             color:#a0aec0;
             margin-top:2px;
         }
-        
-        /* 仪表盘双栏布局 */
-        .dashboard-grid{
-            display:grid;
-            grid-template-columns:1.4fr 1fr;
-            gap:12px;
-            margin:12px 0;
-        }
-        .dash-panel{
-            background:#fff;
-            border:1px solid #d0d7e2;
-            border-radius:2px;
-            overflow:hidden;
-        }
-        .dash-panel-header{
-            background:#f7f9fc;
-            padding:12px 16px;
-            border-bottom:1px solid #e8ecf2;
-            font-size:13px;
-            font-weight:600;
-            color:#003366;
-            display:flex;
-            align-items:center;
-            gap:8px;
-        }
-        .dash-panel-header .dot{
-            width:6px;
-            height:6px;
-            border-radius:50%;
-            background:#003366;
-        }
-        .dash-panel-body{
-            padding:12px 16px;
-        }
-        
-        /* 实时滚动告警 */
-        .alert-ticker-wrap{
-            background:#fffbe6;
-            border:1px solid #ffe58f;
-            border-radius:2px;
-            padding:8px 12px;
-            margin:12px 0;
-            display:flex;
-            align-items:center;
-            gap:10px;
-            overflow:hidden;
-        }
-        .alert-ticker-label{
-            background:#e67e22;
-            color:#fff;
-            font-size:11px;
-            padding:2px 10px;
-            border-radius:2px;
-            white-space:nowrap;
-            font-weight:600;
-        }
-        .alert-ticker-content{
-            flex:1;
-            overflow:hidden;
-            position:relative;
-            height:22px;
-        }
-        .alert-ticker-scroll{
-            white-space:nowrap;
-            animation:ticker-scroll 20s linear infinite;
-            font-size:12px;
-            color:#7a5a00;
-        }
-        @keyframes ticker-scroll{
-            0%{transform:translateX(100%);}
-            100%{transform:translateX(-100%);}
-        }
-        
-        /* 活动列表 */
-        .activity-list{
-            max-height:280px;
-            overflow-y:auto;
-        }
-        .activity-item{
-            display:flex;
-            align-items:flex-start;
-            gap:10px;
-            padding:8px 0;
-            border-bottom:1px solid #f0f2f5;
-            font-size:12px;
-        }
-        .activity-item:last-child{border-bottom:none;}
-        .activity-time{
-            color:#a0aec0;
-            font-size:11px;
-            white-space:nowrap;
-            min-width:48px;
-        }
-        .activity-dot{
-            width:8px;
-            height:8px;
-            border-radius:50%;
-            margin-top:4px;
-            flex-shrink:0;
-        }
-        .activity-dot.red{background:#c0392b;}
-        .activity-dot.orange{background:#e67e22;}
-        .activity-dot.blue{background:#2980b9;}
-        .activity-dot.green{background:#27ae60;}
-        .activity-text{flex:1;color:#2c3e50;}
-        
-        /* 快捷操作按钮组 */
-        .quick-actions{
-            display:flex;
-            gap:8px;
-            margin:12px 0;
-            flex-wrap:wrap;
-        }
-        .quick-action-btn{
-            flex:1;
-            min-width:100px;
-            padding:10px 12px;
-            background:#fff;
-            border:1px solid #d0d7e2;
-            border-radius:2px;
-            text-align:center;
-            cursor:pointer;
-            font-size:12px;
-            transition:all 0.15s;
-            color:#003366;
-        }
-        .quick-action-btn:hover{
-            background:#003366;
-            color:#fff;
-            border-color:#003366;
-        }
-        .quick-action-btn .qa-icon{
-            display:block;
-            font-size:20px;
-            margin-bottom:4px;
-        }
-        
+
         /* 统计行 双栏图表 */
         .stat-rows{
             display:grid;
@@ -1113,27 +1026,29 @@
             .stat-cards{
                 grid-template-columns:repeat(2,1fr);
             }
-            .stat-rows,.dashboard-grid{
+            .stat-rows,.portal-grid{
                 grid-template-columns:1fr;
             }
             .stat-card{
                 width:auto;
                 margin:0;
             }
-            .quick-action-btn{
-                min-width:70px;
-                padding:8px 6px;
-                font-size:10px;
+            .shortcut-grid{
+                grid-template-columns:repeat(3,1fr);
             }
-            .quick-action-btn .qa-icon{
-                font-size:16px;
+            .shortcut-item{
+                padding:10px 4px;
             }
-            .alert-ticker-wrap{
-                font-size:10px;
-                padding:6px 8px;
+            .shortcut-icon{ font-size:18px; }
+            .shortcut-label{ font-size:10px; }
+            .func-btns{
+                flex-direction:column;
             }
-            .activity-list{
-                max-height:200px;
+            .func-btn{
+                min-width:auto;
+            }
+            .watch-list{
+                max-height:150px;
             }
             
             .login-box{
@@ -1264,153 +1179,141 @@
     </div>
 
     <div class="content-wrap">
-        <!-- 综合工作台 - 公安指挥中心仪表盘 -->
+        <!-- 综合工作台 - 公安综合应用平台门户 -->
         <div class="page-content active" id="home">
-            <div class="title-txt">警务综合指挥工作台</div>
+            <div class="title-txt">个人工作台</div>
             
-            <!-- KPI统计卡片 -->
-            <div class="stat-cards">
-                <div class="stat-card card-red">
-                    <div class="stat-icon">&#x1F4E3;</div>
-                    <div class="stat-number" id="kpiTodayAlarms">5</div>
-                    <div class="stat-label">今日接警</div>
-                    <div class="stat-sub">较昨日 ↑2</div>
-                </div>
-                <div class="stat-card card-orange">
-                    <div class="stat-icon">&#x2696;</div>
-                    <div class="stat-number" id="kpiTodayCases">2</div>
-                    <div class="stat-label">今日立案</div>
-                    <div class="stat-sub">待审核 1 件</div>
-                </div>
-                <div class="stat-card card-blue">
-                    <div class="stat-icon">&#x1F4CB;</div>
-                    <div class="stat-number" id="kpiPendingCases">12</div>
-                    <div class="stat-label">在办案件</div>
-                    <div class="stat-sub">即将到期 3 件</div>
-                </div>
-                <div class="stat-card card-green">
-                    <div class="stat-icon">&#x2705;</div>
-                    <div class="stat-number" id="kpiClosedCases">85</div>
-                    <div class="stat-label">已结案件</div>
-                    <div class="stat-sub">本月结案率 87%</div>
-                </div>
-            </div>
-            
-            <!-- 实时告警滚动条 -->
-            <div class="alert-ticker-wrap">
-                <div class="alert-ticker-label">实时警情</div>
-                <div class="alert-ticker-content">
-                    <div class="alert-ticker-scroll">
-                        【2025-05-25 14:30】和平社区发生邻里纠纷，已派警处置 | 
-                        【2025-05-25 13:15】建设路与新华街交叉口交通事故，交警已到场 | 
-                        【2025-05-25 11:42】阳光小区疑似入室盗窃，刑警正在勘查 | 
-                        【2025-05-25 09:08】重点人员张某轨迹异常，情报部门已介入
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 快捷操作入口 -->
-            <div class="quick-actions">
-                <div class="quick-action-btn" onclick="switchPage('alarm')">
-                    <span class="qa-icon">&#x1F6A8;</span>接警登记
-                </div>
-                <div class="quick-action-btn" onclick="switchPage('case')">
-                    <span class="qa-icon">&#x1F4DD;</span>案件备案
-                </div>
-                <div class="quick-action-btn" onclick="switchPage('command')">
-                    <span class="qa-icon">&#x1F4E1;</span>指挥调度
-                </div>
-                <div class="quick-action-btn" onclick="switchPage('intelligence')">
-                    <span class="qa-icon">&#x1F50D;</span>情报研判
-                </div>
-                <div class="quick-action-btn" onclick="switchPage('person')">
-                    <span class="qa-icon">&#x1F464;</span>人员管控
-                </div>
-                <div class="quick-action-btn" onclick="switchPage('patrol')">
-                    <span class="qa-icon">&#x1F6F8;</span>巡逻防控
-                </div>
-            </div>
-            
-            <!-- 双栏布局：事件列表 + 动态面板 -->
-            <div class="dashboard-grid">
-                <!-- 左侧：事件列表 -->
-                <div class="dash-panel">
-                    <div class="dash-panel-header">
-                        <span class="dot"></span>近期警情事件列表
-                    </div>
-                    <div class="dash-panel-body" style="padding:8px;">
-                        <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
-                            <input type="text" class="input-text" placeholder="关键词检索" id="keySearch" style="flex:1;min-width:120px;">
-                            <select class="select-box" id="typeSearch" style="margin:0;">
-                                <option value="">全部类型</option>
-                                <option value="治安事件">治安事件</option>
-                                <option value="邻里纠纷">邻里纠纷</option>
-                                <option value="治安巡查">治安巡查</option>
-                                <option value="盗窃案件">盗窃案件</option>
-                            </select>
-                            <button class="btn btn-search" onclick="combineSearch()">查询</button>
-                            <button class="btn btn-add" onclick="openAddModal()">新增</button>
-                            <button class="btn btn-del" onclick="delCheck()">删除</button>
+            <!-- 第一行：待办事项 + 通知公告 -->
+            <div class="portal-grid">
+                <div class="portal-card">
+                    <div class="portal-header">待办事项 <span class="badge">3 条待处理</span></div>
+                    <div class="portal-body">
+                        <div class="todo-item" onclick="switchPage('case')">
+                            <span class="todo-priority high"></span>
+                            <span class="todo-content">涉密案件审批 - 需要您审核确认</span>
+                            <span class="todo-time">今天 14:20</span>
                         </div>
-                        <table id="homeTable" style="margin:0;">
-                            <thead>
-                                <tr>
-                                    <th style="width:30px;">选</th>
-                                    <th>事件编号</th>
-                                    <th>事件类型</th>
-                                    <th>事发地点</th>
-                                    <th>处理状态</th>
-                                    <th>操作</th>
-                                </tr>
-                            </thead>
-                            <tbody id="homeTableBody"></tbody>
-                        </table>
-                        <div class="page-area" style="margin:8px 0 0 0;">
-                            <span class="page-btn" onclick="prevPage()">上一页</span>
-                            <span class="page-btn active" data-page="1" onclick="setPage(1)">1</span>
-                            <span class="page-btn" data-page="2" onclick="setPage(2)">2</span>
-                            <span class="page-btn" data-page="3" onclick="setPage(3)">3</span>
-                            <span class="page-btn" onclick="nextPage()">下一页</span>
+                        <div class="todo-item" onclick="switchPage('case')">
+                            <span class="todo-priority medium"></span>
+                            <span class="todo-content">车辆扣押申请审核 - 张三提交的申请</span>
+                            <span class="todo-time">今天 11:05</span>
+                        </div>
+                        <div class="todo-item" onclick="switchPage('sys')">
+                            <span class="todo-priority low"></span>
+                            <span class="todo-content">月度工作报告 - 请于本周内提交</span>
+                            <span class="todo-time">昨天 16:30</span>
+                        </div>
+                        <div class="todo-more"><a href="#">查看全部待办 &raquo;</a></div>
+                    </div>
+                </div>
+                
+                <div class="portal-card">
+                    <div class="portal-header">&#x1F4F0; 通知公告 <span class="badge">2 条新消息</span></div>
+                    <div class="portal-body">
+                        <div class="notice-item">
+                            <div class="notice-title">关于开展夏季治安整治专项行动的通知</div>
+                            <div class="notice-time">2025-05-24 发布 | 指挥中心</div>
+                        </div>
+                        <div class="notice-item">
+                            <div class="notice-title">系统升级维护公告（2025年5月25日）</div>
+                            <div class="notice-time">2025-05-23 发布 | 技术保障科</div>
+                        </div>
+                        <div class="notice-item">
+                            <div class="notice-title">关于加强数据安全管理的紧急通知</div>
+                            <div class="notice-time">2025-05-22 发布 | 政治部</div>
+                        </div>
+                        <div class="todo-more"><a href="#">查看全部公告 &raquo;</a></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 第二行：快捷入口 + 日历 -->
+            <div class="portal-grid">
+                <div class="portal-card">
+                    <div class="portal-header">&#x2699; 常用系统快捷入口</div>
+                    <div class="portal-body">
+                        <div class="shortcut-grid">
+                            <div class="shortcut-item" onclick="switchPage('alarm')"><span class="shortcut-icon">&#x1F6A8;</span><span class="shortcut-label">110接警</span></div>
+                            <div class="shortcut-item" onclick="switchPage('case')"><span class="shortcut-icon">&#x1F4CB;</span><span class="shortcut-label">案件管理</span></div>
+                            <div class="shortcut-item" onclick="switchPage('command')"><span class="shortcut-icon">&#x1F4E1;</span><span class="shortcut-label">指挥调度</span></div>
+                            <div class="shortcut-item" onclick="switchPage('intelligence')"><span class="shortcut-icon">&#x1F50D;</span><span class="shortcut-label">情报研判</span></div>
+                            <div class="shortcut-item" onclick="switchPage('person')"><span class="shortcut-icon">&#x1F464;</span><span class="shortcut-label">人员管控</span></div>
+                            <div class="shortcut-item" onclick="switchPage('car')"><span class="shortcut-icon">&#x1F698;</span><span class="shortcut-label">车辆管控</span></div>
+                            <div class="shortcut-item" onclick="switchPage('community')"><span class="shortcut-icon">&#x1F3ED;</span><span class="shortcut-label">社区警务</span></div>
+                            <div class="shortcut-item" onclick="switchPage('patrol')"><span class="shortcut-icon">&#x1F6F8;</span><span class="shortcut-label">巡逻防控</span></div>
+                            <div class="shortcut-item" onclick="switchPage('record')"><span class="shortcut-icon">&#x1F58A;</span><span class="shortcut-label">电子笔录</span></div>
+                            <div class="shortcut-item" onclick="switchPage('law')"><span class="shortcut-icon">&#x1F4DC;</span><span class="shortcut-label">执法监督</span></div>
+                            <div class="shortcut-item" onclick="switchPage('service')"><span class="shortcut-icon">&#x1F3EC;</span><span class="shortcut-label">便民服务</span></div>
+                            <div class="shortcut-item" onclick="switchPage('traffic')"><span class="shortcut-icon">&#x1F6E3;</span><span class="shortcut-label">交通管理</span></div>
+                            <div class="shortcut-item" onclick="switchPage('market')"><span class="shortcut-icon">&#x1F3EC;</span><span class="shortcut-label">市场主体</span></div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- 右侧：动态面板 -->
-                <div class="dash-panel">
-                    <div class="dash-panel-header">
-                        <span class="dot" style="background:#e67e22;"></span>系统实时动态
+                <div class="portal-card">
+                    <div class="portal-header">&#x1F4C5; 日历助手</div>
+                    <div class="portal-body">
+                        <div class="calendar-mini" id="miniCalendar"></div>
                     </div>
-                    <div class="dash-panel-body">
-                        <div class="activity-list" id="activityFeed">
-                            <div class="activity-item">
-                                <span class="activity-time">14:30</span>
-                                <span class="activity-dot red"></span>
-                                <span class="activity-text">和平社区邻里纠纷 - 已派警处置</span>
+                </div>
+            </div>
+            
+            <!-- 第三行：常用功能 + 关注列表 -->
+            <div class="portal-grid">
+                <div class="portal-card">
+                    <div class="portal-header">&#x2699; 常用操作功能</div>
+                    <div class="portal-body">
+                        <div class="func-btns">
+                            <button class="func-btn" onclick="openAddModal()">+ 新增记录</button>
+                            <button class="func-btn" onclick="combineSearch()">🔍 综合查询</button>
+                            <button class="func-btn" onclick="exportFile()">📤 导出报表</button>
+                            <button class="func-btn" onclick="resetEvents()">↺ 重置筛选</button>
+                        </div>
+                        
+                        <div style="margin-top:12px;">
+                            <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
+                                <input type="text" class="input-text" placeholder="关键词检索" id="keySearch" style="flex:1;">
+                                <select class="select-box" id="typeSearch" style="margin:0;"><option value="">全部类型</option><option value="治安事件">治安事件</option><option value="邻里纠纷">邻里纠纷</option><option value="盗窃案件">盗窃案件</option></select>
+                                <button class="btn btn-search" onclick="combineSearch()">查询</button>
                             </div>
-                            <div class="activity-item">
-                                <span class="activity-time">13:15</span>
-                                <span class="activity-dot orange"></span>
-                                <span class="activity-text">建设路交通事故 - 交警到场处理</span>
+                            <table id="homeTable" style="margin:0;">
+                                <thead><tr><th style="width:30px;">选</th><th>事件编号</th><th>类型</th><th>地点</th><th>状态</th><th>操作</th></tr></thead>
+                                <tbody id="homeTableBody"></tbody>
+                            </table>
+                            <div class="page-area" style="margin:8px 0 0 0;">
+                                <span class="page-btn" onclick="prevPage()">上一页</span>
+                                <span class="page-btn active" data-page="1" onclick="setPage(1)">1</span>
+                                <span class="page-btn" data-page="2" onclick="setPage(2)">2</span>
+                                <span class="page-btn" data-page="3" onclick="setPage(3)">3</span>
+                                <span class="page-btn" onclick="nextPage()">下一页</span>
                             </div>
-                            <div class="activity-item">
-                                <span class="activity-time">11:42</span>
-                                <span class="activity-dot red"></span>
-                                <span class="activity-text">阳光小区疑似盗窃 - 刑警勘查中</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="portal-card">
+                    <div class="portal-header">&#x1F441; 关注动态</div>
+                    <div class="portal-body">
+                        <div class="watch-list">
+                            <div class="watch-item">
+                                <span class="watch-tag" style="background:#fee2e2;color:#c0392b;">警情</span>
+                                <span>和平社区邻里纠纷 - 处置中</span>
                             </div>
-                            <div class="activity-item">
-                                <span class="activity-time">09:08</span>
-                                <span class="activity-dot blue"></span>
-                                <span class="activity-text">张某轨迹异常预警 - 情报已介入</span>
+                            <div class="watch-item">
+                                <span class="watch-tag" style="background:#fee2e2;color:#c0392b;">案件</span>
+                                <span>阳光小区盗窃案 - 侦查中</span>
                             </div>
-                            <div class="activity-item">
-                                <span class="activity-time">08:30</span>
-                                <span class="activity-dot green"></span>
-                                <span class="activity-text">巡逻一组完成早班交接 - 签到正常</span>
+                            <div class="watch-item">
+                                <span class="watch-tag" style="background:#fff3cd;color:#856404;">人员</span>
+                                <span>张某轨迹异常 - 已关注</span>
                             </div>
-                            <div class="activity-item">
-                                <span class="activity-time">07:45</span>
-                                <span class="activity-dot blue"></span>
-                                <span class="activity-text">系统自动备份完成 - 数据同步正常</span>
+                            <div class="watch-item">
+                                <span class="watch-tag" style="background:#dbeafe;color:#2980b9;">巡逻</span>
+                                <span>建设路夜间巡查 - 正常</span>
+                            </div>
+                            <div class="watch-item">
+                                <span class="watch-tag" style="background:#d1fae5;color:#27ae60;">办结</span>
+                                <span>幸福社区户籍迁移 - 已完成</span>
                             </div>
                         </div>
                     </div>
@@ -2633,6 +2536,47 @@ function resetEvents() {
     document.getElementById('statSearch').value = '';
     renderHomeTable();
     showMsg('已重置');
+}
+
+// 生成迷你日历
+function renderMiniCalendar() {
+    const container = document.getElementById('miniCalendar');
+    if (!container) return;
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const today = now.getDate();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    let html = '<div class="cal-head">';
+    html += '<span class="cal-nav" onclick="renderMiniCalendarPrev()">&lt;</span>';
+    html += '<span class="cal-title">' + year + '年' + (month + 1) + '月</span>';
+    html += '<span class="cal-nav" onclick="renderMiniCalendarNext()">&gt;</span>';
+    html += '</div>';
+    html += '<div class="cal-weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>';
+    html += '<div class="cal-days">';
+
+    // 上月空白
+    for (let i = 0; i < firstDay; i++) {
+        html += '<span class="cal-day empty"></span>';
+    }
+    // 本月日期
+    for (let d = 1; d <= daysInMonth; d++) {
+        if (d === today && now.getMonth() === new Date().getMonth()) {
+            html += '<span class="cal-day today">' + d + '</span>';
+        } else {
+            html += '<span class="cal-day">' + d + '</span>';
+        }
+    }
+    // 下月空白
+    const totalCells = firstDay + daysInMonth;
+    const remaining = totalCells % 7 ? 7 - (totalCells % 7) : 0;
+    for (let i = 0; i < remaining; i++) {
+        html += '<span class="cal-day empty"></span>';
+    }
+    html += '</div>';
+    container.innerHTML = html;
 }
 
 function renderAlarmTable() {
@@ -4112,6 +4056,7 @@ window.onload = async function(){
         showLoginPage();
     }
     renderHomeTable();
+    renderMiniCalendar();
     renderAlarmTable();
     renderCaseTable();
     renderPersonTable();

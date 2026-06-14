@@ -2805,6 +2805,57 @@ let data = {
                 regCapital: '100万元人民币'
             }
         ]
+    },
+    commandData: {
+        dispatches: [
+            {id: 'DD20250525001', type: '紧急处警', center: '指挥中心一组', police: '巡警三队', location: '红旗路与建设街交口', status: '处置中', time: '2025-05-25 09:35'},
+            {id: 'DD20250524002', type: '案件支援', center: '指挥中心二组', police: '刑侦一队', location: '开发区工业园区', status: '已完成', time: '2025-05-24 15:20'}
+        ]
+    },
+    intelligenceData: {
+        items: [
+            {id: 'QB202505001', type: '人员预警', summary: '重点人员张某近日频繁出入娱乐场所', source: '社区走访', risk: '高', status: '待研判', time: '2025-05-25 10:00'},
+            {id: 'QB202505002', type: '车辆预警', summary: '嫌疑车辆冀A12345在市区活动', source: '卡口监控', risk: '中', status: '已处置', time: '2025-05-24 14:30'}
+        ]
+    },
+    communityData: {
+        visits: [
+            {community: '幸福小区', police: '王警官', type: '入户走访', target: '独居老人', content: '了解生活状况，宣传防诈骗知识', status: '已完成', time: '2025-05-25 09:00'},
+            {community: '花园社区', police: '李警官', type: '安全检查', target: '沿街商铺', content: '检查消防设施，排查安全隐患', status: '进行中', time: '2025-05-24 15:00'}
+        ]
+    },
+    patrolData: {
+        patrols: [
+            {id: 'XL202505001', area: '商业中心区', police: '张警官、赵警官', type: '车巡', time: '2025-05-25 08:00', status: '进行中', checkins: 3},
+            {id: 'XL202505002', area: '火车站周边', police: '刘警官、陈警官', type: '步巡', time: '2025-05-24 20:00', status: '已完成', checkins: 5}
+        ]
+    },
+    recordData: {
+        records: [
+            {id: 'BL202505001', caseId: 'XA2026021', type: '询问笔录', target: '王某', police: '李警官', status: '已完成', time: '2025-05-25 10:30'},
+            {id: 'BL202505002', caseId: '', type: '讯问笔录', target: '赵某', police: '张警官', status: '进行中', time: '2025-05-24 14:00'}
+        ]
+    },
+    lawSupervisionData: {
+        evaluations: [
+            {person: '张三', score: 95, rank: '优秀', month: '2026-05'},
+            {person: '李四', score: 88, rank: '良好', month: '2026-05'},
+            {person: '王五', score: 76, rank: '合格', month: '2026-05'}
+        ],
+        pendingAudits: 3,
+        issues: 1
+    },
+    serviceData: {
+        services: [
+            {id: 'FW202505001', type: '户籍迁移', applicant: '陈先生', phone: '138****5678', police: '户籍民警', status: '已办结', time: '2025-05-25 11:00'},
+            {id: 'FW202505002', type: '身份证办理', applicant: '王女士', phone: '139****9012', police: '户籍民警', status: '办理中', time: '2025-05-24 09:30'}
+        ]
+    },
+    trafficData: {
+        services: [
+            {id: 'JT202505001', plate: '冀A12345', type: '违章处理', party: '周某', police: '交警一中队', status: '已处理', time: '2025-05-25 10:00'},
+            {id: 'JT202505002', plate: '冀B67890', type: '事故认定', party: '吴某', police: '交警二中队', status: '处理中', time: '2025-05-24 15:30'}
+        ]
     }
 };
 
@@ -3087,14 +3138,14 @@ async function loadData() {
         data.supervision = loadedData.supervision || data.supervision;
         
         // 新增模块
-        if (loadedData.commandData) commandData = loadedData.commandData;
-        if (loadedData.intelligenceData) intelligenceData = loadedData.intelligenceData;
-        if (loadedData.communityData) communityData = loadedData.communityData;
-        if (loadedData.patrolData) patrolData = loadedData.patrolData;
-        if (loadedData.recordData) recordData = loadedData.recordData;
-        if (loadedData.lawSupervisionData) lawSupervisionData = loadedData.lawSupervisionData;
-        if (loadedData.serviceData) serviceData = loadedData.serviceData;
-        if (loadedData.trafficData) trafficData = loadedData.trafficData;
+        if (loadedData.commandData) data.commandData = loadedData.commandData;
+        if (loadedData.intelligenceData) data.intelligenceData = loadedData.intelligenceData;
+        if (loadedData.communityData) data.communityData = loadedData.communityData;
+        if (loadedData.patrolData) data.patrolData = loadedData.patrolData;
+        if (loadedData.recordData) data.recordData = loadedData.recordData;
+        if (loadedData.lawSupervisionData) data.lawSupervisionData = loadedData.lawSupervisionData;
+        if (loadedData.serviceData) data.serviceData = loadedData.serviceData;
+        if (loadedData.trafficData) data.trafficData = loadedData.trafficData;
         if (loadedData.marketData) data.marketData = loadedData.marketData;
         
         // 新模块
@@ -3118,15 +3169,15 @@ function backupOriginalData() {
     originalData.goods = [...data.goods];
     originalData.logs = [...data.logs];
     originalData.users = [...data.users];
-    originalData.commandData = JSON.parse(JSON.stringify(commandData));
-    originalData.intelligenceData = JSON.parse(JSON.stringify(intelligenceData));
-    originalData.communityData = JSON.parse(JSON.stringify(communityData));
-    originalData.patrolData = JSON.parse(JSON.stringify(patrolData));
-    originalData.recordData = JSON.parse(JSON.stringify(recordData));
-    originalData.lawSupervisionData = JSON.parse(JSON.stringify(lawSupervisionData));
-    originalData.serviceData = JSON.parse(JSON.stringify(serviceData));
-    originalData.trafficData = JSON.parse(JSON.stringify(trafficData));
+    originalData.recordData = JSON.parse(JSON.stringify(data.recordData));
+    originalData.lawSupervisionData = JSON.parse(JSON.stringify(data.lawSupervisionData));
+    originalData.serviceData = JSON.parse(JSON.stringify(data.serviceData));
+    originalData.trafficData = JSON.parse(JSON.stringify(data.trafficData));
     originalData.marketData = JSON.parse(JSON.stringify(data.marketData));
+    originalData.commandData = JSON.parse(JSON.stringify(data.commandData));
+    originalData.intelligenceData = JSON.parse(JSON.stringify(data.intelligenceData));
+    originalData.communityData = JSON.parse(JSON.stringify(data.communityData));
+    originalData.patrolData = JSON.parse(JSON.stringify(data.patrolData));
     originalData.combined = {...data.combined, tasks: [...data.combined.tasks]};
     originalData.fileData = {...data.fileData, files: [...data.fileData.files]};
     originalData.duty = {...data.duty, rosters: [...data.duty.rosters]};
@@ -3166,15 +3217,15 @@ function saveData() {
             users: data.users,
             statistics: data.statistics,
             supervision: data.supervision,
-            commandData: commandData,
-            intelligenceData: intelligenceData,
-            communityData: communityData,
-            patrolData: patrolData,
-            recordData: recordData,
-            lawSupervisionData: lawSupervisionData,
-            serviceData: serviceData,
-            trafficData: trafficData,
+            recordData: data.recordData,
+            lawSupervisionData: data.lawSupervisionData,
+            serviceData: data.serviceData,
+            trafficData: data.trafficData,
             marketData: data.marketData,
+            commandData: data.commandData,
+            intelligenceData: data.intelligenceData,
+            communityData: data.communityData,
+            patrolData: data.patrolData,
             combined: data.combined,
             fileData: data.fileData,
             duty: data.duty,
@@ -4575,10 +4626,10 @@ function startSessionCheck() {
 }
 
 // 新增各模块渲染函数
-function renderCommandTable(data) {
+function renderCommandTable(renderData) {
     const tbody = document.getElementById('commandTableBody');
     if (!tbody) return;
-    const displayData = data || commandData.dispatches;
+    const displayData = renderData || (data.commandData && data.commandData.dispatches) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -4598,10 +4649,10 @@ function renderCommandTable(data) {
     `).join('');
 }
 
-function renderIntelTable(data) {
+function renderIntelTable(renderData) {
     const tbody = document.getElementById('intelTableBody');
     if (!tbody) return;
-    const displayData = data || intelligenceData.items;
+    const displayData = renderData || (data.intelligenceData && data.intelligenceData.items) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -4620,12 +4671,12 @@ function renderIntelTable(data) {
     `).join('');
 }
 
-function renderCommunityTable(data) {
+function renderCommunityTable(renderData) {
     const tbody = document.getElementById('communityTableBody');
     if (!tbody) return;
-    const displayData = data || communityData.visits;
+    const displayData = renderData || (data.communityData && data.data.data.communityData.visits) || [];
     tbody.innerHTML = displayData.map((item, index) => {
-        const originalIndex = data ? communityData.visits.indexOf(item) : index;
+        const originalIndex = data.communityData ? data.data.data.communityData.visits.indexOf(item) : index;
         return `
         <tr>
             <td>${item.community}</td>
@@ -4645,10 +4696,10 @@ function renderCommunityTable(data) {
     }).join('');
 }
 
-function renderPatrolTable(data) {
+function renderPatrolTable(renderData) {
     const tbody = document.getElementById('patrolTableBody');
     if (!tbody) return;
-    const displayData = data || patrolData.patrols;
+    const displayData = renderData || (data.patrolData && data.data.data.patrolData.patrols) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -4667,10 +4718,10 @@ function renderPatrolTable(data) {
     `).join('');
 }
 
-function renderRecordTable(data) {
+function renderRecordTable(renderData) {
     const tbody = document.getElementById('recordTableBody');
     if (!tbody) return;
-    const displayData = data || recordData.records;
+    const displayData = renderData || (data.recordData && data.data.data.recordData.records) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -4689,10 +4740,10 @@ function renderRecordTable(data) {
     `).join('');
 }
 
-function renderLawTable(data) {
+function renderLawTable(renderData) {
     const tbody = document.getElementById('lawTableBody');
     if (!tbody) return;
-    const displayData = data || lawSupervisionData.cases;
+    const displayData = renderData || (data.lawSupervisionData && data.data.data.lawSupervisionData.cases) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -4712,10 +4763,10 @@ function renderLawTable(data) {
     `).join('');
 }
 
-function renderServiceTable(data) {
+function renderServiceTable(renderData) {
     const tbody = document.getElementById('serviceTableBody');
     if (!tbody) return;
-    const displayData = data || serviceData.services;
+    const displayData = renderData || (data.serviceData && data.data.data.serviceData.services) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -4735,10 +4786,10 @@ function renderServiceTable(data) {
     `).join('');
 }
 
-function renderTrafficTable(data) {
+function renderTrafficTable(renderData) {
     const tbody = document.getElementById('trafficTableBody');
     if (!tbody) return;
-    const displayData = data || trafficData.services;
+    const displayData = renderData || (data.trafficData && data.data.data.trafficData.services) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -4975,20 +5026,15 @@ function viewCarDetail(plate) {
 }
 
 // 指挥调度中心功能
-let commandData = {
-    dispatches: [
-        {id: 'DD20250525001', type: '紧急处警', center: '指挥中心一组', police: '巡警三队', location: '红旗路与建设街交口', status: '处置中', time: '2025-05-25 09:35'},
-        {id: 'DD20250524002', type: '案件支援', center: '指挥中心二组', police: '刑侦一队', location: '开发区工业园区', status: '已完成', time: '2025-05-24 15:20'}
-    ]
-};
+// commandData 已整合到 data.commandData 中
 
 function searchDispatch() {
     const keyword = document.getElementById('commandSearch').value.toLowerCase().trim();
     
-    let filteredData = commandData.dispatches;
+    let filteredData = data.commandData.dispatches;
     
     if (keyword) {
-        filteredData = commandData.dispatches.filter(item => 
+        filteredData = data.commandData.dispatches.filter(item => 
             item.id.toLowerCase().includes(keyword) || 
             item.type.toLowerCase().includes(keyword) || 
             item.center.toLowerCase().includes(keyword) || 
@@ -5020,7 +5066,7 @@ function addDispatch() {
 }
 
 function viewDispatch(id) {
-    const item = commandData.dispatches.find(d => d.id === id);
+    const item = data.commandData.dispatches.find(d => d.id === id);
     if (item) {
         openModal('调度详情', `
             <div class="form-item"><label>警情编号：</label><span>${item.id}</span></div>
@@ -5035,7 +5081,7 @@ function viewDispatch(id) {
 }
 
 function completeDispatch(id) {
-    const item = commandData.dispatches.find(d => d.id === id);
+    const item = data.commandData.dispatches.find(d => d.id === id);
     if (item) {
         item.status = '已完成';
         showMsg("调度已完成");
@@ -5046,18 +5092,13 @@ function completeDispatch(id) {
 }
 
 // 情报研判分析功能
-let intelligenceData = {
-    items: [
-        {id: 'QB20250525001', type: '人员情报', summary: '重点人员张某近期活动异常', source: '社区网格员', risk: '高风险', status: '待研判', time: '2025-05-25 08:45'},
-        {id: 'QB20250524002', type: '案件情报', summary: '近期盗窃案件线索', source: '视频监控', risk: '中风险', status: '已处置', time: '2025-05-24 11:30'}
-    ]
-};
+// intelligenceData 已整合到 data.intelligenceData 中
 
 function searchIntelligence() {
     const keyword = document.getElementById('intelSearch').value.toLowerCase().trim();
     const typeFilter = document.getElementById('intelTypeFilter').value;
     
-    let filteredData = intelligenceData.items;
+    let filteredData = data.intelligenceData.items;
     
     if (keyword) {
         filteredData = filteredData.filter(item => 
@@ -5100,7 +5141,7 @@ function addIntelligence() {
 }
 
 function analyzeIntelligence(id) {
-    const item = intelligenceData.items.find(i => i.id === id);
+    const item = data.intelligenceData.items.find(i => i.id === id);
     if (item) {
         item.status = '研判中';
         renderIntelTable();
@@ -5116,9 +5157,9 @@ function analyzeIntelligence(id) {
 
 function deleteIntelligence(id) {
     if (confirm('确定要删除该情报吗？')) {
-        const idx = intelligenceData.items.findIndex(i => i.id === id);
+        const idx = data.intelligenceData.items.findIndex(i => i.id === id);
         if (idx > -1) {
-            intelligenceData.items.splice(idx, 1);
+            data.intelligenceData.items.splice(idx, 1);
             showMsg("删除成功");
             addLog('删除情报', id);
             renderIntelTable();
@@ -5128,7 +5169,7 @@ function deleteIntelligence(id) {
 }
 
 function editIntelligence(id) {
-    const item = intelligenceData.items.find(i => i.id === id);
+    const item = data.intelligenceData.items.find(i => i.id === id);
     if (!item) return;
     currentModal = 'editIntelligence';
     editId = id;
@@ -5161,18 +5202,13 @@ function editIntelligence(id) {
 }
 
 // 社区警务管理功能
-let communityData = {
-    visits: [
-        {community: '和平社区', police: '王警官', type: '重点人员走访', target: '李某', content: '了解近期思想动态', status: '已完成', time: '2025-05-24'},
-        {community: '幸福社区', police: '张警官', type: '纠纷调解', target: '邻里纠纷', content: '噪音扰民问题调解', status: '进行中', time: '2025-05-25'}
-    ]
-};
+// communityData 已整合到 data.communityData 中
 
 function searchCommunity() {
     const keyword = document.getElementById('communitySearch').value.toLowerCase().trim();
     const communityFilter = document.getElementById('communityFilter').value;
     
-    let filteredData = communityData.visits;
+    let filteredData = data.communityData.visits;
     
     if (keyword) {
         filteredData = filteredData.filter(item => 
@@ -5210,18 +5246,13 @@ function addVisit() {
 }
 
 // 智慧巡逻防控功能
-let patrolData = {
-    patrols: [
-        {id: 'XL20250525001', area: '商业中心', police: '巡逻一组', type: '步巡', time: '2025-05-25 08:00', status: '巡逻中', checkins: 5},
-        {id: 'XL20250524002', area: '居民区', police: '巡逻二组', type: '车巡', time: '2025-05-24 20:00', status: '已结束', checkins: 8}
-    ]
-};
+// patrolData 已整合到 data.patrolData 中
 
 function searchPatrol() {
     const keyword = document.getElementById('patrolSearch').value.toLowerCase().trim();
     const statusFilter = document.getElementById('patrolStatusFilter').value;
     
-    let filteredData = patrolData.patrols;
+    let filteredData = data.patrolData.patrols;
     
     if (keyword) {
         filteredData = filteredData.filter(item => 
@@ -5257,18 +5288,13 @@ function addPatrol() {
 }
 
 // 电子笔录制作功能
-let recordData = {
-    records: [
-        {id: 'BL20250525001', caseId: 'JA20250525001', type: '询问笔录', target: '证人王某', police: '李警官', status: '已完成', time: '2025-05-25'},
-        {id: 'BL20250524002', caseId: 'JA20250524002', type: '报案笔录', target: '报警人张某', police: '王警官', status: '制作中', time: '2025-05-24'}
-    ]
-};
+// recordData 已整合到 data.recordData 中
 
 function searchRecord() {
     const keyword = document.getElementById('recordSearch').value.toLowerCase().trim();
     const typeFilter = document.getElementById('recordTypeFilter').value;
     
-    let filteredData = recordData.records;
+    let filteredData = data.recordData.records;
     
     if (keyword) {
         filteredData = filteredData.filter(item => 
@@ -5306,18 +5332,13 @@ function addRecord() {
 }
 
 // 执法监督管理功能
-let lawSupervisionData = {
-    cases: [
-        {id: 'JA20250525001', name: '盗窃案件', police: '张警官', deadline: '30天', remaining: 25, status: '办理中', supervision: '正常'},
-        {id: 'JA20250510002', name: '治安案件', police: '李警官', deadline: '7天', remaining: 1, status: '办理中', supervision: '预警'}
-    ]
-};
+// lawSupervisionData 已整合到 data.lawSupervisionData 中
 
 function searchLawSupervision() {
     const keyword = document.getElementById('lawSearch').value.toLowerCase().trim();
     const statusFilter = document.getElementById('lawStatusFilter').value;
     
-    let filteredData = lawSupervisionData.cases;
+    let filteredData = data.lawSupervisionData.cases;
     
     if (keyword) {
         filteredData = filteredData.filter(item => 
@@ -5336,7 +5357,7 @@ function searchLawSupervision() {
 }
 
 function superviseCase(id) {
-    const item = lawSupervisionData.cases.find(c => c.id === id);
+    const item = data.data.lawSupervisionData.cases.find(c => c.id === id);
     if (item) {
         item.supervision = '督办中';
         showMsg("已启动督办");
@@ -5347,18 +5368,13 @@ function superviseCase(id) {
 }
 
 // 便民服务大厅功能
-let serviceData = {
-    services: [
-        {id: 'BW20250525001', type: '身份证补办', applicant: '赵某', phone: '13800138001', time: '2025-05-25', status: '办理中', police: '刘警官'},
-        {id: 'BW20250524002', type: '户籍迁移', applicant: '孙某', phone: '13900139002', time: '2025-05-24', status: '已办结', police: '王警官'}
-    ]
-};
+// serviceData 已整合到 data.serviceData 中
 
 function searchService() {
     const keyword = document.getElementById('serviceSearch').value.toLowerCase().trim();
     const typeFilter = document.getElementById('serviceTypeFilter').value;
     
-    let filteredData = serviceData.services;
+    let filteredData = data.serviceData.services;
     
     if (keyword) {
         filteredData = filteredData.filter(item => 
@@ -5396,7 +5412,7 @@ function addService() {
 }
 
 function completeService(id) {
-    const item = serviceData.services.find(s => s.id === id);
+    const item = data.data.serviceData.services.find(s => s.id === id);
     if (item) {
         item.status = '已办结';
         showMsg("业务已办结");
@@ -5407,18 +5423,13 @@ function completeService(id) {
 }
 
 // 交通管理服务功能
-let trafficData = {
-    services: [
-        {id: 'JT20250525001', plate: '冀A12345', type: '违法处理', party: '钱某', time: '2025-05-25', status: '已处理', police: '交警张警官'},
-        {id: 'JT20250524002', plate: '冀B67890', type: '事故处理', party: '周某', time: '2025-05-24', status: '处理中', police: '交警李警官'}
-    ]
-};
+// trafficData 已整合到 data.trafficData 中
 
 function searchTraffic() {
     const keyword = document.getElementById('trafficSearch').value.toLowerCase().trim();
     const typeFilter = document.getElementById('trafficTypeFilter').value;
     
-    let filteredData = trafficData.services;
+    let filteredData = data.trafficData.services;
     
     if (keyword) {
         filteredData = filteredData.filter(item => 
@@ -5472,7 +5483,7 @@ function updateSaveForm() {
                 const id = document.getElementById('dispatchId').value;
                 if (!id) { showMsg("请填写警情编号"); return; }
                 const now = new Date().toLocaleString('zh-CN').replace(/\//g, '-').replace(/年|月|日/g, '-');
-                commandData.dispatches.unshift({
+                data.commandData.dispatches.unshift({
                     id: id,
                     type: document.getElementById('dispatchType').value,
                     center: document.getElementById('dispatchCenter').value,
@@ -5487,7 +5498,7 @@ function updateSaveForm() {
                 const id = document.getElementById('intelId').value;
                 if (!id) { showMsg("请填写情报编号"); return; }
                 const now = new Date().toLocaleString('zh-CN').replace(/\//g, '-').replace(/年|月|日/g, '-');
-                intelligenceData.items.unshift({
+                data.intelligenceData.items.unshift({
                     id: id,
                     type: document.getElementById('intelType').value,
                     summary: document.getElementById('intelSummary').value,
@@ -5500,7 +5511,7 @@ function updateSaveForm() {
                 renderIntelTable();
             } else if (currentModal === 'addVisit') {
                 const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
-                communityData.visits.unshift({
+                data.data.communityData.visits.unshift({
                     community: document.getElementById('visitCommunity').value,
                     police: document.getElementById('visitPolice').value,
                     type: document.getElementById('visitType').value,
@@ -5515,7 +5526,7 @@ function updateSaveForm() {
                 const id = document.getElementById('patrolId').value;
                 if (!id) { showMsg("请填写巡逻编号"); return; }
                 const now = new Date().toLocaleString('zh-CN').replace(/\//g, '-').replace(/年|月|日/g, '-');
-                patrolData.patrols.unshift({
+                data.data.patrolData.patrols.unshift({
                     id: id,
                     area: document.getElementById('patrolArea').value,
                     police: document.getElementById('patrolPolice').value,
@@ -5530,7 +5541,7 @@ function updateSaveForm() {
                 const id = document.getElementById('recordId').value;
                 if (!id) { showMsg("请填写笔录编号"); return; }
                 const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
-                recordData.records.unshift({
+                data.data.recordData.records.unshift({
                     id: id,
                     caseId: document.getElementById('recordCaseId').value,
                     type: document.getElementById('recordType').value,
@@ -5545,7 +5556,7 @@ function updateSaveForm() {
                 const id = document.getElementById('serviceId').value;
                 if (!id) { showMsg("请填写业务编号"); return; }
                 const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
-                serviceData.services.unshift({
+                data.data.serviceData.services.unshift({
                     id: id,
                     type: document.getElementById('serviceType').value,
                     applicant: document.getElementById('serviceApplicant').value,
@@ -5560,7 +5571,7 @@ function updateSaveForm() {
                 const id = document.getElementById('trafficId').value;
                 if (!id) { showMsg("请填写业务编号"); return; }
                 const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
-                trafficData.services.unshift({
+                data.data.trafficData.services.unshift({
                     id: id,
                     plate: document.getElementById('trafficPlate').value,
                     type: document.getElementById('trafficType').value,
@@ -5620,7 +5631,7 @@ function updateSaveForm() {
                     renderMarketTable();
                 }
             } else if (currentModal === 'editDispatch') {
-                const item = commandData.dispatches.find(d => d.id === editId);
+                const item = data.commandData.dispatches.find(d => d.id === editId);
                 if (item) {
                     item.type = document.getElementById('editDispatchType').value;
                     item.center = document.getElementById('editDispatchCenter').value;
@@ -5632,7 +5643,7 @@ function updateSaveForm() {
                     renderCommandTable();
                 }
             } else if (currentModal === 'editVisit') {
-                const item = communityData.visits[editId];
+                const item = data.data.communityData.visits[editId];
                 if (item) {
                     item.community = document.getElementById('editVisitCommunity').value;
                     item.police = document.getElementById('editVisitPolice').value;
@@ -5645,7 +5656,7 @@ function updateSaveForm() {
                     renderCommunityTable();
                 }
             } else if (currentModal === 'editPatrol') {
-                const item = patrolData.patrols.find(p => p.id === editId);
+                const item = data.data.patrolData.patrols.find(p => p.id === editId);
                 if (item) {
                     item.area = document.getElementById('editPatrolArea').value;
                     item.police = document.getElementById('editPatrolPolice').value;
@@ -5657,7 +5668,7 @@ function updateSaveForm() {
                     renderPatrolTable();
                 }
             } else if (currentModal === 'editRecord') {
-                const item = recordData.records.find(r => r.id === editId);
+                const item = data.data.recordData.records.find(r => r.id === editId);
                 if (item) {
                     item.caseId = document.getElementById('editRecordCaseId').value;
                     item.type = document.getElementById('editRecordType').value;
@@ -5669,7 +5680,7 @@ function updateSaveForm() {
                     renderRecordTable();
                 }
             } else if (currentModal === 'editIntelligence') {
-                const item = intelligenceData.items.find(i => i.id === editId);
+                const item = data.intelligenceData.items.find(i => i.id === editId);
                 if (item) {
                     item.type = document.getElementById('intelType').value;
                     item.summary = document.getElementById('intelSummary').value;
@@ -5681,7 +5692,7 @@ function updateSaveForm() {
                     renderIntelTable();
                 }
             } else if (currentModal === 'editLawCase') {
-                const item = lawSupervisionData.cases.find(c => c.id === editId);
+                const item = data.data.lawSupervisionData.cases.find(c => c.id === editId);
                 if (item) {
                     item.name = document.getElementById('editLawCaseName').value;
                     item.police = document.getElementById('editLawCasePolice').value;
@@ -5694,7 +5705,7 @@ function updateSaveForm() {
                     renderLawTable();
                 }
             } else if (currentModal === 'editService') {
-                const item = serviceData.services.find(s => s.id === editId);
+                const item = data.data.serviceData.services.find(s => s.id === editId);
                 if (item) {
                     item.type = document.getElementById('editServiceType').value;
                     item.applicant = document.getElementById('editServiceApplicant').value;
@@ -5706,7 +5717,7 @@ function updateSaveForm() {
                     renderServiceTable();
                 }
             } else if (currentModal === 'editTrafficService') {
-                const item = trafficData.services.find(t => t.id === editId);
+                const item = data.data.trafficData.services.find(t => t.id === editId);
                 if (item) {
                     item.plate = document.getElementById('editTrafficPlate').value;
                     item.type = document.getElementById('editTrafficType').value;
@@ -5891,7 +5902,7 @@ function renderMarketTable(renderData) {
 
 // 所有模块的查看详情功能
 function viewIntelligenceDetail(id) {
-    const item = intelligenceData.items.find(i => i.id === id);
+    const item = data.intelligenceData.items.find(i => i.id === id);
     if (item) {
         openModal('情报详情', `
             <div class="form-item"><label>情报编号：</label><span>${item.id}</span></div>
@@ -5906,7 +5917,7 @@ function viewIntelligenceDetail(id) {
 }
 
 function viewCommunityDetail(index) {
-    const item = communityData.visits[index];
+    const item = data.data.communityData.visits[index];
     if (item) {
         openModal('走访详情', `
             <div class="form-item"><label>社区名称：</label><span>${item.community}</span></div>
@@ -5921,7 +5932,7 @@ function viewCommunityDetail(index) {
 }
 
 function viewPatrolDetail(id) {
-    const item = patrolData.patrols.find(p => p.id === id);
+    const item = data.data.patrolData.patrols.find(p => p.id === id);
     if (item) {
         openModal('巡逻详情', `
             <div class="form-item"><label>巡逻编号：</label><span>${item.id}</span></div>
@@ -5936,7 +5947,7 @@ function viewPatrolDetail(id) {
 }
 
 function viewRecordDetail(id) {
-    const item = recordData.records.find(r => r.id === id);
+    const item = data.data.recordData.records.find(r => r.id === id);
     if (item) {
         openModal('笔录详情', `
             <div class="form-item"><label>笔录编号：</label><span>${item.id}</span></div>
@@ -5956,7 +5967,7 @@ function exportRecord(id) {
 }
 
 function viewLawDetail(id) {
-    const item = lawSupervisionData.cases.find(c => c.id === id);
+    const item = data.data.lawSupervisionData.cases.find(c => c.id === id);
     if (item) {
         openModal('执法监督详情', `
             <div class="form-item"><label>案件编号：</label><span>${item.id}</span></div>
@@ -5971,7 +5982,7 @@ function viewLawDetail(id) {
 }
 
 function viewServiceDetail(id) {
-    const item = serviceData.services.find(s => s.id === id);
+    const item = data.data.serviceData.services.find(s => s.id === id);
     if (item) {
         openModal('便民服务详情', `
             <div class="form-item"><label>业务编号：</label><span>${item.id}</span></div>
@@ -5986,7 +5997,7 @@ function viewServiceDetail(id) {
 }
 
 function viewTrafficDetail(id) {
-    const item = trafficData.services.find(t => t.id === id);
+    const item = data.data.trafficData.services.find(t => t.id === id);
     if (item) {
         openModal('交通管理详情', `
             <div class="form-item"><label>业务编号：</label><span>${item.id}</span></div>
@@ -6003,9 +6014,9 @@ function viewTrafficDetail(id) {
 // 所有模块的删除函数
 function deleteDispatch(id) {
     if (confirm('确定要删除这个调度吗？')) {
-        const idx = commandData.dispatches.findIndex(d => d.id === id);
+        const idx = data.commandData.dispatches.findIndex(d => d.id === id);
         if (idx > -1) {
-            commandData.dispatches.splice(idx, 1);
+            data.commandData.dispatches.splice(idx, 1);
             showMsg('删除成功');
             addLog('删除调度', id);
             renderCommandTable();
@@ -6016,8 +6027,8 @@ function deleteDispatch(id) {
 
 function deleteVisit(index) {
     if (confirm('确定要删除这个走访记录吗？')) {
-        const item = communityData.visits[index];
-        communityData.visits.splice(index, 1);
+        const item = data.data.communityData.visits[index];
+        data.data.communityData.visits.splice(index, 1);
         showMsg('删除成功');
         addLog('删除走访', item.target);
         renderCommunityTable();
@@ -6027,9 +6038,9 @@ function deleteVisit(index) {
 
 function deletePatrol(id) {
     if (confirm('确定要删除这个巡逻记录吗？')) {
-        const idx = patrolData.patrols.findIndex(p => p.id === id);
+        const idx = data.data.patrolData.patrols.findIndex(p => p.id === id);
         if (idx > -1) {
-            patrolData.patrols.splice(idx, 1);
+            data.data.patrolData.patrols.splice(idx, 1);
             showMsg('删除成功');
             addLog('删除巡逻', id);
             renderPatrolTable();
@@ -6040,9 +6051,9 @@ function deletePatrol(id) {
 
 function deleteRecord(id) {
     if (confirm('确定要删除这个笔录吗？')) {
-        const idx = recordData.records.findIndex(r => r.id === id);
+        const idx = data.data.recordData.records.findIndex(r => r.id === id);
         if (idx > -1) {
-            recordData.records.splice(idx, 1);
+            data.data.recordData.records.splice(idx, 1);
             showMsg('删除成功');
             addLog('删除笔录', id);
             renderRecordTable();
@@ -6053,9 +6064,9 @@ function deleteRecord(id) {
 
 function deleteLawCase(id) {
     if (confirm('确定要删除这个执法监督案件吗？')) {
-        const idx = lawSupervisionData.cases.findIndex(c => c.id === id);
+        const idx = data.data.lawSupervisionData.cases.findIndex(c => c.id === id);
         if (idx > -1) {
-            lawSupervisionData.cases.splice(idx, 1);
+            data.data.lawSupervisionData.cases.splice(idx, 1);
             showMsg('删除成功');
             addLog('删除执法案件', id);
             renderLawTable();
@@ -6066,9 +6077,9 @@ function deleteLawCase(id) {
 
 function deleteService(id) {
     if (confirm('确定要删除这个服务记录吗？')) {
-        const idx = serviceData.services.findIndex(s => s.id === id);
+        const idx = data.data.serviceData.services.findIndex(s => s.id === id);
         if (idx > -1) {
-            serviceData.services.splice(idx, 1);
+            data.data.serviceData.services.splice(idx, 1);
             showMsg('删除成功');
             addLog('删除服务', id);
             renderServiceTable();
@@ -6079,9 +6090,9 @@ function deleteService(id) {
 
 function deleteTrafficService(id) {
     if (confirm('确定要删除这个交通服务记录吗？')) {
-        const idx = trafficData.services.findIndex(t => t.id === id);
+        const idx = data.data.trafficData.services.findIndex(t => t.id === id);
         if (idx > -1) {
-            trafficData.services.splice(idx, 1);
+            data.data.trafficData.services.splice(idx, 1);
             showMsg('删除成功');
             addLog('删除交通服务', id);
             renderTrafficTable();
@@ -6092,7 +6103,7 @@ function deleteTrafficService(id) {
 
 // 所有模块的编辑函数
 function editDispatch(id) {
-    const item = commandData.dispatches.find(d => d.id === id);
+    const item = data.commandData.dispatches.find(d => d.id === id);
     if (!item) return;
     currentModal = 'editDispatch';
     editId = id;
@@ -6113,7 +6124,7 @@ function editDispatch(id) {
 }
 
 function editVisit(index) {
-    const item = communityData.visits[index];
+    const item = data.data.communityData.visits[index];
     if (!item) return;
     currentModal = 'editVisit';
     editId = index;
@@ -6134,7 +6145,7 @@ function editVisit(index) {
 }
 
 function editPatrol(id) {
-    const item = patrolData.patrols.find(p => p.id === id);
+    const item = data.data.patrolData.patrols.find(p => p.id === id);
     if (!item) return;
     currentModal = 'editPatrol';
     editId = id;
@@ -6155,7 +6166,7 @@ function editPatrol(id) {
 }
 
 function editRecord(id) {
-    const item = recordData.records.find(r => r.id === id);
+    const item = data.data.recordData.records.find(r => r.id === id);
     if (!item) return;
     currentModal = 'editRecord';
     editId = id;
@@ -6175,7 +6186,7 @@ function editRecord(id) {
 }
 
 function editLawCase(id) {
-    const item = lawSupervisionData.cases.find(c => c.id === id);
+    const item = data.data.lawSupervisionData.cases.find(c => c.id === id);
     if (!item) return;
     currentModal = 'editLawCase';
     editId = id;
@@ -6204,7 +6215,7 @@ function editLawCase(id) {
 }
 
 function editService(id) {
-    const item = serviceData.services.find(s => s.id === id);
+    const item = data.data.serviceData.services.find(s => s.id === id);
     if (!item) return;
     currentModal = 'editService';
     editId = id;
@@ -6225,7 +6236,7 @@ function editService(id) {
 }
 
 function editTrafficService(id) {
-    const item = trafficData.services.find(t => t.id === id);
+    const item = data.data.trafficData.services.find(t => t.id === id);
     if (!item) return;
     currentModal = 'editTrafficService';
     editId = id;

@@ -824,8 +824,15 @@
         .task-text{ flex:1; }
         .task-time{ font-size:11px;color:#a0aec0;flex-shrink:0; }
         
-        /* 敏感日日历 */
-        .sensitive-calendar{ font-size:12px; }
+        /* 敏感日提醒 */
+        .sensitive-list{ font-size:12px; }
+        .sensitive-item{ display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f8fafc; }
+        .sensitive-item:last-child{ border-bottom:none; }
+        .sensitive-date{ width:50px;color:#888;flex-shrink:0; }
+        .sensitive-name{ flex:1;color:#2c3e50; }
+        .sensitive-level{ font-size:10px;padding:2px 8px;border-radius:3px;flex-shrink:0; }
+        .sensitive-level.high{ background:#fee2e2;color:#c0392b; }
+        .sensitive-level.medium{ background:#fff3cd;color:#d97706; }
 
         /* ==================== 统计卡片（统计页面使用） ==================== */
         .stat-cards{
@@ -1360,42 +1367,42 @@
 
 <div class="main-wrap">
     <div class="left-menu" id="leftMenu">
-        <div class="menu-first">&#x1F4E1; 情报指挥中心</div>
-        <div class="menu-second active" onclick="switchPage('home')">&#x1F3E0; 综合工作台</div>
-        <div class="menu-second" onclick="switchPage('alarm')">&#x1F6A8; 110接处警平台</div>
-        <div class="menu-second" onclick="switchPage('command')">&#x1F4DF; 指挥调度中心</div>
-        <div class="menu-second" onclick="switchPage('intelligence')">&#x1F50D; 情报研判分析</div>
-        <div class="menu-second" onclick="switchPage('combined')">&#x1F4A5; 合成作战平台</div>
+        <div class="menu-first">情报指挥中心</div>
+        <div class="menu-second active" onclick="switchPage('home')">综合工作台</div>
+        <div class="menu-second" onclick="switchPage('alarm')">110接处警平台</div>
+        <div class="menu-second" onclick="switchPage('command')">指挥调度中心</div>
+        <div class="menu-second" onclick="switchPage('intelligence')">情报研判分析</div>
+        <div class="menu-second" onclick="switchPage('combined')">合成作战平台</div>
         
-        <div class="menu-first">&#x2696; 执法办案管理</div>
-        <div class="menu-second" onclick="switchPage('case')">&#x1F4CB; 案件办理管理</div>
-        <div class="menu-second" onclick="switchPage('record')">&#x1F58A; 电子笔录制作</div>
-        <div class="menu-second" onclick="switchPage('file')">&#x1F4DA; 电子卷宗管理</div>
-        <div class="menu-second" onclick="switchPage('goods')">&#x1F4E6; 涉案财物管理</div>
-        <div class="menu-second" onclick="switchPage('law')">&#x1F4DC; 执法监督考评</div>
+        <div class="menu-first">执法办案管理</div>
+        <div class="menu-second" onclick="switchPage('case')">案件办理管理</div>
+        <div class="menu-second" onclick="switchPage('record')">电子笔录制作</div>
+        <div class="menu-second" onclick="switchPage('file')">电子卷宗管理</div>
+        <div class="menu-second" onclick="switchPage('goods')">涉案财物管理</div>
+        <div class="menu-second" onclick="switchPage('law')">执法监督考评</div>
         
-        <div class="menu-first">&#x1F6E1; 重点要素管控</div>
-        <div class="menu-second" onclick="switchPage('person')">&#x1F464; 重点人员管控</div>
-        <div class="menu-second" onclick="switchPage('car')">&#x1F698; 涉控车辆管理</div>
+        <div class="menu-first">重点要素管控</div>
+        <div class="menu-second" onclick="switchPage('person')">重点人员管控</div>
+        <div class="menu-second" onclick="switchPage('car')">涉控车辆管理</div>
         
-        <div class="menu-first">&#x1F3D8; 基层警务管理</div>
-        <div class="menu-second" onclick="switchPage('community')">&#x1F3E1; 社区警务管理</div>
-        <div class="menu-second" onclick="switchPage('patrol')">&#x1F6F8; 智慧巡逻防控</div>
-        <div class="menu-second" onclick="switchPage('duty')">&#x1F4C5; 勤务排班管理</div>
+        <div class="menu-first">基层警务管理</div>
+        <div class="menu-second" onclick="switchPage('community')">社区警务管理</div>
+        <div class="menu-second" onclick="switchPage('patrol')">智慧巡逻防控</div>
+        <div class="menu-second" onclick="switchPage('duty')">勤务排班管理</div>
         
-        <div class="menu-first">&#x1F3DB; 民生服务管理</div>
-        <div class="menu-second" onclick="switchPage('service')">&#x1F3E2; 便民服务大厅</div>
-        <div class="menu-second" onclick="switchPage('traffic')">&#x1F6E3; 交通管理服务</div>
-        <div class="menu-second" onclick="switchPage('market')">&#x1F3EC; 市场主体管理</div>
-        <div class="menu-second" onclick="switchPage('petition')">&#x1F4DD; 信访事项管理</div>
+        <div class="menu-first">民生服务管理</div>
+        <div class="menu-second" onclick="switchPage('service')">便民服务大厅</div>
+        <div class="menu-second" onclick="switchPage('traffic')">交通管理服务</div>
+        <div class="menu-second" onclick="switchPage('market')">市场主体管理</div>
+        <div class="menu-second" onclick="switchPage('petition')">信访事项管理</div>
         
-        <div class="menu-first">&#x1F4C8; 统计分析考核</div>
-        <div class="menu-second" onclick="switchPage('statistics')">&#x1F4CA; 警情数据统计</div>
-        <div class="menu-second" onclick="switchPage('assessment')">&#x1F3AF; 绩效考核管理</div>
+        <div class="menu-first">统计分析考核</div>
+        <div class="menu-second" onclick="switchPage('statistics')">警情数据统计</div>
+        <div class="menu-second" onclick="switchPage('assessment')">绩效考核管理</div>
         
-        <div class="menu-first">&#x2699; 系统运维管理</div>
-        <div class="menu-second" onclick="switchPage('log')">&#x1F4DD; 操作日志审计</div>
-        <div class="menu-second" onclick="switchPage('sys')">&#x1F511; 账号权限管理</div>
+        <div class="menu-first">系统运维管理</div>
+        <div class="menu-second" onclick="switchPage('log')">操作日志审计</div>
+        <div class="menu-second" onclick="switchPage('sys')">账号权限管理</div>
     </div>
 
     <div class="content-wrap">
@@ -1405,7 +1412,7 @@
             <div class="portal-top-row">
                 <!-- 专栏链接区 -->
                 <div class="portal-special-column">
-                    <div class="special-header">&#x1F6A8; 情指行一体化实战专栏</div>
+                    <div class="special-header">情指行一体化实战专栏</div>
                     <div class="special-links">
                         <a href="#" onclick="event.preventDefault(); switchPage('alarm');" class="special-link">110接处警</a>
                         <a href="#" onclick="event.preventDefault(); switchPage('command');" class="special-link">指挥调度</a>
@@ -1417,18 +1424,18 @@
                 
                 <!-- 综合导览区 -->
                 <div class="portal-nav-area">
-                    <div class="nav-item" onclick="showMsg('全站搜索')">&#x1F50D; 全站搜索</div>
-                    <div class="nav-item" onclick="showMsg('网站导航')">&#x1F4D1; 网站导航</div>
-                    <div class="nav-item" onclick="showMsg('通讯录')">&#x1F4DE; 通讯录</div>
-                    <div class="nav-item" onclick="showMsg('一键收发')">&#x1F4E4; 一键收发</div>
-                    <div class="nav-item" onclick="showMsg('个人中心')">&#x1F464; 个人中心</div>
+                    <div class="nav-item" onclick="showMsg('全站搜索')">全站搜索</div>
+                    <div class="nav-item" onclick="showMsg('网站导航')">网站导航</div>
+                    <div class="nav-item" onclick="showMsg('通讯录')">通讯录</div>
+                    <div class="nav-item" onclick="showMsg('一键收发')">一键收发</div>
+                    <div class="nav-item" onclick="showMsg('个人中心')">个人中心</div>
                 </div>
             </div>
             
             <!-- 第二行：数据展示区（登录后可见） -->
             <div class="portal-data-area">
                 <div class="data-show-header">
-                    <span class="data-show-title">&#x1F4CA; 数据展示中心</span>
+                    <span class="data-show-title">数据展示中心</span>
                     <span class="data-show-user">当前用户：<span id="workUserName">超级管理员</span> | 值班组：<span class="duty-group">指挥中心一组</span> | <span id="workDateText"></span></span>
                 </div>
                 <div class="data-show-grid">
@@ -1472,7 +1479,7 @@
                     <!-- 工作要闻 -->
                     <div class="info-section">
                         <div class="info-header">
-                            <span class="info-title">&#x1F4F0; 工作要闻</span>
+                            <span class="info-title">工作要闻</span>
                             <a href="#" class="info-more" onclick="event.preventDefault(); showMsg('查看更多');">更多 &raquo;</a>
                         </div>
                         <div class="info-list">
@@ -1497,7 +1504,7 @@
                     <!-- 通知通报 -->
                     <div class="info-section">
                         <div class="info-header">
-                            <span class="info-title">&#x1F514; 通知通报</span>
+                            <span class="info-title">通知通报</span>
                             <a href="#" class="info-more" onclick="event.preventDefault(); showMsg('查看更多');">更多 &raquo;</a>
                         </div>
                         <div class="info-list">
@@ -1527,7 +1534,7 @@
                     <!-- 各地动态 -->
                     <div class="info-section">
                         <div class="info-header">
-                            <span class="info-title">&#x1F4E2; 各地动态</span>
+                            <span class="info-title">各地动态</span>
                             <a href="#" class="info-more" onclick="event.preventDefault(); showMsg('查看更多');">更多 &raquo;</a>
                         </div>
                         <div class="info-list">
@@ -1554,7 +1561,7 @@
                 <div class="portal-right-area">
                     <!-- 今日值班 -->
                     <div class="biz-section">
-                        <div class="biz-header">&#x1F4C5; 今日值班</div>
+                        <div class="biz-header">今日值班</div>
                         <div class="biz-body">
                             <div class="duty-info">
                                 <div class="duty-row"><span class="duty-label">带班领导</span><span class="duty-value">张局长</span></div>
@@ -1567,39 +1574,31 @@
                     
                     <!-- 业务系统入口 -->
                     <div class="biz-section">
-                        <div class="biz-header">&#x2699; 业务系统</div>
+                        <div class="biz-header">业务系统</div>
                         <div class="biz-body">
                             <div class="biz-grid">
                                 <div class="biz-item" onclick="switchPage('alarm')">
-                                    <span class="biz-icon">&#x1F6A8;</span>
                                     <span class="biz-label">110接处警</span>
                                 </div>
                                 <div class="biz-item" onclick="switchPage('command')">
-                                    <span class="biz-icon">&#x1F4DF;</span>
                                     <span class="biz-label">指挥调度</span>
                                 </div>
                                 <div class="biz-item" onclick="switchPage('intelligence')">
-                                    <span class="biz-icon">&#x1F50D;</span>
                                     <span class="biz-label">情报平台</span>
                                 </div>
                                 <div class="biz-item" onclick="switchPage('combined')">
-                                    <span class="biz-icon">&#x1F4A5;</span>
                                     <span class="biz-label">合成作战</span>
                                 </div>
                                 <div class="biz-item" onclick="switchPage('case')">
-                                    <span class="biz-icon">&#x1F4CB;</span>
                                     <span class="biz-label">执法办案</span>
                                 </div>
                                 <div class="biz-item" onclick="switchPage('person')">
-                                    <span class="biz-icon">&#x1F464;</span>
                                     <span class="biz-label">重点人员</span>
                                 </div>
                                 <div class="biz-item" onclick="switchPage('patrol')">
-                                    <span class="biz-icon">&#x1F6F8;</span>
                                     <span class="biz-label">智慧巡防</span>
                                 </div>
                                 <div class="biz-item" onclick="switchPage('community')">
-                                    <span class="biz-icon">&#x1F3E1;</span>
                                     <span class="biz-label">社区警务</span>
                                 </div>
                             </div>
@@ -1608,15 +1607,41 @@
                     
                     <!-- 敏感日提醒 -->
                     <div class="biz-section">
-                        <div class="biz-header">&#x26A0; 敏感日提醒</div>
+                        <div class="biz-header">敏感日提醒</div>
                         <div class="biz-body">
-                            <div class="sensitive-calendar" id="sensitiveCalendar"></div>
+                            <div class="sensitive-list">
+                                <div class="sensitive-item">
+                                    <span class="sensitive-date">5月1日</span>
+                                    <span class="sensitive-name">五一劳动节</span>
+                                    <span class="sensitive-level high">高</span>
+                                </div>
+                                <div class="sensitive-item">
+                                    <span class="sensitive-date">6月1日</span>
+                                    <span class="sensitive-name">国际儿童节</span>
+                                    <span class="sensitive-level medium">中</span>
+                                </div>
+                                <div class="sensitive-item">
+                                    <span class="sensitive-date">6月7日</span>
+                                    <span class="sensitive-name">高考首日</span>
+                                    <span class="sensitive-level high">高</span>
+                                </div>
+                                <div class="sensitive-item">
+                                    <span class="sensitive-date">7月1日</span>
+                                    <span class="sensitive-name">建党节</span>
+                                    <span class="sensitive-level high">高</span>
+                                </div>
+                                <div class="sensitive-item">
+                                    <span class="sensitive-date">8月1日</span>
+                                    <span class="sensitive-name">建军节</span>
+                                    <span class="sensitive-level medium">中</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- 待办任务 -->
                     <div class="biz-section">
-                        <div class="biz-header">&#x2705; 我的待办 <span class="todo-count">3</span></div>
+                        <div class="biz-header">我的待办 <span class="todo-count">3</span></div>
                         <div class="biz-body">
                             <div class="todo-list">
                                 <div class="todo-task" onclick="switchPage('case')">

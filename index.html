@@ -2809,6 +2809,11 @@ let data = {
         ]
     },
     lawSupervisionData: {
+        cases: [
+            {id: 'JD202601', name: '盗窃案侦查监督', police: '张警官', deadline: '2026-06-10', remaining: 15, status: '正常', supervision: '正常'},
+            {id: 'JD202602', name: '寻衅滋事案监督', police: '李警官', deadline: '2026-05-25', remaining: 3, status: '预警', supervision: '督办中'},
+            {id: 'JD202603', name: '交通肇事案监督', police: '王警官', deadline: '2026-05-20', remaining: -2, status: '异常', supervision: '超期预警'}
+        ],
         evaluations: [
             {person: '张三', score: 95, rank: '优秀', month: '2026-05'},
             {person: '李四', score: 88, rank: '良好', month: '2026-05'},
@@ -3299,14 +3304,19 @@ function resetEvents() {
     showMsg('已重置');
 }
 
+// 迷你日历当前月份
+let miniCalendarYear = new Date().getFullYear();
+let miniCalendarMonth = new Date().getMonth();
+
 // 生成迷你日历
 function renderMiniCalendar() {
     const container = document.getElementById('miniCalendar');
     if (!container) return;
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth();
-    const today = now.getDate();
+    const year = miniCalendarYear;
+    const month = miniCalendarMonth;
+    const today = new Date().getDate();
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -3324,7 +3334,7 @@ function renderMiniCalendar() {
     }
     // 本月日期
     for (let d = 1; d <= daysInMonth; d++) {
-        if (d === today && now.getMonth() === new Date().getMonth()) {
+        if (d === today && month === currentMonth && year === currentYear) {
             html += '<span class="cal-day today">' + d + '</span>';
         } else {
             html += '<span class="cal-day">' + d + '</span>';
@@ -3338,6 +3348,24 @@ function renderMiniCalendar() {
     }
     html += '</div>';
     container.innerHTML = html;
+}
+
+function renderMiniCalendarPrev() {
+    miniCalendarMonth--;
+    if (miniCalendarMonth < 0) {
+        miniCalendarMonth = 11;
+        miniCalendarYear--;
+    }
+    renderMiniCalendar();
+}
+
+function renderMiniCalendarNext() {
+    miniCalendarMonth++;
+    if (miniCalendarMonth > 11) {
+        miniCalendarMonth = 0;
+        miniCalendarYear++;
+    }
+    renderMiniCalendar();
 }
 
 function renderAlarmTable() {

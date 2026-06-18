@@ -3175,89 +3175,119 @@ async function saveDataToJsonBin() {
 async function loadData() {
     let loadedData = null;
     const syncService = getSyncService();
-    console.log('loadData 开始执行, syncService:', syncService);
+    console.log('[loadData] 开始执行, syncService:', syncService);
     
+    // 第一步：尝试从云端加载
     if (syncService === 'jsonbin') {
-        loadedData = await loadDataFromJsonBin();
-        console.log('从 JSONBin 加载的数据:', loadedData ? '有数据' : '无数据');
+        try {
+            loadedData = await loadDataFromJsonBin();
+            console.log('[loadData] 从 JSONBin 加载:', loadedData ? '有数据' : '无数据');
+        } catch(e) {
+            console.warn('[loadData] JSONBin 加载异常:', e);
+        }
     } else if (syncService === 'gist' && GIST_CONFIG.token && GIST_CONFIG.gistId) {
-        loadedData = await loadDataFromGist();
-        console.log('从 Gist 加载的数据:', loadedData ? '有数据' : '无数据');
+        try {
+            loadedData = await loadDataFromGist();
+            console.log('[loadData] 从 Gist 加载:', loadedData ? '有数据' : '无数据');
+        } catch(e) {
+            console.warn('[loadData] Gist 加载异常:', e);
+        }
     }
     
-    // 强制检查：如果localStorage中有旧版本数据，直接清除并使用默认数据
-    const saved = localStorage.getItem('policeData');
-    const savedVersion = localStorage.getItem('policeDataVersion');
-    const currentVersion = '4.2';
-    console.log('localStorage 状态 - saved:', saved ? '有数据' : '无数据', 'version:', savedVersion);
+    // 第二步：如果云端没有数据，尝试从 localStorage 加载
+    if (!loadedData) {
+        const saved = localStorage.getItem('policeData');
+        const savedVersion = localStorage.getItem('policeDataVersion');
+        console.log('[loadData] localStorage 状态 - saved:', saved ? '有数据(' + saved.length + '字符)' : '无数据', 'version:', savedVersion);
+        
+        if (saved) {
+            try {
+                let decrypted = saved;
+                if (ENCRYPTION_KEY) {
+                    const dec = decryptData(saved, ENCRYPTION_KEY);
+                    if (dec) decrypted = dec;
+                }
+                loadedData = JSON.parse(decrypted);
+                console.log('[loadData] 从 localStorage 解析成功, keys:', loadedData ? Object.keys(loadedData).length : 0);
+            } catch(e) {
+                console.warn('[loadData] 从localStorage加载失败:', e);
+                loadedData = null;
+            }
+        }
+    }
     
-    if (saved && savedVersion !== currentVersion) {
-        console.log('数据版本过旧，清除并使用默认数据');
+    // 第三步：检查版本
+    const currentVersion = '4.2';
+    const savedVersion = localStorage.getItem('policeDataVersion');
+    if (loadedData && savedVersion !== currentVersion) {
+        console.log('[loadData] 数据版本不匹配，清除旧数据');
         localStorage.removeItem('policeData');
         localStorage.setItem('policeDataVersion', currentVersion);
         loadedData = null;
     }
     
-    if (!loadedData && saved) {
-        try {
-            let decrypted = saved;
-            if (ENCRYPTION_KEY) {
-                const dec = decryptData(saved, ENCRYPTION_KEY);
-                if (dec) decrypted = dec;
-            }
-            loadedData = JSON.parse(decrypted);
-            console.log('从 localStorage 加载的数据 keys:', loadedData ? Object.keys(loadedData) : '无');
-        } catch(e) {
-            console.warn('从localStorage加载失败:', e);
-            loadedData = null;
-            localStorage.removeItem('policeData');
-        }
-    }
+    console.log('[loadData] 最终 loadedData 状态:', loadedData ? '有数据 (' + Object.keys(loadedData).length + ' keys)' : 'null');
     
-    console.log('最终 loadedData 状态:', loadedData ? Object.keys(loadedData) : 'null');
-    
-    // 如果没有任何有效数据，直接使用代码中的默认数据（data对象已经初始化为完整默认数据）
-    // 只有当loadedData存在且有效时才覆盖
-    
+    // 第四步：将 loadedData 中的数据合并到 data 中
     if (loadedData) {
-        // 原有模块 - 只有当加载的数据非空时才覆盖默认数据
-        data.events = (loadedData.events && loadedData.events.length > 0) ? loadedData.events : data.events;
-        data.alarms = (loadedData.alarms && loadedData.alarms.length > 0) ? loadedData.alarms : data.alarms;
-        data.cases = (loadedData.cases && loadedData.cases.length > 0) ? loadedData.cases.map(c => ({
-            ...c,
-            caseStatus: c.caseStatus || c.progress || '办理中',
-            investigator: c.investigator || '',
-            evidence: c.evidence || [],
-            timeline: c.timeline || []
-        })) : data.cases;
-        data.persons = (loadedData.persons && loadedData.persons.length > 0) ? loadedData.persons.map(p => ({
-            ...p,
-            riskLevel: p.riskLevel || '中风险',
-            notes: p.notes || '',
-            relatedPersons: p.relatedPersons || [],
-            trackRecords: p.trackRecords || []
-        })) : data.persons;
-        data.cars = (loadedData.cars && loadedData.cars.length > 0) ? loadedData.cars.map(c => ({
-            ...c,
-            brand: c.brand || '',
-            color: c.color || '',
-            riskLevel: c.riskLevel || '中',
-            trackRecords: c.trackRecords || []
-        })) : data.cars;
-        data.goods = (loadedData.goods && loadedData.goods.length > 0) ? loadedData.goods.map(g => ({
-            ...g,
-            caseId: g.caseId || '',
-            status: g.status || '已登记',
-            keeper: g.keeper || '',
-            inTime: g.inTime || '',
-            outTime: g.outTime || ''
-        })) : data.goods;
-        data.logs = (loadedData.logs && loadedData.logs.length > 0) ? loadedData.logs : data.logs;
-        data.users = (loadedData.users && loadedData.users.length > 0) ? loadedData.users : data.users;
-        data.statistics = loadedData.statistics || data.statistics;
-        data.supervision = loadedData.supervision || data.supervision;
+        // 数组模块 - 只有当加载的数据非空时才覆盖
+        if (loadedData.events && loadedData.events.length > 0) {
+            data.events = loadedData.events;
+            console.log('[loadData] events 加载:', data.events.length, '条');
+        }
+        if (loadedData.alarms && loadedData.alarms.length > 0) {
+            data.alarms = loadedData.alarms;
+            console.log('[loadData] alarms 加载:', data.alarms.length, '条');
+        }
+        if (loadedData.cases && loadedData.cases.length > 0) {
+            data.cases = loadedData.cases.map(c => ({
+                ...c,
+                caseStatus: c.caseStatus || c.progress || '办理中',
+                investigator: c.investigator || '',
+                evidence: c.evidence || [],
+                timeline: c.timeline || []
+            }));
+            console.log('[loadData] cases 加载:', data.cases.length, '条');
+        }
+        if (loadedData.persons && loadedData.persons.length > 0) {
+            data.persons = loadedData.persons.map(p => ({
+                ...p,
+                riskLevel: p.riskLevel || '中风险',
+                notes: p.notes || '',
+                relatedPersons: p.relatedPersons || [],
+                trackRecords: p.trackRecords || []
+            }));
+            console.log('[loadData] persons 加载:', data.persons.length, '条');
+        }
+        if (loadedData.cars && loadedData.cars.length > 0) {
+            data.cars = loadedData.cars.map(c => ({
+                ...c,
+                brand: c.brand || '',
+                color: c.color || '',
+                riskLevel: c.riskLevel || '中',
+                trackRecords: c.trackRecords || []
+            }));
+            console.log('[loadData] cars 加载:', data.cars.length, '条');
+        }
+        if (loadedData.goods && loadedData.goods.length > 0) {
+            data.goods = loadedData.goods.map(g => ({
+                ...g,
+                caseId: g.caseId || '',
+                status: g.status || '已登记',
+                keeper: g.keeper || '',
+                inTime: g.inTime || '',
+                outTime: g.outTime || ''
+            }));
+            console.log('[loadData] goods 加载:', data.goods.length, '条');
+        }
+        if (loadedData.logs && loadedData.logs.length > 0) data.logs = loadedData.logs;
+        if (loadedData.users && loadedData.users.length > 0) data.users = loadedData.users;
         
-        // 新增模块 - 检查是否有有效数据
+        // 对象模块
+        if (loadedData.statistics) data.statistics = loadedData.statistics;
+        if (loadedData.supervision) data.supervision = loadedData.supervision;
+        
+        // 嵌套对象模块
         if (loadedData.commandData && Object.keys(loadedData.commandData).length > 0) data.commandData = loadedData.commandData;
         if (loadedData.intelligenceData && Object.keys(loadedData.intelligenceData).length > 0) data.intelligenceData = loadedData.intelligenceData;
         if (loadedData.communityData && Object.keys(loadedData.communityData).length > 0) data.communityData = loadedData.communityData;
@@ -3268,7 +3298,7 @@ async function loadData() {
         if (loadedData.trafficData && Object.keys(loadedData.trafficData).length > 0) data.trafficData = loadedData.trafficData;
         if (loadedData.marketData && Object.keys(loadedData.marketData).length > 0) data.marketData = loadedData.marketData;
         
-        // 新模块 - 检查是否有有效数据
+        // 新模块
         if (loadedData.combined && Object.keys(loadedData.combined).length > 0) data.combined = loadedData.combined;
         if (loadedData.fileData && Object.keys(loadedData.fileData).length > 0) data.fileData = loadedData.fileData;
         if (loadedData.duty && Object.keys(loadedData.duty).length > 0) data.duty = loadedData.duty;

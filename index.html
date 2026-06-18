@@ -2601,6 +2601,14 @@
 // API 配置
 const API_BASE_URL = 'https://gongan-api.your-workers-domain.workers.dev';
 
+// HTML 转义函数，防止 XSS 攻击
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    const div = document.createElement('div');
+    div.textContent = String(str);
+    return div.innerHTML;
+}
+
 // 获取 Token
 function getToken() {
     return localStorage.getItem('token');
@@ -3288,12 +3296,12 @@ function renderHomeTable() {
         tr.className = selectedEventId === item.id ? 'selected-row' : '';
         tr.onclick = function(e) { selectEvent(item.id, e); };
         tr.innerHTML = `
-            <td><input type="checkbox" ${selectedEventId === item.id ? 'checked' : ''} onclick="event.stopPropagation(); selectEvent('${item.id}', event)"></td>
-            <td>${item.id}</td>
-            <td>${item.type}</td>
-            <td>${item.address}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td><button class="btn btn-edit" onclick="event.stopPropagation(); editEvent('${item.id}')">编辑</button></td>
+            <td><input type="checkbox" ${selectedEventId === item.id ? 'checked' : ''} onclick="event.stopPropagation(); selectEvent('${escapeHtml(item.id)}', event)"></td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.address)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td><button class="btn btn-edit" onclick="event.stopPropagation(); editEvent('${escapeHtml(item.id)}')">编辑</button></td>
         `;
         frag.appendChild(tr);
     });
@@ -3372,15 +3380,15 @@ function renderAlarmTable() {
     const tbody = document.getElementById('alarmTableBody');
     tbody.innerHTML = data.alarms.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.reporter || '-'}</td>
-            <td>${item.victim || '-'}</td>
-            <td>${item.type}</td>
-            <td>${item.location || '-'}</td>
-            <td>${item.time}</td>
-            <td>${item.officer}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td><button class="btn btn-edit" onclick="editAlarm('${item.id}')">编辑</button></td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.reporter || '-')}</td>
+            <td>${escapeHtml(item.victim || '-')}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.location || '-')}</td>
+            <td>${escapeHtml(item.time)}</td>
+            <td>${escapeHtml(item.officer)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td><button class="btn btn-edit" onclick="editAlarm('${escapeHtml(item.id)}')">编辑</button></td>
         </tr>
     `).join('');
 }
@@ -3389,14 +3397,14 @@ function renderCaseTable() {
     const tbody = document.getElementById('caseTableBody');
     tbody.innerHTML = data.cases.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.type}</td>
-            <td>${item.person}</td>
-            <td>${item.time}</td>
-            <td><span class="${getStatusClass(item.caseStatus || item.progress)}">${item.caseStatus || item.progress}</span></td>
-            <td>${item.investigator || '-'}</td>
-            <td><button class="btn btn-edit" onclick="editCase('${item.id}')">编辑</button></td>
-            <td><button class="btn btn-modal" onclick="viewCaseDetail('${item.id}')">详情</button></td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.person)}</td>
+            <td>${escapeHtml(item.time)}</td>
+            <td><span class="${getStatusClass(item.caseStatus || item.progress)}">${escapeHtml(item.caseStatus || item.progress)}</span></td>
+            <td>${escapeHtml(item.investigator || '-')}</td>
+            <td><button class="btn btn-edit" onclick="editCase('${escapeHtml(item.id)}')">编辑</button></td>
+            <td><button class="btn btn-modal" onclick="viewCaseDetail('${escapeHtml(item.id)}')">详情</button></td>
         </tr>
     `).join('');
 }
@@ -3405,14 +3413,14 @@ function renderPersonTable() {
     const tbody = document.getElementById('personTableBody');
     tbody.innerHTML = data.persons.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.idCard}</td>
-            <td><span class="${getStatusClass(item.level)}">${item.level}</span></td>
-            <td><span class="${getStatusClass(item.riskLevel)}">${item.riskLevel || '-'}</span></td>
-            <td>${item.address}</td>
-            <td><button class="btn btn-edit" onclick="editPerson('${item.id}')">编辑</button></td>
-            <td><button class="btn btn-modal" onclick="viewPersonDetail('${item.id}')">详情</button></td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.idCard)}</td>
+            <td><span class="${getStatusClass(item.level)}">${escapeHtml(item.level)}</span></td>
+            <td><span class="${getStatusClass(item.riskLevel)}">${escapeHtml(item.riskLevel || '-')}</span></td>
+            <td>${escapeHtml(item.address)}</td>
+            <td><button class="btn btn-edit" onclick="editPerson('${escapeHtml(item.id)}')">编辑</button></td>
+            <td><button class="btn btn-modal" onclick="viewPersonDetail('${escapeHtml(item.id)}')">详情</button></td>
         </tr>
     `).join('');
 }
@@ -3421,15 +3429,15 @@ function renderCarTable() {
     const tbody = document.getElementById('carTableBody');
     tbody.innerHTML = data.cars.map(item => `
         <tr>
-            <td>${item.plate}</td>
-            <td>${item.brand || '-'}</td>
-            <td>${item.type}</td>
-            <td>${item.color || '-'}</td>
-            <td>${item.owner}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td><span class="${getStatusClass(item.riskLevel)}">${item.riskLevel || '-'}</span></td>
-            <td><button class="btn btn-edit" onclick="editCar('${item.plate}')">编辑</button></td>
-            <td><button class="btn btn-modal" onclick="viewCarDetail('${item.plate}')">详情</button></td>
+            <td>${escapeHtml(item.plate)}</td>
+            <td>${escapeHtml(item.brand || '-')}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.color || '-')}</td>
+            <td>${escapeHtml(item.owner)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td><span class="${getStatusClass(item.riskLevel)}">${escapeHtml(item.riskLevel || '-')}</span></td>
+            <td><button class="btn btn-edit" onclick="editCar('${escapeHtml(item.plate)}')">编辑</button></td>
+            <td><button class="btn btn-modal" onclick="viewCarDetail('${escapeHtml(item.plate)}')">详情</button></td>
         </tr>
     `).join('');
 }
@@ -3438,16 +3446,16 @@ function renderGoodsTable() {
     const tbody = document.getElementById('goodsTableBody');
     tbody.innerHTML = data.goods.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.count}</td>
-            <td>${item.caseId || '-'}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status || '-'}</span></td>
-            <td>${item.keeper || '-'}</td>
-            <td>${item.inTime || '-'}</td>
-            <td>${item.outTime || '-'}</td>
-            <td>${item.location}</td>
-            <td><button class="btn btn-edit" onclick="editGoods('${item.id}')">编辑</button></td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.count)}</td>
+            <td>${escapeHtml(item.caseId || '-')}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status || '-')}</span></td>
+            <td>${escapeHtml(item.keeper || '-')}</td>
+            <td>${escapeHtml(item.inTime || '-')}</td>
+            <td>${escapeHtml(item.outTime || '-')}</td>
+            <td>${escapeHtml(item.location)}</td>
+            <td><button class="btn btn-edit" onclick="editGoods('${escapeHtml(item.id)}')">编辑</button></td>
         </tr>
     `).join('');
 }
@@ -3456,11 +3464,11 @@ function renderLogTable() {
     const tbody = document.getElementById('logTableBody');
     tbody.innerHTML = data.logs.slice(0, 20).map(item => `
         <tr>
-            <td>${item.account}</td>
-            <td>${item.name}</td>
-            <td>${item.action}</td>
-            <td>${item.time}</td>
-            <td>${item.ip}</td>
+            <td>${escapeHtml(item.account)}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.action)}</td>
+            <td>${escapeHtml(item.time)}</td>
+            <td>${escapeHtml(item.ip)}</td>
         </tr>
     `).join('');
 }
@@ -3469,16 +3477,16 @@ function renderSysTable() {
     const tbody = document.getElementById('sysTableBody');
     tbody.innerHTML = data.users.map(item => `
         <tr>
-            <td>${item.account}</td>
-            <td>${item.name}</td>
-            <td>${item.role}</td>
-            <td>${item.level}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td>${item.expireDate || '-'}</td>
-            <td>${item.lastLoginTime || '-'}</td>
+            <td>${escapeHtml(item.account)}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.role)}</td>
+            <td>${escapeHtml(item.level)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td>${escapeHtml(item.expireDate || '-')}</td>
+            <td>${escapeHtml(item.lastLoginTime || '-')}</td>
             <td>
-                <button class="btn btn-edit" onclick="editUser('${item.account}')">编辑</button>
-                <button class="btn btn-del" onclick="deleteUser('${item.account}')">删除</button>
+                <button class="btn btn-edit" onclick="editUser('${escapeHtml(item.account)}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteUser('${escapeHtml(item.account)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -3706,7 +3714,7 @@ function updateHeaderUserInfo() {
     const logoutBtn = document.getElementById('logoutBtn');
     
     if (currentUser) {
-        userInfo.innerHTML = `登录账号：${currentUser.name}｜所属单位：河北省公安厅指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>`;
+        userInfo.innerHTML = `登录账号：${escapeHtml(currentUser.name)}｜所属单位：河北省公安厅指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>`;
         logoutBtn.style.display = 'inline';
     } else {
         userInfo.innerHTML = '';
@@ -3772,26 +3780,26 @@ function editUser(account) {
     const user = data.users.find(u => u.account === account);
     if (user) {
         openModal('编辑账号', `
-            <div class="form-item"><label>账号：</label><input type="text" class="input-text" id="userAccount" value="${user.account}" readonly></div>
-            <div class="form-item"><label>密码：</label><input type="text" class="input-text" id="userPassword" value="${user.password}"></div>
-            <div class="form-item"><label>姓名：</label><input type="text" class="input-text" id="userName" value="${user.name}"></div>
-            <div class="form-item"><label>岗位：</label><input type="text" class="input-text" id="userRole" value="${user.role}"></div>
+            <div class="form-item"><label>账号：</label><input type="text" class="input-text" id="userAccount" value="${escapeHtml(user.account)}" readonly></div>
+            <div class="form-item"><label>密码：</label><input type="text" class="input-text" id="userPassword" value="${escapeHtml(user.password)}"></div>
+            <div class="form-item"><label>姓名：</label><input type="text" class="input-text" id="userName" value="${escapeHtml(user.name)}"></div>
+            <div class="form-item"><label>岗位：</label><input type="text" class="input-text" id="userRole" value="${escapeHtml(user.role)}"></div>
             <div class="form-item"><label>权限等级：</label>
                 <select class="select-box" id="userLevel">
-                    <option ${user.level === '最高全权限' ? 'selected' : ''}>最高全权限</option>
-                    <option ${user.level === '查看+新增权限' ? 'selected' : ''}>查看+新增权限</option>
-                    <option ${user.level === '仅查看权限' ? 'selected' : ''}>仅查看权限</option>
+                    <option value="最高全权限" ${user.level === '最高全权限' ? 'selected' : ''}>最高全权限</option>
+                    <option value="查看+新增权限" ${user.level === '查看+新增权限' ? 'selected' : ''}>查看+新增权限</option>
+                    <option value="仅查看权限" ${user.level === '仅查看权限' ? 'selected' : ''}>仅查看权限</option>
                 </select>
             </div>
             <div class="form-item"><label>账号状态：</label>
                 <select class="select-box" id="userStatus">
-                    <option ${user.status === '正常启用' ? 'selected' : ''}>正常启用</option>
-                    <option ${user.status === '临时开通' ? 'selected' : ''}>临时开通</option>
-                    <option ${user.status === '已禁用' ? 'selected' : ''}>已禁用</option>
-                    <option ${user.status === '已失效' ? 'selected' : ''}>已失效</option>
+                    <option value="正常启用" ${user.status === '正常启用' ? 'selected' : ''}>正常启用</option>
+                    <option value="临时开通" ${user.status === '临时开通' ? 'selected' : ''}>临时开通</option>
+                    <option value="已禁用" ${user.status === '已禁用' ? 'selected' : ''}>已禁用</option>
+                    <option value="已失效" ${user.status === '已失效' ? 'selected' : ''}>已失效</option>
                 </select>
             </div>
-            <div class="form-item"><label>到期日期（临时账号）：</label><input type="date" class="input-text" id="userExpireDate" value="${user.expireDate || ''}"></div>
+            <div class="form-item"><label>到期日期（临时账号）：</label><input type="date" class="input-text" id="userExpireDate" value="${escapeHtml(user.expireDate || '')}"></div>
         `);
     }
 }
@@ -3891,7 +3899,7 @@ function editEvent(id) {
     const item = data.events.find(e => e.id === id) || originalData.events.find(e => e.id === id);
     if (item) {
         openModal('编辑警务事件记录', `
-            <div class="form-item"><label>事件编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="code" value="${item.id}" readonly></div>
+            <div class="form-item"><label>事件编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="code" value="${escapeHtml(item.id)}" readonly></div>
             <div class="form-item"><label>事件类型：</label>
                 <select class="select-box" id="type">
                     <option value="治安事件" ${item.type==='治安事件'?'selected':''}>治安事件</option>
@@ -3901,7 +3909,7 @@ function editEvent(id) {
                     <option value="盗窃案件" ${item.type==='盗窃案件'?'selected':''}>盗窃案件</option>
                 </select>
             </div>
-            <div class="form-item"><label>事发地点：</label><input type="text" class="input-text" id="address" value="${item.address}"></div>
+            <div class="form-item"><label>事发地点：</label><input type="text" class="input-text" id="address" value="${escapeHtml(item.address)}"></div>
             <div class="form-item"><label>处理状态：</label>
                 <select class="select-box" id="status">
                     <option value="待处理" ${item.status==='待处理'?'selected':''}>待处理</option>
@@ -3995,12 +4003,12 @@ function editAlarm(id) {
     const item = data.alarms.find(a => a.id === id);
     if (item) {
         openModal('编辑接警记录', `
-            <div class="form-item"><label>接警编号：</label><input type="text" class="input-text" id="alarmId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>报案人：</label><input type="text" class="input-text" id="alarmReporter" value="${item.reporter || ''}"></div>
-            <div class="form-item"><label>受害人：</label><input type="text" class="input-text" id="alarmVictim" value="${item.victim || ''}"></div>
-            <div class="form-item"><label>报警类型：</label><input type="text" class="input-text" id="alarmType" value="${item.type}"></div>
-            <div class="form-item"><label>事发地点：</label><input type="text" class="input-text" id="alarmLocation" value="${item.location || ''}"></div>
-            <div class="form-item"><label>处警人员：</label><input type="text" class="input-text" id="alarmOfficer" value="${item.officer}"></div>
+            <div class="form-item"><label>接警编号：</label><input type="text" class="input-text" id="alarmId" value="${escapeHtml(item.id)}" readonly></div>
+            <div class="form-item"><label>报案人：</label><input type="text" class="input-text" id="alarmReporter" value="${escapeHtml(item.reporter || '')}"></div>
+            <div class="form-item"><label>受害人：</label><input type="text" class="input-text" id="alarmVictim" value="${escapeHtml(item.victim || '')}"></div>
+            <div class="form-item"><label>报警类型：</label><input type="text" class="input-text" id="alarmType" value="${escapeHtml(item.type)}"></div>
+            <div class="form-item"><label>事发地点：</label><input type="text" class="input-text" id="alarmLocation" value="${escapeHtml(item.location || '')}"></div>
+            <div class="form-item"><label>处警人员：</label><input type="text" class="input-text" id="alarmOfficer" value="${escapeHtml(item.officer)}"></div>
             <div class="form-item"><label>处置状态：</label>
                 <select class="select-box" id="alarmStatus">
                     <option value="处置中" ${item.status==='处置中'?'selected':''}>处置中</option>
@@ -4042,17 +4050,17 @@ function addCase() {
         <div class="form-item"><label>涉案人员：</label><input type="text" class="input-text" id="casePerson"></div>
         <div class="form-item"><label>案件状态：</label>
             <select class="select-box" id="caseStatus">
-                <option>办理中</option>
-                <option>已结案</option>
+                <option value="办理中">办理中</option>
+                <option value="已结案">已结案</option>
             </select>
         </div>
         <div class="form-item"><label>办案单位：</label><input type="text" class="input-text" id="caseInvestigator"></div>
         <div class="form-item"><label>办理进度：</label>
             <select class="select-box" id="caseProgress">
-                <option>立案</option>
-                <option>侦查取证</option>
-                <option>审查起诉</option>
-                <option>结案归档</option>
+                <option value="立案">立案</option>
+                <option value="侦查取证">侦查取证</option>
+                <option value="审查起诉">审查起诉</option>
+                <option value="结案归档">结案归档</option>
             </select>
         </div>
     `);
@@ -4063,22 +4071,22 @@ function editCase(id) {
     const item = data.cases.find(c => c.id === id);
     if (item) {
         openModal('编辑案件记录', `
-            <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="caseId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>案件类别：</label><input type="text" class="input-text" id="caseType" value="${item.type}"></div>
-            <div class="form-item"><label>涉案人员：</label><input type="text" class="input-text" id="casePerson" value="${item.person}"></div>
+            <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="caseId" value="${escapeHtml(item.id)}" readonly></div>
+            <div class="form-item"><label>案件类别：</label><input type="text" class="input-text" id="caseType" value="${escapeHtml(item.type)}"></div>
+            <div class="form-item"><label>涉案人员：</label><input type="text" class="input-text" id="casePerson" value="${escapeHtml(item.person)}"></div>
             <div class="form-item"><label>案件状态：</label>
                 <select class="select-box" id="caseStatus">
                     <option value="办理中" ${(item.caseStatus || item.progress) === '办理中' ? 'selected' : ''}>办理中</option>
                     <option value="已结案" ${(item.caseStatus || item.progress) === '已结案' ? 'selected' : ''}>已结案</option>
                 </select>
             </div>
-            <div class="form-item"><label>办案单位：</label><input type="text" class="input-text" id="caseInvestigator" value="${item.investigator || ''}"></div>
+            <div class="form-item"><label>办案单位：</label><input type="text" class="input-text" id="caseInvestigator" value="${escapeHtml(item.investigator || '')}"></div>
             <div class="form-item"><label>办理进度：</label>
                 <select class="select-box" id="caseProgress">
-                    <option ${item.progress === '立案' ? 'selected' : ''}>立案</option>
-                    <option ${item.progress === '侦查取证' ? 'selected' : ''}>侦查取证</option>
-                    <option ${item.progress === '审查起诉' ? 'selected' : ''}>审查起诉</option>
-                    <option ${item.progress === '结案归档' ? 'selected' : ''}>结案归档</option>
+                    <option value="立案" ${item.progress === '立案' ? 'selected' : ''}>立案</option>
+                    <option value="侦查取证" ${item.progress === '侦查取证' ? 'selected' : ''}>侦查取证</option>
+                    <option value="审查起诉" ${item.progress === '审查起诉' ? 'selected' : ''}>审查起诉</option>
+                    <option value="结案归档" ${item.progress === '结案归档' ? 'selected' : ''}>结案归档</option>
                 </select>
             </div>
         `);
@@ -4116,16 +4124,16 @@ function addPerson() {
         <div class="form-item"><label>身份证号：</label><input type="text" class="input-text" id="personIdCard"></div>
         <div class="form-item"><label>管控等级：</label>
             <select class="select-box" id="personLevel">
-                <option>一级管控</option>
-                <option>二级管控</option>
-                <option>三级管控</option>
+                <option value="一级管控">一级管控</option>
+                <option value="二级管控">二级管控</option>
+                <option value="三级管控">三级管控</option>
             </select>
         </div>
         <div class="form-item"><label>风险等级：</label>
             <select class="select-box" id="personRiskLevel">
-                <option>高风险</option>
-                <option>中风险</option>
-                <option>低风险</option>
+                <option value="高风险">高风险</option>
+                <option value="中风险">中风险</option>
+                <option value="低风险">低风险</option>
             </select>
         </div>
         <div class="form-item"><label>居住地址：</label><input type="text" class="input-text" id="personAddress"></div>
@@ -4138,25 +4146,25 @@ function editPerson(id) {
     const item = data.persons.find(p => p.id === id);
     if (item) {
         openModal('编辑重点人员', `
-            <div class="form-item"><label>人员编号：</label><input type="text" class="input-text" id="personId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>姓名：</label><input type="text" class="input-text" id="personName" value="${item.name}"></div>
-            <div class="form-item"><label>身份证号：</label><input type="text" class="input-text" id="personIdCard" value="${item.idCard}"></div>
+            <div class="form-item"><label>人员编号：</label><input type="text" class="input-text" id="personId" value="${escapeHtml(item.id)}" readonly></div>
+            <div class="form-item"><label>姓名：</label><input type="text" class="input-text" id="personName" value="${escapeHtml(item.name)}"></div>
+            <div class="form-item"><label>身份证号：</label><input type="text" class="input-text" id="personIdCard" value="${escapeHtml(item.idCard)}"></div>
             <div class="form-item"><label>管控等级：</label>
                 <select class="select-box" id="personLevel">
-                    <option ${item.level==='一级管控'?'selected':''}>一级管控</option>
-                    <option ${item.level==='二级管控'?'selected':''}>二级管控</option>
-                    <option ${item.level==='三级管控'?'selected':''}>三级管控</option>
+                    <option value="一级管控" ${item.level==='一级管控'?'selected':''}>一级管控</option>
+                    <option value="二级管控" ${item.level==='二级管控'?'selected':''}>二级管控</option>
+                    <option value="三级管控" ${item.level==='三级管控'?'selected':''}>三级管控</option>
                 </select>
             </div>
             <div class="form-item"><label>风险等级：</label>
                 <select class="select-box" id="personRiskLevel">
-                    <option ${(item.riskLevel || '')==='高风险'?'selected':''}>高风险</option>
-                    <option ${(item.riskLevel || '')==='中风险'?'selected':''}>中风险</option>
-                    <option ${(item.riskLevel || '')==='低风险'?'selected':''}>低风险</option>
+                    <option value="高风险" ${(item.riskLevel || '')==='高风险'?'selected':''}>高风险</option>
+                    <option value="中风险" ${(item.riskLevel || '')==='中风险'?'selected':''}>中风险</option>
+                    <option value="低风险" ${(item.riskLevel || '')==='低风险'?'selected':''}>低风险</option>
                 </select>
             </div>
-            <div class="form-item"><label>居住地址：</label><input type="text" class="input-text" id="personAddress" value="${item.address}"></div>
-            <div class="form-item"><label>备注：</label><textarea class="input-text" id="personNotes" style="height:60px;">${item.notes || ''}</textarea></div>
+            <div class="form-item"><label>居住地址：</label><input type="text" class="input-text" id="personAddress" value="${escapeHtml(item.address)}"></div>
+            <div class="form-item"><label>备注：</label><textarea class="input-text" id="personNotes" style="height:60px;">${escapeHtml(item.notes || '')}</textarea></div>
         `);
     }
 }
@@ -4194,15 +4202,15 @@ function addCar() {
         <div class="form-item"><label>车主姓名：</label><input type="text" class="input-text" id="carOwner"></div>
         <div class="form-item"><label>登记状态：</label>
             <select class="select-box" id="carStatus">
-                <option>正常备案</option>
-                <option>重点布控</option>
+                <option value="正常备案">正常备案</option>
+                <option value="重点布控">重点布控</option>
             </select>
         </div>
         <div class="form-item"><label>风险等级：</label>
             <select class="select-box" id="carRiskLevel">
-                <option>高</option>
-                <option>中</option>
-                <option>低</option>
+                <option value="高">高</option>
+                <option value="中">中</option>
+                <option value="低">低</option>
             </select>
         </div>
     `);
@@ -4213,22 +4221,22 @@ function editCar(plate) {
     const item = data.cars.find(c => c.plate === plate);
     if (item) {
         openModal('编辑车辆信息', `
-            <div class="form-item"><label>车牌号码：</label><input type="text" class="input-text" id="carPlate" value="${item.plate}" readonly></div>
-            <div class="form-item"><label>品牌：</label><input type="text" class="input-text" id="carBrand" value="${item.brand || ''}"></div>
-            <div class="form-item"><label>车辆类型：</label><input type="text" class="input-text" id="carType" value="${item.type}"></div>
-            <div class="form-item"><label>颜色：</label><input type="text" class="input-text" id="carColor" value="${item.color || ''}"></div>
-            <div class="form-item"><label>车主姓名：</label><input type="text" class="input-text" id="carOwner" value="${item.owner}"></div>
+            <div class="form-item"><label>车牌号码：</label><input type="text" class="input-text" id="carPlate" value="${escapeHtml(item.plate)}" readonly></div>
+            <div class="form-item"><label>品牌：</label><input type="text" class="input-text" id="carBrand" value="${escapeHtml(item.brand || '')}"></div>
+            <div class="form-item"><label>车辆类型：</label><input type="text" class="input-text" id="carType" value="${escapeHtml(item.type)}"></div>
+            <div class="form-item"><label>颜色：</label><input type="text" class="input-text" id="carColor" value="${escapeHtml(item.color || '')}"></div>
+            <div class="form-item"><label>车主姓名：</label><input type="text" class="input-text" id="carOwner" value="${escapeHtml(item.owner)}"></div>
             <div class="form-item"><label>登记状态：</label>
                 <select class="select-box" id="carStatus">
-                    <option ${item.status==='正常备案'?'selected':''}>正常备案</option>
-                    <option ${item.status==='重点布控'?'selected':''}>重点布控</option>
+                    <option value="正常备案" ${item.status==='正常备案'?'selected':''}>正常备案</option>
+                    <option value="重点布控" ${item.status==='重点布控'?'selected':''}>重点布控</option>
                 </select>
             </div>
             <div class="form-item"><label>风险等级：</label>
                 <select class="select-box" id="carRiskLevel">
-                    <option ${(item.riskLevel || '')==='高'?'selected':''}>高</option>
-                    <option ${(item.riskLevel || '')==='中'?'selected':''}>中</option>
-                    <option ${(item.riskLevel || '')==='低'?'selected':''}>低</option>
+                    <option value="高" ${(item.riskLevel || '')==='高'?'selected':''}>高</option>
+                    <option value="中" ${(item.riskLevel || '')==='中'?'selected':''}>中</option>
+                    <option value="低" ${(item.riskLevel || '')==='低'?'selected':''}>低</option>
                 </select>
             </div>
         `);
@@ -4267,9 +4275,9 @@ function addGoods() {
         <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="goodsCaseId"></div>
         <div class="form-item"><label>保管状态：</label>
             <select class="select-box" id="goodsStatus">
-                <option>已登记</option>
-                <option>已封存</option>
-                <option>已移交</option>
+                <option value="已登记">已登记</option>
+                <option value="已封存">已封存</option>
+                <option value="已移交">已移交</option>
             </select>
         </div>
         <div class="form-item"><label>保管人：</label><input type="text" class="input-text" id="goodsKeeper"></div>
@@ -4282,19 +4290,19 @@ function editGoods(id) {
     const item = data.goods.find(g => g.id === id);
     if (item) {
         openModal('编辑涉案物品', `
-            <div class="form-item"><label>物品编号：</label><input type="text" class="input-text" id="goodsId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>物品名称：</label><input type="text" class="input-text" id="goodsName" value="${item.name}"></div>
-            <div class="form-item"><label>数量：</label><input type="text" class="input-text" id="goodsCount" value="${item.count}"></div>
-            <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="goodsCaseId" value="${item.caseId || ''}"></div>
+            <div class="form-item"><label>物品编号：</label><input type="text" class="input-text" id="goodsId" value="${escapeHtml(item.id)}" readonly></div>
+            <div class="form-item"><label>物品名称：</label><input type="text" class="input-text" id="goodsName" value="${escapeHtml(item.name)}"></div>
+            <div class="form-item"><label>数量：</label><input type="text" class="input-text" id="goodsCount" value="${escapeHtml(item.count)}"></div>
+            <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="goodsCaseId" value="${escapeHtml(item.caseId || '')}"></div>
             <div class="form-item"><label>保管状态：</label>
                 <select class="select-box" id="goodsStatus">
-                    <option ${(item.status || '')==='已登记'?'selected':''}>已登记</option>
-                    <option ${(item.status || '')==='已封存'?'selected':''}>已封存</option>
-                    <option ${(item.status || '')==='已移交'?'selected':''}>已移交</option>
+                    <option value="已登记" ${(item.status || '')==='已登记'?'selected':''}>已登记</option>
+                    <option value="已封存" ${(item.status || '')==='已封存'?'selected':''}>已封存</option>
+                    <option value="已移交" ${(item.status || '')==='已移交'?'selected':''}>已移交</option>
                 </select>
             </div>
-            <div class="form-item"><label>保管人：</label><input type="text" class="input-text" id="goodsKeeper" value="${item.keeper || ''}"></div>
-            <div class="form-item"><label>存放位置：</label><input type="text" class="input-text" id="goodsLocation" value="${item.location}"></div>
+            <div class="form-item"><label>保管人：</label><input type="text" class="input-text" id="goodsKeeper" value="${escapeHtml(item.keeper || '')}"></div>
+            <div class="form-item"><label>存放位置：</label><input type="text" class="input-text" id="goodsLocation" value="${escapeHtml(item.location)}"></div>
         `);
     }
 }
@@ -4374,6 +4382,8 @@ async function saveForm() {
         } else if (currentModal === 'addCase') {
             const id = document.getElementById('caseId').value;
             if (!id) { showMsg("请填写案件编号"); return; }
+            const existCase = data.cases.find(c => c.id === id);
+            if (existCase) { showMsg("案件编号已存在"); return; }
             const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
             data.cases.unshift({
                 id: id,
@@ -4632,18 +4642,18 @@ function renderCommandTable(renderData) {
     const displayData = renderData || (data.commandData && data.commandData.dispatches) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.type}</td>
-            <td>${item.center}</td>
-            <td>${item.police}</td>
-            <td>${item.location}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td>${item.time}</td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.center)}</td>
+            <td>${escapeHtml(item.police)}</td>
+            <td>${escapeHtml(item.location)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td>${escapeHtml(item.time)}</td>
             <td>
-                <button class="btn btn-edit" onclick="viewDispatch('${item.id}')">查看</button>
-                <button class="btn btn-edit" onclick="editDispatch('${item.id}')">编辑</button>
-                ${item.status !== '已完成' ? `<button class="btn btn-success" onclick="completeDispatch('${item.id}')">完成</button>` : ''}
-                <button class="btn btn-del" onclick="deleteDispatch('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="viewDispatch('${escapeHtml(item.id)}')">查看</button>
+                <button class="btn btn-edit" onclick="editDispatch('${escapeHtml(item.id)}')">编辑</button>
+                ${item.status !== '已完成' ? `<button class="btn btn-success" onclick="completeDispatch('${escapeHtml(item.id)}')">完成</button>` : ''}
+                <button class="btn btn-del" onclick="deleteDispatch('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -4655,17 +4665,17 @@ function renderIntelTable(renderData) {
     const displayData = renderData || (data.intelligenceData && data.intelligenceData.items) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.type}</td>
-            <td>${item.summary}</td>
-            <td>${item.source}</td>
-            <td><span class="${getStatusClass(item.risk)}">${item.risk}</span></td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td>${item.time}</td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.summary)}</td>
+            <td>${escapeHtml(item.source)}</td>
+            <td><span class="${getStatusClass(item.risk)}">${escapeHtml(item.risk)}</span></td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td>${escapeHtml(item.time)}</td>
             <td>
-                <button class="btn btn-edit" onclick="viewIntelligenceDetail('${item.id}')">查看</button>
-                ${item.status !== '已处置' ? `<button class="btn btn-edit" onclick="analyzeIntelligence('${item.id}')">研判</button>` : ''}
-                <button class="btn btn-del" onclick="deleteIntelligence('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="viewIntelligenceDetail('${escapeHtml(item.id)}')">查看</button>
+                ${item.status !== '已处置' ? `<button class="btn btn-edit" onclick="analyzeIntelligence('${escapeHtml(item.id)}')">研判</button>` : ''}
+                <button class="btn btn-del" onclick="deleteIntelligence('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -4679,13 +4689,13 @@ function renderCommunityTable(renderData) {
         const originalIndex = data.communityData ? data.data.data.communityData.visits.indexOf(item) : index;
         return `
         <tr>
-            <td>${item.community}</td>
-            <td>${item.police}</td>
-            <td>${item.type}</td>
-            <td>${item.target}</td>
-            <td>${item.content}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td>${item.time}</td>
+            <td>${escapeHtml(item.community)}</td>
+            <td>${escapeHtml(item.police)}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.target)}</td>
+            <td>${escapeHtml(item.content)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td>${escapeHtml(item.time)}</td>
             <td>
                 <button class="btn btn-edit" onclick="viewCommunityDetail(${originalIndex})">查看</button>
                 <button class="btn btn-edit" onclick="editVisit(${originalIndex})">编辑</button>
@@ -4702,17 +4712,17 @@ function renderPatrolTable(renderData) {
     const displayData = renderData || (data.patrolData && data.data.data.patrolData.patrols) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.area}</td>
-            <td>${item.police}</td>
-            <td>${item.type}</td>
-            <td>${item.time}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td>${item.checkins}</td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.area)}</td>
+            <td>${escapeHtml(item.police)}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.time)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td>${escapeHtml(item.checkins)}</td>
             <td>
-                <button class="btn btn-edit" onclick="viewPatrolDetail('${item.id}')">查看</button>
-                <button class="btn btn-edit" onclick="editPatrol('${item.id}')">编辑</button>
-                <button class="btn btn-del" onclick="deletePatrol('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="viewPatrolDetail('${escapeHtml(item.id)}')">查看</button>
+                <button class="btn btn-edit" onclick="editPatrol('${escapeHtml(item.id)}')">编辑</button>
+                <button class="btn btn-del" onclick="deletePatrol('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -4724,17 +4734,17 @@ function renderRecordTable(renderData) {
     const displayData = renderData || (data.recordData && data.data.data.recordData.records) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.caseId || '-'}</td>
-            <td>${item.type}</td>
-            <td>${item.target}</td>
-            <td>${item.police}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td>${item.time}</td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.caseId || '-')}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.target)}</td>
+            <td>${escapeHtml(item.police)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td>${escapeHtml(item.time)}</td>
             <td>
-                <button class="btn btn-edit" onclick="viewRecordDetail('${item.id}')">查看</button>
-                ${item.status === '已完成' ? `<button class="btn btn-export" onclick="exportRecord('${item.id}')">导出</button>` : `<button class="btn btn-edit" onclick="editRecord('${item.id}')">编辑</button>`}
-                <button class="btn btn-del" onclick="deleteRecord('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="viewRecordDetail('${escapeHtml(item.id)}')">查看</button>
+                ${item.status === '已完成' ? `<button class="btn btn-export" onclick="exportRecord('${escapeHtml(item.id)}')">导出</button>` : `<button class="btn btn-edit" onclick="editRecord('${escapeHtml(item.id)}')">编辑</button>`}
+                <button class="btn btn-del" onclick="deleteRecord('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -4746,18 +4756,18 @@ function renderLawTable(renderData) {
     const displayData = renderData || (data.lawSupervisionData && data.data.data.lawSupervisionData.cases) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.police}</td>
-            <td>${item.deadline}</td>
-            <td>${item.remaining}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td><span class="${getStatusClass(item.supervision)}">${item.supervision}</span></td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.police)}</td>
+            <td>${escapeHtml(item.deadline)}</td>
+            <td>${escapeHtml(item.remaining)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td><span class="${getStatusClass(item.supervision)}">${escapeHtml(item.supervision)}</span></td>
             <td>
-                <button class="btn btn-edit" onclick="viewLawDetail('${item.id}')">查看</button>
-                <button class="btn btn-edit" onclick="editLawCase('${item.id}')">编辑</button>
-                <button class="btn btn-edit" onclick="superviseCase('${item.id}')">督办</button>
-                <button class="btn btn-del" onclick="deleteLawCase('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="viewLawDetail('${escapeHtml(item.id)}')">查看</button>
+                <button class="btn btn-edit" onclick="editLawCase('${escapeHtml(item.id)}')">编辑</button>
+                <button class="btn btn-edit" onclick="superviseCase('${escapeHtml(item.id)}')">督办</button>
+                <button class="btn btn-del" onclick="deleteLawCase('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -4769,18 +4779,18 @@ function renderServiceTable(renderData) {
     const displayData = renderData || (data.serviceData && data.data.data.serviceData.services) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.type}</td>
-            <td>${item.applicant}</td>
-            <td>${item.phone}</td>
-            <td>${item.time}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td>${item.police}</td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.applicant)}</td>
+            <td>${escapeHtml(item.phone)}</td>
+            <td>${escapeHtml(item.time)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td>${escapeHtml(item.police)}</td>
             <td>
-                <button class="btn btn-edit" onclick="viewServiceDetail('${item.id}')">查看</button>
-                <button class="btn btn-edit" onclick="editService('${item.id}')">编辑</button>
-                ${item.status === '办理中' ? `<button class="btn btn-success" onclick="completeService('${item.id}')">办结</button>` : ''}
-                <button class="btn btn-del" onclick="deleteService('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="viewServiceDetail('${escapeHtml(item.id)}')">查看</button>
+                <button class="btn btn-edit" onclick="editService('${escapeHtml(item.id)}')">编辑</button>
+                ${item.status === '办理中' ? `<button class="btn btn-success" onclick="completeService('${escapeHtml(item.id)}')">办结</button>` : ''}
+                <button class="btn btn-del" onclick="deleteService('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -4792,18 +4802,18 @@ function renderTrafficTable(renderData) {
     const displayData = renderData || (data.trafficData && data.data.data.trafficData.services) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.plate}</td>
-            <td>${item.type}</td>
-            <td>${item.party}</td>
-            <td>${item.time}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
-            <td>${item.police}</td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.plate)}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.party)}</td>
+            <td>${escapeHtml(item.time)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+            <td>${escapeHtml(item.police)}</td>
             <td>
-                <button class="btn btn-edit" onclick="viewTrafficDetail('${item.id}')">查看</button>
-                <button class="btn btn-edit" onclick="editTrafficService('${item.id}')">编辑</button>
-                ${item.status === '已处理' ? `<button class="btn btn-export" onclick="printTrafficService('${item.id}')">打印</button>` : ''}
-                <button class="btn btn-del" onclick="deleteTrafficService('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="viewTrafficDetail('${escapeHtml(item.id)}')">查看</button>
+                <button class="btn btn-edit" onclick="editTrafficService('${escapeHtml(item.id)}')">编辑</button>
+                ${item.status === '已处理' ? `<button class="btn btn-export" onclick="printTrafficService('${escapeHtml(item.id)}')">打印</button>` : ''}
+                <button class="btn btn-del" onclick="deleteTrafficService('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -4878,11 +4888,11 @@ function renderSupervisionTable() {
     if (!tbody) return;
     tbody.innerHTML = data.supervision.evaluations.map(item => `
         <tr>
-            <td>${item.person}</td>
-            <td>${item.score}</td>
-            <td><span class="${item.rank === '优秀' ? 'stat-green' : item.rank === '良好' ? 'stat-blue' : 'stat-orange'}">${item.rank}</span></td>
-            <td>${item.month}</td>
-            <td><button class="btn btn-edit" onclick="editEvaluation('${item.person}')">编辑</button></td>
+            <td>${escapeHtml(item.person)}</td>
+            <td>${escapeHtml(item.score)}</td>
+            <td><span class="${item.rank === '优秀' ? 'stat-green' : item.rank === '良好' ? 'stat-blue' : 'stat-orange'}">${escapeHtml(item.rank)}</span></td>
+            <td>${escapeHtml(item.month)}</td>
+            <td><button class="btn btn-edit" onclick="editEvaluation('${escapeHtml(item.person)}')">编辑</button></td>
         </tr>
     `).join('');
 }
@@ -4920,18 +4930,18 @@ function editEvaluation(person) {
     const item = data.supervision.evaluations.find(e => e.person === person);
     if (item) {
         openModal('编辑绩效考评', `
-            <div class="form-item"><label>考评人员：</label><input type="text" class="input-text" id="evalPerson" value="${item.person}" readonly></div>
-            <div class="form-item"><label>得分：</label><input type="number" class="input-text" id="evalScore" min="0" max="100" value="${item.score}"></div>
+            <div class="form-item"><label>考评人员：</label><input type="text" class="input-text" id="evalPerson" value="${escapeHtml(item.person)}" readonly></div>
+            <div class="form-item"><label>得分：</label><input type="number" class="input-text" id="evalScore" min="0" max="100" value="${escapeHtml(item.score)}"></div>
             <div class="form-item"><label>评级：</label>
                 <select class="select-box" id="evalRank">
-                    <option ${item.rank === '优秀' ? 'selected' : ''}>优秀</option>
-                    <option ${item.rank === '良好' ? 'selected' : ''}>良好</option>
-                    <option ${item.rank === '合格' ? 'selected' : ''}>合格</option>
-                    <option ${item.rank === '不合格' ? 'selected' : ''}>不合格</option>
+                    <option value="优秀" ${item.rank === '优秀' ? 'selected' : ''}>优秀</option>
+                    <option value="良好" ${item.rank === '良好' ? 'selected' : ''}>良好</option>
+                    <option value="合格" ${item.rank === '合格' ? 'selected' : ''}>合格</option>
+                    <option value="不合格" ${item.rank === '不合格' ? 'selected' : ''}>不合格</option>
                 </select>
             </div>
             <div class="form-item"><label>考评月份：</label>
-                <input type="month" class="input-text" id="evalMonth" value="${item.month}">
+                <input type="month" class="input-text" id="evalMonth" value="${escapeHtml(item.month)}">
             </div>
         `);
     }
@@ -4965,17 +4975,17 @@ function viewCaseDetail(id) {
     const item = data.cases.find(c => c.id === id);
     if (item) {
         openModal('案件详情', `
-            <div class="form-item"><label>案件编号：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>案件类别：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>涉案人员：</label><span>${item.person}</span></div>
-            <div class="form-item"><label>立案时间：</label><span>${item.time}</span></div>
-            <div class="form-item"><label>案件状态：</label><span class="${getStatusClass(item.caseStatus || item.progress)}">${item.caseStatus || item.progress}</span></div>
-            <div class="form-item"><label>办案单位：</label><span>${item.investigator || ''}</span></div>
-            <div class="form-item"><label>办理进度：</label><span>${item.progress}</span></div>
-            <div class="form-item"><label>证据清单：</label><span>${(item.evidence || []).join('、') || '暂无'}</span></div>
+            <div class="form-item"><label>案件编号：</label><span>${escapeHtml(item.id)}</span></div>
+            <div class="form-item"><label>案件类别：</label><span>${escapeHtml(item.type)}</span></div>
+            <div class="form-item"><label>涉案人员：</label><span>${escapeHtml(item.person)}</span></div>
+            <div class="form-item"><label>立案时间：</label><span>${escapeHtml(item.time)}</span></div>
+            <div class="form-item"><label>案件状态：</label><span class="${getStatusClass(item.caseStatus || item.progress)}">${escapeHtml(item.caseStatus || item.progress)}</span></div>
+            <div class="form-item"><label>办案单位：</label><span>${escapeHtml(item.investigator || '')}</span></div>
+            <div class="form-item"><label>办理进度：</label><span>${escapeHtml(item.progress)}</span></div>
+            <div class="form-item"><label>证据清单：</label><span>${escapeHtml((item.evidence || []).join('、') || '暂无')}</span></div>
             <div class="form-item"><label>办理时间线：</label>
                 <ul style="padding-left:20px;margin:0;">
-                    ${(item.timeline || []).map(t => `<li>${t}</li>`).join('')}
+                    ${(item.timeline || []).map(t => `<li>${escapeHtml(t)}</li>`).join('')}
                 </ul>
             </div>
         `);
@@ -4987,17 +4997,17 @@ function viewPersonDetail(id) {
     const item = data.persons.find(p => p.id === id);
     if (item) {
         openModal('重点人员详情', `
-            <div class="form-item"><label>人员编号：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>姓名：</label><span>${item.name}</span></div>
-            <div class="form-item"><label>身份证号：</label><span>${item.idCard}</span></div>
-            <div class="form-item"><label>管控等级：</label><span class="${getStatusClass(item.level)}">${item.level}</span></div>
-            <div class="form-item"><label>风险等级：</label><span class="${getStatusClass(item.riskLevel || '')}">${item.riskLevel || ''}</span></div>
-            <div class="form-item"><label>居住地址：</label><span>${item.address}</span></div>
-            <div class="form-item"><label>备注：</label><span>${item.notes || '暂无'}</span></div>
-            <div class="form-item"><label>关联人员：</label><span>${(item.relatedPersons || []).join('、') || '暂无'}</span></div>
+            <div class="form-item"><label>人员编号：</label><span>${escapeHtml(item.id)}</span></div>
+            <div class="form-item"><label>姓名：</label><span>${escapeHtml(item.name)}</span></div>
+            <div class="form-item"><label>身份证号：</label><span>${escapeHtml(item.idCard)}</span></div>
+            <div class="form-item"><label>管控等级：</label><span class="${getStatusClass(item.level)}">${escapeHtml(item.level)}</span></div>
+            <div class="form-item"><label>风险等级：</label><span class="${getStatusClass(item.riskLevel || '')}">${escapeHtml(item.riskLevel || '')}</span></div>
+            <div class="form-item"><label>居住地址：</label><span>${escapeHtml(item.address)}</span></div>
+            <div class="form-item"><label>备注：</label><span>${escapeHtml(item.notes || '暂无')}</span></div>
+            <div class="form-item"><label>关联人员：</label><span>${escapeHtml((item.relatedPersons || []).join('、') || '暂无')}</span></div>
             <div class="form-item"><label>轨迹记录：</label>
                 <ul style="padding-left:20px;margin:0;">
-                    ${(item.trackRecords || []).map(t => `<li>${t}</li>`).join('')}
+                    ${(item.trackRecords || []).map(t => `<li>${escapeHtml(t)}</li>`).join('')}
                 </ul>
             </div>
         `);
@@ -5009,16 +5019,16 @@ function viewCarDetail(plate) {
     const item = data.cars.find(c => c.plate === plate);
     if (item) {
         openModal('车辆详情', `
-            <div class="form-item"><label>车牌号码：</label><span>${item.plate}</span></div>
-            <div class="form-item"><label>品牌：</label><span>${item.brand || ''}</span></div>
-            <div class="form-item"><label>车辆类型：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>颜色：</label><span>${item.color || ''}</span></div>
-            <div class="form-item"><label>车主姓名：</label><span>${item.owner}</span></div>
-            <div class="form-item"><label>登记状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
-            <div class="form-item"><label>风险等级：</label><span class="${getStatusClass(item.riskLevel || '')}">${item.riskLevel || ''}</span></div>
+            <div class="form-item"><label>车牌号码：</label><span>${escapeHtml(item.plate)}</span></div>
+            <div class="form-item"><label>品牌：</label><span>${escapeHtml(item.brand || '')}</span></div>
+            <div class="form-item"><label>车辆类型：</label><span>${escapeHtml(item.type)}</span></div>
+            <div class="form-item"><label>颜色：</label><span>${escapeHtml(item.color || '')}</span></div>
+            <div class="form-item"><label>车主姓名：</label><span>${escapeHtml(item.owner)}</span></div>
+            <div class="form-item"><label>登记状态：</label><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></div>
+            <div class="form-item"><label>风险等级：</label><span class="${getStatusClass(item.riskLevel || '')}">${escapeHtml(item.riskLevel || '')}</span></div>
             <div class="form-item"><label>轨迹记录：</label>
                 <ul style="padding-left:20px;margin:0;">
-                    ${(item.trackRecords || []).map(t => `<li>${t}</li>`).join('')}
+                    ${(item.trackRecords || []).map(t => `<li>${escapeHtml(t)}</li>`).join('')}
                 </ul>
             </div>
         `);
@@ -5069,13 +5079,13 @@ function viewDispatch(id) {
     const item = data.commandData.dispatches.find(d => d.id === id);
     if (item) {
         openModal('调度详情', `
-            <div class="form-item"><label>警情编号：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>调度类型：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>指挥中心：</label><span>${item.center}</span></div>
-            <div class="form-item"><label>指派警力：</label><span>${item.police}</span></div>
-            <div class="form-item"><label>现场位置：</label><span>${item.location}</span></div>
-            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
-            <div class="form-item"><label>创建时间：</label><span>${item.time}</span></div>
+            <div class="form-item"><label>警情编号：</label><span>${escapeHtml(item.id)}</span></div>
+            <div class="form-item"><label>调度类型：</label><span>${escapeHtml(item.type)}</span></div>
+            <div class="form-item"><label>指挥中心：</label><span>${escapeHtml(item.center)}</span></div>
+            <div class="form-item"><label>指派警力：</label><span>${escapeHtml(item.police)}</span></div>
+            <div class="form-item"><label>现场位置：</label><span>${escapeHtml(item.location)}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></div>
+            <div class="form-item"><label>创建时间：</label><span>${escapeHtml(item.time)}</span></div>
         `);
     }
 }
@@ -5174,28 +5184,28 @@ function editIntelligence(id) {
     currentModal = 'editIntelligence';
     editId = id;
     openModal('编辑情报', `
-        <div class="form-item"><label>情报编号：</label><input type="text" class="input-text" id="intelId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>情报编号：</label><input type="text" class="input-text" id="intelId" value="${escapeHtml(item.id)}" readonly></div>
         <div class="form-item"><label>情报类型：</label>
             <select class="select-box" id="intelType">
-                <option ${item.type === '人员情报' ? 'selected' : ''}>人员情报</option>
-                <option ${item.type === '案件情报' ? 'selected' : ''}>案件情报</option>
-                <option ${item.type === '舆情情报' ? 'selected' : ''}>舆情情报</option>
+                <option value="人员情报" ${item.type === '人员情报' ? 'selected' : ''}>人员情报</option>
+                <option value="案件情报" ${item.type === '案件情报' ? 'selected' : ''}>案件情报</option>
+                <option value="舆情情报" ${item.type === '舆情情报' ? 'selected' : ''}>舆情情报</option>
             </select>
         </div>
-        <div class="form-item"><label>情报摘要：</label><input type="text" class="input-text" id="intelSummary" value="${item.summary}"></div>
-        <div class="form-item"><label>情报来源：</label><input type="text" class="input-text" id="intelSource" value="${item.source}"></div>
+        <div class="form-item"><label>情报摘要：</label><input type="text" class="input-text" id="intelSummary" value="${escapeHtml(item.summary)}"></div>
+        <div class="form-item"><label>情报来源：</label><input type="text" class="input-text" id="intelSource" value="${escapeHtml(item.source)}"></div>
         <div class="form-item"><label>风险等级：</label>
             <select class="select-box" id="intelRisk">
-                <option ${item.risk === '高风险' ? 'selected' : ''}>高风险</option>
-                <option ${item.risk === '中风险' ? 'selected' : ''}>中风险</option>
-                <option ${item.risk === '低风险' ? 'selected' : ''}>低风险</option>
+                <option value="高风险" ${item.risk === '高风险' ? 'selected' : ''}>高风险</option>
+                <option value="中风险" ${item.risk === '中风险' ? 'selected' : ''}>中风险</option>
+                <option value="低风险" ${item.risk === '低风险' ? 'selected' : ''}>低风险</option>
             </select>
         </div>
         <div class="form-item"><label>研判状态：</label>
             <select class="select-box" id="intelStatus">
-                <option ${item.status === '待研判' ? 'selected' : ''}>待研判</option>
-                <option ${item.status === '研判中' ? 'selected' : ''}>研判中</option>
-                <option ${item.status === '已处置' ? 'selected' : ''}>已处置</option>
+                <option value="待研判" ${item.status === '待研判' ? 'selected' : ''}>待研判</option>
+                <option value="研判中" ${item.status === '研判中' ? 'selected' : ''}>研判中</option>
+                <option value="已处置" ${item.status === '已处置' ? 'selected' : ''}>已处置</option>
             </select>
         </div>
     `);
@@ -5814,31 +5824,31 @@ function editMarket(id) {
     const item = data.marketData.entities.find(m => m.id === id);
     if (item) {
         openModal('编辑市场主体', `
-            <div class="form-item"><label>统一社会信用代码：</label><input type="text" class="input-text" id="marketId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>企业名称：</label><input type="text" class="input-text" id="marketName" value="${item.name}"></div>
+            <div class="form-item"><label>统一社会信用代码：</label><input type="text" class="input-text" id="marketId" value="${escapeHtml(item.id)}" readonly></div>
+            <div class="form-item"><label>企业名称：</label><input type="text" class="input-text" id="marketName" value="${escapeHtml(item.name)}"></div>
             <div class="form-item"><label>企业类型：</label>
                 <select class="select-box" id="marketType">
-                    <option ${item.type === '有限责任公司' ? 'selected' : ''}>有限责任公司</option>
-                    <option ${item.type === '股份有限公司' ? 'selected' : ''}>股份有限公司</option>
-                    <option ${item.type === '个体工商户' ? 'selected' : ''}>个体工商户</option>
-                    <option ${item.type === '合伙企业' ? 'selected' : ''}>合伙企业</option>
-                    <option ${item.type === '农民专业合作社' ? 'selected' : ''}>农民专业合作社</option>
+                    <option value="有限责任公司" ${item.type === '有限责任公司' ? 'selected' : ''}>有限责任公司</option>
+                    <option value="股份有限公司" ${item.type === '股份有限公司' ? 'selected' : ''}>股份有限公司</option>
+                    <option value="个体工商户" ${item.type === '个体工商户' ? 'selected' : ''}>个体工商户</option>
+                    <option value="合伙企业" ${item.type === '合伙企业' ? 'selected' : ''}>合伙企业</option>
+                    <option value="农民专业合作社" ${item.type === '农民专业合作社' ? 'selected' : ''}>农民专业合作社</option>
                 </select>
             </div>
-            <div class="form-item"><label>法定代表人：</label><input type="text" class="input-text" id="marketLegalRep" value="${item.legalRep}"></div>
-            <div class="form-item"><label>经营场所：</label><input type="text" class="input-text" id="marketAddress" value="${item.address}"></div>
-            <div class="form-item"><label>成立日期：</label><input type="date" class="input-text" id="marketDate" value="${item.date}"></div>
+            <div class="form-item"><label>法定代表人：</label><input type="text" class="input-text" id="marketLegalRep" value="${escapeHtml(item.legalRep)}"></div>
+            <div class="form-item"><label>经营场所：</label><input type="text" class="input-text" id="marketAddress" value="${escapeHtml(item.address)}"></div>
+            <div class="form-item"><label>成立日期：</label><input type="date" class="input-text" id="marketDate" value="${escapeHtml(item.date)}"></div>
             <div class="form-item"><label>状态：</label>
                 <select class="select-box" id="marketStatus">
-                    <option ${item.status === '存续' ? 'selected' : ''}>存续</option>
-                    <option ${item.status === '在业' ? 'selected' : ''}>在业</option>
-                    <option ${item.status === '吊销' ? 'selected' : ''}>吊销</option>
-                    <option ${item.status === '注销' ? 'selected' : ''}>注销</option>
+                    <option value="存续" ${item.status === '存续' ? 'selected' : ''}>存续</option>
+                    <option value="在业" ${item.status === '在业' ? 'selected' : ''}>在业</option>
+                    <option value="吊销" ${item.status === '吊销' ? 'selected' : ''}>吊销</option>
+                    <option value="注销" ${item.status === '注销' ? 'selected' : ''}>注销</option>
                 </select>
             </div>
-            <div class="form-item"><label>经营范围：</label><textarea class="input-text" id="marketScope" style="height:60px;">${item.scope}</textarea></div>
-            <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="marketPhone" value="${item.phone}"></div>
-            <div class="form-item"><label>注册资本：</label><input type="text" class="input-text" id="marketCapital" value="${item.regCapital}"></div>
+            <div class="form-item"><label>经营范围：</label><textarea class="input-text" id="marketScope" style="height:60px;">${escapeHtml(item.scope)}</textarea></div>
+            <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="marketPhone" value="${escapeHtml(item.phone)}"></div>
+            <div class="form-item"><label>注册资本：</label><input type="text" class="input-text" id="marketCapital" value="${escapeHtml(item.regCapital)}"></div>
         `);
     }
 }
@@ -5847,16 +5857,16 @@ function viewMarketDetail(id) {
     const item = data.marketData.entities.find(m => m.id === id);
     if (item) {
         openModal('市场主体详情', `
-            <div class="form-item"><label>统一社会信用代码：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>企业名称：</label><span>${item.name}</span></div>
-            <div class="form-item"><label>企业类型：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>法定代表人：</label><span>${item.legalRep}</span></div>
-            <div class="form-item"><label>经营场所：</label><span>${item.address}</span></div>
-            <div class="form-item"><label>成立日期：</label><span>${item.date}</span></div>
-            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
-            <div class="form-item"><label>经营范围：</label><span>${item.scope}</span></div>
-            <div class="form-item"><label>联系电话：</label><span>${item.phone}</span></div>
-            <div class="form-item"><label>注册资本：</label><span>${item.regCapital}</span></div>
+            <div class="form-item"><label>统一社会信用代码：</label><span>${escapeHtml(item.id)}</span></div>
+            <div class="form-item"><label>企业名称：</label><span>${escapeHtml(item.name)}</span></div>
+            <div class="form-item"><label>企业类型：</label><span>${escapeHtml(item.type)}</span></div>
+            <div class="form-item"><label>法定代表人：</label><span>${escapeHtml(item.legalRep)}</span></div>
+            <div class="form-item"><label>经营场所：</label><span>${escapeHtml(item.address)}</span></div>
+            <div class="form-item"><label>成立日期：</label><span>${escapeHtml(item.date)}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></div>
+            <div class="form-item"><label>经营范围：</label><span>${escapeHtml(item.scope)}</span></div>
+            <div class="form-item"><label>联系电话：</label><span>${escapeHtml(item.phone)}</span></div>
+            <div class="form-item"><label>注册资本：</label><span>${escapeHtml(item.regCapital)}</span></div>
         `);
     }
 }
@@ -5883,18 +5893,18 @@ function renderMarketTable(renderData) {
     }
     tbody.innerHTML = displayData.map(item => `
         <tr>
-            <td>${item.id || ''}</td>
-            <td>${item.name || ''}</td>
-            <td>${item.type || ''}</td>
-            <td>${item.legalRep || ''}</td>
-            <td>${item.address || ''}</td>
-            <td>${item.date || ''}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status || ''}</span></td>
-            <td>${item.phone || ''}</td>
+            <td>${escapeHtml(item.id || '')}</td>
+            <td>${escapeHtml(item.name || '')}</td>
+            <td>${escapeHtml(item.type || '')}</td>
+            <td>${escapeHtml(item.legalRep || '')}</td>
+            <td>${escapeHtml(item.address || '')}</td>
+            <td>${escapeHtml(item.date || '')}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status || '')}</span></td>
+            <td>${escapeHtml(item.phone || '')}</td>
             <td>
-                <button class="btn btn-edit" onclick="viewMarketDetail('${item.id}')">详情</button>
-                <button class="btn btn-edit" onclick="editMarket('${item.id}')">编辑</button>
-                <button class="btn btn-del" onclick="deleteMarket('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="viewMarketDetail('${escapeHtml(item.id)}')">详情</button>
+                <button class="btn btn-edit" onclick="editMarket('${escapeHtml(item.id)}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteMarket('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -5905,13 +5915,13 @@ function viewIntelligenceDetail(id) {
     const item = data.intelligenceData.items.find(i => i.id === id);
     if (item) {
         openModal('情报详情', `
-            <div class="form-item"><label>情报编号：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>情报类型：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>情报摘要：</label><span>${item.summary}</span></div>
-            <div class="form-item"><label>情报来源：</label><span>${item.source}</span></div>
-            <div class="form-item"><label>风险等级：</label><span class="${getStatusClass(item.risk)}">${item.risk}</span></div>
-            <div class="form-item"><label>研判状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
-            <div class="form-item"><label>提交时间：</label><span>${item.time}</span></div>
+            <div class="form-item"><label>情报编号：</label><span>${escapeHtml(item.id)}</span></div>
+            <div class="form-item"><label>情报类型：</label><span>${escapeHtml(item.type)}</span></div>
+            <div class="form-item"><label>情报摘要：</label><span>${escapeHtml(item.summary)}</span></div>
+            <div class="form-item"><label>情报来源：</label><span>${escapeHtml(item.source)}</span></div>
+            <div class="form-item"><label>风险等级：</label><span class="${getStatusClass(item.risk)}">${escapeHtml(item.risk)}</span></div>
+            <div class="form-item"><label>研判状态：</label><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></div>
+            <div class="form-item"><label>提交时间：</label><span>${escapeHtml(item.time)}</span></div>
         `);
     }
 }
@@ -5920,13 +5930,13 @@ function viewCommunityDetail(index) {
     const item = data.data.communityData.visits[index];
     if (item) {
         openModal('走访详情', `
-            <div class="form-item"><label>社区名称：</label><span>${item.community}</span></div>
-            <div class="form-item"><label>包片民警：</label><span>${item.police}</span></div>
-            <div class="form-item"><label>走访类型：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>走访对象：</label><span>${item.target}</span></div>
-            <div class="form-item"><label>走访内容：</label><span>${item.content}</span></div>
-            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
-            <div class="form-item"><label>走访时间：</label><span>${item.time}</span></div>
+            <div class="form-item"><label>社区名称：</label><span>${escapeHtml(item.community)}</span></div>
+            <div class="form-item"><label>包片民警：</label><span>${escapeHtml(item.police)}</span></div>
+            <div class="form-item"><label>走访类型：</label><span>${escapeHtml(item.type)}</span></div>
+            <div class="form-item"><label>走访对象：</label><span>${escapeHtml(item.target)}</span></div>
+            <div class="form-item"><label>走访内容：</label><span>${escapeHtml(item.content)}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></div>
+            <div class="form-item"><label>走访时间：</label><span>${escapeHtml(item.time)}</span></div>
         `);
     }
 }
@@ -5935,13 +5945,13 @@ function viewPatrolDetail(id) {
     const item = data.data.patrolData.patrols.find(p => p.id === id);
     if (item) {
         openModal('巡逻详情', `
-            <div class="form-item"><label>巡逻编号：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>巡逻区域：</label><span>${item.area}</span></div>
-            <div class="form-item"><label>巡逻民警：</label><span>${item.police}</span></div>
-            <div class="form-item"><label>巡逻方式：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>开始时间：</label><span>${item.time}</span></div>
-            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
-            <div class="form-item"><label>签到次数：</label><span>${item.checkins}</span></div>
+            <div class="form-item"><label>巡逻编号：</label><span>${escapeHtml(item.id)}</span></div>
+            <div class="form-item"><label>巡逻区域：</label><span>${escapeHtml(item.area)}</span></div>
+            <div class="form-item"><label>巡逻民警：</label><span>${escapeHtml(item.police)}</span></div>
+            <div class="form-item"><label>巡逻方式：</label><span>${escapeHtml(item.type)}</span></div>
+            <div class="form-item"><label>开始时间：</label><span>${escapeHtml(item.time)}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></div>
+            <div class="form-item"><label>签到次数：</label><span>${escapeHtml(item.checkins)}</span></div>
         `);
     }
 }
@@ -5950,13 +5960,13 @@ function viewRecordDetail(id) {
     const item = data.data.recordData.records.find(r => r.id === id);
     if (item) {
         openModal('笔录详情', `
-            <div class="form-item"><label>笔录编号：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>案件关联：</label><span>${item.caseId || '-'}</span></div>
-            <div class="form-item"><label>笔录类型：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>被询问人：</label><span>${item.target}</span></div>
-            <div class="form-item"><label>制作民警：</label><span>${item.police}</span></div>
-            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
-            <div class="form-item"><label>制作时间：</label><span>${item.time}</span></div>
+            <div class="form-item"><label>笔录编号：</label><span>${escapeHtml(item.id)}</span></div>
+            <div class="form-item"><label>案件关联：</label><span>${escapeHtml(item.caseId || '-')}</span></div>
+            <div class="form-item"><label>笔录类型：</label><span>${escapeHtml(item.type)}</span></div>
+            <div class="form-item"><label>被询问人：</label><span>${escapeHtml(item.target)}</span></div>
+            <div class="form-item"><label>制作民警：</label><span>${escapeHtml(item.police)}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></div>
+            <div class="form-item"><label>制作时间：</label><span>${escapeHtml(item.time)}</span></div>
         `);
     }
 }
@@ -5970,13 +5980,13 @@ function viewLawDetail(id) {
     const item = data.data.lawSupervisionData.cases.find(c => c.id === id);
     if (item) {
         openModal('执法监督详情', `
-            <div class="form-item"><label>案件编号：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>案件名称：</label><span>${item.name}</span></div>
-            <div class="form-item"><label>主办民警：</label><span>${item.police}</span></div>
-            <div class="form-item"><label>办理期限：</label><span>${item.deadline}</span></div>
-            <div class="form-item"><label>剩余天数：</label><span>${item.remaining}</span></div>
-            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
-            <div class="form-item"><label>监督状态：</label><span class="${getStatusClass(item.supervision)}">${item.supervision}</span></div>
+            <div class="form-item"><label>案件编号：</label><span>${escapeHtml(item.id)}</span></div>
+            <div class="form-item"><label>案件名称：</label><span>${escapeHtml(item.name)}</span></div>
+            <div class="form-item"><label>主办民警：</label><span>${escapeHtml(item.police)}</span></div>
+            <div class="form-item"><label>办理期限：</label><span>${escapeHtml(item.deadline)}</span></div>
+            <div class="form-item"><label>剩余天数：</label><span>${escapeHtml(item.remaining)}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></div>
+            <div class="form-item"><label>监督状态：</label><span class="${getStatusClass(item.supervision)}">${escapeHtml(item.supervision)}</span></div>
         `);
     }
 }
@@ -5985,13 +5995,13 @@ function viewServiceDetail(id) {
     const item = data.data.serviceData.services.find(s => s.id === id);
     if (item) {
         openModal('便民服务详情', `
-            <div class="form-item"><label>业务编号：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>业务类型：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>申请人：</label><span>${item.applicant}</span></div>
-            <div class="form-item"><label>联系电话：</label><span>${item.phone}</span></div>
-            <div class="form-item"><label>申请时间：</label><span>${item.time}</span></div>
-            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
-            <div class="form-item"><label>办理民警：</label><span>${item.police}</span></div>
+            <div class="form-item"><label>业务编号：</label><span>${escapeHtml(item.id)}</span></div>
+            <div class="form-item"><label>业务类型：</label><span>${escapeHtml(item.type)}</span></div>
+            <div class="form-item"><label>申请人：</label><span>${escapeHtml(item.applicant)}</span></div>
+            <div class="form-item"><label>联系电话：</label><span>${escapeHtml(item.phone)}</span></div>
+            <div class="form-item"><label>申请时间：</label><span>${escapeHtml(item.time)}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></div>
+            <div class="form-item"><label>办理民警：</label><span>${escapeHtml(item.police)}</span></div>
         `);
     }
 }
@@ -6000,13 +6010,13 @@ function viewTrafficDetail(id) {
     const item = data.data.trafficData.services.find(t => t.id === id);
     if (item) {
         openModal('交通管理详情', `
-            <div class="form-item"><label>业务编号：</label><span>${item.id}</span></div>
-            <div class="form-item"><label>车牌号码：</label><span>${item.plate}</span></div>
-            <div class="form-item"><label>业务类型：</label><span>${item.type}</span></div>
-            <div class="form-item"><label>当事人：</label><span>${item.party}</span></div>
-            <div class="form-item"><label>受理时间：</label><span>${item.time}</span></div>
-            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
-            <div class="form-item"><label>处理民警：</label><span>${item.police}</span></div>
+            <div class="form-item"><label>业务编号：</label><span>${escapeHtml(item.id)}</span></div>
+            <div class="form-item"><label>车牌号码：</label><span>${escapeHtml(item.plate)}</span></div>
+            <div class="form-item"><label>业务类型：</label><span>${escapeHtml(item.type)}</span></div>
+            <div class="form-item"><label>当事人：</label><span>${escapeHtml(item.party)}</span></div>
+            <div class="form-item"><label>受理时间：</label><span>${escapeHtml(item.time)}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></div>
+            <div class="form-item"><label>处理民警：</label><span>${escapeHtml(item.police)}</span></div>
         `);
     }
 }
@@ -6108,11 +6118,11 @@ function editDispatch(id) {
     currentModal = 'editDispatch';
     editId = id;
     openModal('编辑调度', `
-        <div class="form-item"><label>调度编号：</label><input type="text" class="input-text" id="editDispatchId" value="${item.id}" readonly></div>
-        <div class="form-item"><label>调度类型：</label><input type="text" class="input-text" id="editDispatchType" value="${item.type}"></div>
-        <div class="form-item"><label>指挥中心：</label><input type="text" class="input-text" id="editDispatchCenter" value="${item.center}"></div>
-        <div class="form-item"><label>负责民警：</label><input type="text" class="input-text" id="editDispatchPolice" value="${item.police}"></div>
-        <div class="form-item"><label>地点：</label><input type="text" class="input-text" id="editDispatchLocation" value="${item.location}"></div>
+        <div class="form-item"><label>调度编号：</label><input type="text" class="input-text" id="editDispatchId" value="${escapeHtml(item.id)}" readonly></div>
+        <div class="form-item"><label>调度类型：</label><input type="text" class="input-text" id="editDispatchType" value="${escapeHtml(item.type)}"></div>
+        <div class="form-item"><label>指挥中心：</label><input type="text" class="input-text" id="editDispatchCenter" value="${escapeHtml(item.center)}"></div>
+        <div class="form-item"><label>负责民警：</label><input type="text" class="input-text" id="editDispatchPolice" value="${escapeHtml(item.police)}"></div>
+        <div class="form-item"><label>地点：</label><input type="text" class="input-text" id="editDispatchLocation" value="${escapeHtml(item.location)}"></div>
         <div class="form-item"><label>状态：</label>
             <select class="select-box" id="editDispatchStatus">
                 <option value="待处理" ${item.status === '待处理' ? 'selected' : ''}>待处理</option>
@@ -6129,11 +6139,11 @@ function editVisit(index) {
     currentModal = 'editVisit';
     editId = index;
     openModal('编辑走访记录', `
-        <div class="form-item"><label>社区名称：</label><input type="text" class="input-text" id="editVisitCommunity" value="${item.community}"></div>
-        <div class="form-item"><label>包片民警：</label><input type="text" class="input-text" id="editVisitPolice" value="${item.police}"></div>
-        <div class="form-item"><label>走访类型：</label><input type="text" class="input-text" id="editVisitType" value="${item.type}"></div>
-        <div class="form-item"><label>走访对象：</label><input type="text" class="input-text" id="editVisitTarget" value="${item.target}"></div>
-        <div class="form-item"><label>走访内容：</label><textarea class="input-text" id="editVisitContent">${item.content}</textarea></div>
+        <div class="form-item"><label>社区名称：</label><input type="text" class="input-text" id="editVisitCommunity" value="${escapeHtml(item.community)}"></div>
+        <div class="form-item"><label>包片民警：</label><input type="text" class="input-text" id="editVisitPolice" value="${escapeHtml(item.police)}"></div>
+        <div class="form-item"><label>走访类型：</label><input type="text" class="input-text" id="editVisitType" value="${escapeHtml(item.type)}"></div>
+        <div class="form-item"><label>走访对象：</label><input type="text" class="input-text" id="editVisitTarget" value="${escapeHtml(item.target)}"></div>
+        <div class="form-item"><label>走访内容：</label><textarea class="input-text" id="editVisitContent">${escapeHtml(item.content)}</textarea></div>
         <div class="form-item"><label>状态：</label>
             <select class="select-box" id="editVisitStatus">
                 <option value="待开始" ${item.status === '待开始' ? 'selected' : ''}>待开始</option>
@@ -6150,11 +6160,11 @@ function editPatrol(id) {
     currentModal = 'editPatrol';
     editId = id;
     openModal('编辑巡逻记录', `
-        <div class="form-item"><label>巡逻编号：</label><input type="text" class="input-text" id="editPatrolId" value="${item.id}" readonly></div>
-        <div class="form-item"><label>巡逻区域：</label><input type="text" class="input-text" id="editPatrolArea" value="${item.area}"></div>
-        <div class="form-item"><label>巡逻民警：</label><input type="text" class="input-text" id="editPatrolPolice" value="${item.police}"></div>
-        <div class="form-item"><label>巡逻方式：</label><input type="text" class="input-text" id="editPatrolType" value="${item.type}"></div>
-        <div class="form-item"><label>签到次数：</label><input type="number" class="input-text" id="editPatrolCheckins" value="${item.checkins}"></div>
+        <div class="form-item"><label>巡逻编号：</label><input type="text" class="input-text" id="editPatrolId" value="${escapeHtml(item.id)}" readonly></div>
+        <div class="form-item"><label>巡逻区域：</label><input type="text" class="input-text" id="editPatrolArea" value="${escapeHtml(item.area)}"></div>
+        <div class="form-item"><label>巡逻民警：</label><input type="text" class="input-text" id="editPatrolPolice" value="${escapeHtml(item.police)}"></div>
+        <div class="form-item"><label>巡逻方式：</label><input type="text" class="input-text" id="editPatrolType" value="${escapeHtml(item.type)}"></div>
+        <div class="form-item"><label>签到次数：</label><input type="number" class="input-text" id="editPatrolCheckins" value="${escapeHtml(item.checkins)}"></div>
         <div class="form-item"><label>状态：</label>
             <select class="select-box" id="editPatrolStatus">
                 <option value="待开始" ${item.status === '待开始' ? 'selected' : ''}>待开始</option>
@@ -6171,11 +6181,11 @@ function editRecord(id) {
     currentModal = 'editRecord';
     editId = id;
     openModal('编辑笔录', `
-        <div class="form-item"><label>笔录编号：</label><input type="text" class="input-text" id="editRecordId" value="${item.id}" readonly></div>
-        <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="editRecordCaseId" value="${item.caseId || ''}"></div>
-        <div class="form-item"><label>笔录类型：</label><input type="text" class="input-text" id="editRecordType" value="${item.type}"></div>
-        <div class="form-item"><label>被询问人：</label><input type="text" class="input-text" id="editRecordTarget" value="${item.target}"></div>
-        <div class="form-item"><label>制作民警：</label><input type="text" class="input-text" id="editRecordPolice" value="${item.police}"></div>
+        <div class="form-item"><label>笔录编号：</label><input type="text" class="input-text" id="editRecordId" value="${escapeHtml(item.id)}" readonly></div>
+        <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="editRecordCaseId" value="${escapeHtml(item.caseId || '')}"></div>
+        <div class="form-item"><label>笔录类型：</label><input type="text" class="input-text" id="editRecordType" value="${escapeHtml(item.type)}"></div>
+        <div class="form-item"><label>被询问人：</label><input type="text" class="input-text" id="editRecordTarget" value="${escapeHtml(item.target)}"></div>
+        <div class="form-item"><label>制作民警：</label><input type="text" class="input-text" id="editRecordPolice" value="${escapeHtml(item.police)}"></div>
         <div class="form-item"><label>状态：</label>
             <select class="select-box" id="editRecordStatus">
                 <option value="制作中" ${item.status === '制作中' ? 'selected' : ''}>制作中</option>
@@ -6191,11 +6201,11 @@ function editLawCase(id) {
     currentModal = 'editLawCase';
     editId = id;
     openModal('编辑执法监督案件', `
-        <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="editLawCaseId" value="${item.id}" readonly></div>
-        <div class="form-item"><label>案件名称：</label><input type="text" class="input-text" id="editLawCaseName" value="${item.name}"></div>
-        <div class="form-item"><label>主办民警：</label><input type="text" class="input-text" id="editLawCasePolice" value="${item.police}"></div>
-        <div class="form-item"><label>办理期限：</label><input type="text" class="input-text" id="editLawCaseDeadline" value="${item.deadline}"></div>
-        <div class="form-item"><label>剩余天数：</label><input type="number" class="input-text" id="editLawCaseRemaining" value="${item.remaining}"></div>
+        <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="editLawCaseId" value="${escapeHtml(item.id)}" readonly></div>
+        <div class="form-item"><label>案件名称：</label><input type="text" class="input-text" id="editLawCaseName" value="${escapeHtml(item.name)}"></div>
+        <div class="form-item"><label>主办民警：</label><input type="text" class="input-text" id="editLawCasePolice" value="${escapeHtml(item.police)}"></div>
+        <div class="form-item"><label>办理期限：</label><input type="text" class="input-text" id="editLawCaseDeadline" value="${escapeHtml(item.deadline)}"></div>
+        <div class="form-item"><label>剩余天数：</label><input type="number" class="input-text" id="editLawCaseRemaining" value="${escapeHtml(item.remaining)}"></div>
         <div class="form-item"><label>状态：</label>
             <select class="select-box" id="editLawCaseStatus">
                 <option value="待处理" ${item.status === '待处理' ? 'selected' : ''}>待处理</option>
@@ -6220,11 +6230,11 @@ function editService(id) {
     currentModal = 'editService';
     editId = id;
     openModal('编辑便民服务', `
-        <div class="form-item"><label>业务编号：</label><input type="text" class="input-text" id="editServiceId" value="${item.id}" readonly></div>
-        <div class="form-item"><label>业务类型：</label><input type="text" class="input-text" id="editServiceType" value="${item.type}"></div>
-        <div class="form-item"><label>申请人：</label><input type="text" class="input-text" id="editServiceApplicant" value="${item.applicant}"></div>
-        <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="editServicePhone" value="${item.phone}"></div>
-        <div class="form-item"><label>办理民警：</label><input type="text" class="input-text" id="editServicePolice" value="${item.police}"></div>
+        <div class="form-item"><label>业务编号：</label><input type="text" class="input-text" id="editServiceId" value="${escapeHtml(item.id)}" readonly></div>
+        <div class="form-item"><label>业务类型：</label><input type="text" class="input-text" id="editServiceType" value="${escapeHtml(item.type)}"></div>
+        <div class="form-item"><label>申请人：</label><input type="text" class="input-text" id="editServiceApplicant" value="${escapeHtml(item.applicant)}"></div>
+        <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="editServicePhone" value="${escapeHtml(item.phone)}"></div>
+        <div class="form-item"><label>办理民警：</label><input type="text" class="input-text" id="editServicePolice" value="${escapeHtml(item.police)}"></div>
         <div class="form-item"><label>状态：</label>
             <select class="select-box" id="editServiceStatus">
                 <option value="待办理" ${item.status === '待办理' ? 'selected' : ''}>待办理</option>
@@ -6241,11 +6251,11 @@ function editTrafficService(id) {
     currentModal = 'editTrafficService';
     editId = id;
     openModal('编辑交通服务', `
-        <div class="form-item"><label>业务编号：</label><input type="text" class="input-text" id="editTrafficServiceId" value="${item.id}" readonly></div>
-        <div class="form-item"><label>车牌号码：</label><input type="text" class="input-text" id="editTrafficPlate" value="${item.plate}"></div>
-        <div class="form-item"><label>业务类型：</label><input type="text" class="input-text" id="editTrafficType" value="${item.type}"></div>
-        <div class="form-item"><label>当事人：</label><input type="text" class="input-text" id="editTrafficParty" value="${item.party}"></div>
-        <div class="form-item"><label>处理民警：</label><input type="text" class="input-text" id="editTrafficPolice" value="${item.police}"></div>
+        <div class="form-item"><label>业务编号：</label><input type="text" class="input-text" id="editTrafficServiceId" value="${escapeHtml(item.id)}" readonly></div>
+        <div class="form-item"><label>车牌号码：</label><input type="text" class="input-text" id="editTrafficPlate" value="${escapeHtml(item.plate)}"></div>
+        <div class="form-item"><label>业务类型：</label><input type="text" class="input-text" id="editTrafficType" value="${escapeHtml(item.type)}"></div>
+        <div class="form-item"><label>当事人：</label><input type="text" class="input-text" id="editTrafficParty" value="${escapeHtml(item.party)}"></div>
+        <div class="form-item"><label>处理民警：</label><input type="text" class="input-text" id="editTrafficPolice" value="${escapeHtml(item.police)}"></div>
         <div class="form-item"><label>状态：</label>
             <select class="select-box" id="editTrafficStatus">
                 <option value="待处理" ${item.status === '待处理' ? 'selected' : ''}>待处理</option>
@@ -6646,17 +6656,17 @@ function renderCombinedTable(data) {
     } catch(e){}
     tbody.innerHTML = items.map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.leadUnit}</td>
-            <td>${item.partnerUnits}</td>
-            <td>${item.level}</td>
-            <td>${item.startTime}</td>
-            <td>${item.commander}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.leadUnit)}</td>
+            <td>${escapeHtml(item.partnerUnits)}</td>
+            <td>${escapeHtml(item.level)}</td>
+            <td>${escapeHtml(item.startTime)}</td>
+            <td>${escapeHtml(item.commander)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
             <td>
-                <button class="btn btn-edit" onclick="editCombined('${item.id}')">编辑</button>
-                <button class="btn btn-del" onclick="deleteCombined('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="editCombined('${escapeHtml(item.id)}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteCombined('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -6722,25 +6732,25 @@ function editCombined(id) {
     const item = items.find(i => i.id === id);
     if (item) {
         openModal('编辑作战任务', `
-            <div class="form-item"><label>任务编号：</label><input type="text" class="input-text" id="combinedTaskId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>任务名称：</label><input type="text" class="input-text" id="combinedTaskName" value="${item.name}"></div>
-            <div class="form-item"><label>牵头单位：</label><input type="text" class="input-text" id="combinedLeadUnit" value="${item.leadUnit}"></div>
-            <div class="form-item"><label>协作单位：</label><input type="text" class="input-text" id="combinedPartner" value="${item.partnerUnits}"></div>
+            <div class="form-item"><label>任务编号：</label><input type="text" class="input-text" id="combinedTaskId" value="${escapeHtml(item.id)}" readonly></div>
+            <div class="form-item"><label>任务名称：</label><input type="text" class="input-text" id="combinedTaskName" value="${escapeHtml(item.name)}"></div>
+            <div class="form-item"><label>牵头单位：</label><input type="text" class="input-text" id="combinedLeadUnit" value="${escapeHtml(item.leadUnit)}"></div>
+            <div class="form-item"><label>协作单位：</label><input type="text" class="input-text" id="combinedPartner" value="${escapeHtml(item.partnerUnits)}"></div>
             <div class="form-item"><label>任务等级：</label>
                 <select class="select-box" id="combinedLevel">
-                    <option ${item.level === '一级' ? 'selected' : ''}>一级</option>
-                    <option ${item.level === '二级' ? 'selected' : ''}>二级</option>
-                    <option ${item.level === '三级' ? 'selected' : ''}>三级</option>
-                    <option ${item.level === '四级' ? 'selected' : ''}>四级</option>
+                    <option value="一级" ${item.level === '一级' ? 'selected' : ''}>一级</option>
+                    <option value="二级" ${item.level === '二级' ? 'selected' : ''}>二级</option>
+                    <option value="三级" ${item.level === '三级' ? 'selected' : ''}>三级</option>
+                    <option value="四级" ${item.level === '四级' ? 'selected' : ''}>四级</option>
                 </select>
             </div>
-            <div class="form-item"><label>启动时间：</label><input type="date" class="input-text" id="combinedStartTime" value="${item.startTime}"></div>
-            <div class="form-item"><label>指挥人员：</label><input type="text" class="input-text" id="combinedCommander" value="${item.commander}"></div>
+            <div class="form-item"><label>启动时间：</label><input type="date" class="input-text" id="combinedStartTime" value="${escapeHtml(item.startTime)}"></div>
+            <div class="form-item"><label>指挥人员：</label><input type="text" class="input-text" id="combinedCommander" value="${escapeHtml(item.commander)}"></div>
             <div class="form-item"><label>任务状态：</label>
                 <select class="select-box" id="combinedStatus">
-                    <option ${item.status === '待启动' ? 'selected' : ''}>待启动</option>
-                    <option ${item.status === '执行中' ? 'selected' : ''}>执行中</option>
-                    <option ${item.status === '已完成' ? 'selected' : ''}>已完成</option>
+                    <option value="待启动" ${item.status === '待启动' ? 'selected' : ''}>待启动</option>
+                    <option value="执行中" ${item.status === '执行中' ? 'selected' : ''}>执行中</option>
+                    <option value="已完成" ${item.status === '已完成' ? 'selected' : ''}>已完成</option>
                 </select>
             </div>
         `);
@@ -6775,17 +6785,17 @@ function renderFileTable(data) {
     const display = Array.isArray(data) ? data : (window._fileFiltered || window._fileRaw || []);
     tbody.innerHTML = (display || []).map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.caseId}</td>
-            <td>${item.type}</td>
-            <td>${item.archiveDate}</td>
-            <td>${item.unit}</td>
-            <td>${item.period}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.caseId)}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.archiveDate)}</td>
+            <td>${escapeHtml(item.unit)}</td>
+            <td>${escapeHtml(item.period)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
             <td>
-                <button class="btn btn-edit" onclick="editFile('${item.id}')">编辑</button>
-                <button class="btn btn-del" onclick="deleteFile('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="editFile('${escapeHtml(item.id)}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteFile('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -6855,33 +6865,33 @@ function editFile(id) {
     const item = items.find(i => i.id === id);
     if (item) {
         openModal('编辑卷宗', `
-            <div class="form-item"><label>卷宗编号：</label><input type="text" class="input-text" id="fileTaskId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>卷宗名称：</label><input type="text" class="input-text" id="fileName" value="${item.name}"></div>
-            <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="fileCaseId" value="${item.caseId}"></div>
+            <div class="form-item"><label>卷宗编号：</label><input type="text" class="input-text" id="fileTaskId" value="${escapeHtml(item.id)}" readonly></div>
+            <div class="form-item"><label>卷宗名称：</label><input type="text" class="input-text" id="fileName" value="${escapeHtml(item.name)}"></div>
+            <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="fileCaseId" value="${escapeHtml(item.caseId)}"></div>
             <div class="form-item"><label>卷宗类型：</label>
                 <select class="select-box" id="fileType">
-                    <option ${item.type === '刑事案件' ? 'selected' : ''}>刑事案件</option>
-                    <option ${item.type === '行政案件' ? 'selected' : ''}>行政案件</option>
-                    <option ${item.type === '接处警' ? 'selected' : ''}>接处警</option>
+                    <option value="刑事案件" ${item.type === '刑事案件' ? 'selected' : ''}>刑事案件</option>
+                    <option value="行政案件" ${item.type === '行政案件' ? 'selected' : ''}>行政案件</option>
+                    <option value="接处警" ${item.type === '接处警' ? 'selected' : ''}>接处警</option>
                 </select>
             </div>
-            <div class="form-item"><label>归档日期：</label><input type="date" class="input-text" id="fileDate" value="${item.archiveDate}"></div>
-            <div class="form-item"><label>归档单位：</label><input type="text" class="input-text" id="fileUnit" value="${item.unit}"></div>
+            <div class="form-item"><label>归档日期：</label><input type="date" class="input-text" id="fileDate" value="${escapeHtml(item.archiveDate)}"></div>
+            <div class="form-item"><label>归档单位：</label><input type="text" class="input-text" id="fileUnit" value="${escapeHtml(item.unit)}"></div>
             <div class="form-item"><label>保管期限：</label>
                 <select class="select-box" id="filePeriod">
-                    <option ${item.period === '永久' ? 'selected' : ''}>永久</option>
-                    <option ${item.period === '长期' ? 'selected' : ''}>长期</option>
-                    <option ${item.period === '30年' ? 'selected' : ''}>30年</option>
-                    <option ${item.period === '20年' ? 'selected' : ''}>20年</option>
-                    <option ${item.period === '10年' ? 'selected' : ''}>10年</option>
+                    <option value="永久" ${item.period === '永久' ? 'selected' : ''}>永久</option>
+                    <option value="长期" ${item.period === '长期' ? 'selected' : ''}>长期</option>
+                    <option value="30年" ${item.period === '30年' ? 'selected' : ''}>30年</option>
+                    <option value="20年" ${item.period === '20年' ? 'selected' : ''}>20年</option>
+                    <option value="10年" ${item.period === '10年' ? 'selected' : ''}>10年</option>
                 </select>
             </div>
             <div class="form-item"><label>卷宗状态：</label>
                 <select class="select-box" id="fileStatus">
-                    <option ${item.status === '待归档' ? 'selected' : ''}>待归档</option>
-                    <option ${item.status === '已归档' ? 'selected' : ''}>已归档</option>
-                    <option ${item.status === '查阅中' ? 'selected' : ''}>查阅中</option>
-                    <option ${item.status === '借阅中' ? 'selected' : ''}>借阅中</option>
+                    <option value="待归档" ${item.status === '待归档' ? 'selected' : ''}>待归档</option>
+                    <option value="已归档" ${item.status === '已归档' ? 'selected' : ''}>已归档</option>
+                    <option value="查阅中" ${item.status === '查阅中' ? 'selected' : ''}>查阅中</option>
+                    <option value="借阅中" ${item.status === '借阅中' ? 'selected' : ''}>借阅中</option>
                 </select>
             </div>
         `);
@@ -6916,17 +6926,17 @@ function renderDutyTable(data) {
     const display = Array.isArray(data) ? data : (window._dutyFiltered || window._dutyRaw || []);
     tbody.innerHTML = (display || []).map(item => `
         <tr>
-            <td>${item.date}</td>
-            <td>${item.shift}</td>
-            <td>${item.leader}</td>
-            <td>${item.staff}</td>
-            <td>${item.phone}</td>
-            <td>${item.unit}</td>
-            <td>${item.backup}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${escapeHtml(item.date)}</td>
+            <td>${escapeHtml(item.shift)}</td>
+            <td>${escapeHtml(item.leader)}</td>
+            <td>${escapeHtml(item.staff)}</td>
+            <td>${escapeHtml(item.phone)}</td>
+            <td>${escapeHtml(item.unit)}</td>
+            <td>${escapeHtml(item.backup)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
             <td>
-                <button class="btn btn-edit" onclick="editDuty('${item.date}_${item.shift}')">编辑</button>
-                <button class="btn btn-del" onclick="deleteDuty('${item.date}_${item.shift}')">删除</button>
+                <button class="btn btn-edit" onclick="editDuty('${escapeHtml(item.date)}_${escapeHtml(item.shift)}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteDuty('${escapeHtml(item.date)}_${escapeHtml(item.shift)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -6993,25 +7003,25 @@ function editDuty(id) {
     const item = items.find(i => i.date === date && i.shift === shift);
     if (item) {
         openModal('编辑排班', `
-            <div class="form-item"><label>值班日期：</label><input type="date" class="input-text" id="dutyDate" value="${item.date}" readonly></div>
+            <div class="form-item"><label>值班日期：</label><input type="date" class="input-text" id="dutyDate" value="${escapeHtml(item.date)}" readonly></div>
             <div class="form-item"><label>班次：</label>
                 <select class="select-box" id="dutyShift" readonly>
-                    <option ${item.shift === '早班' ? 'selected' : ''}>早班</option>
-                    <option ${item.shift === '中班' ? 'selected' : ''}>中班</option>
-                    <option ${item.shift === '夜班' ? 'selected' : ''}>夜班</option>
-                    <option ${item.shift === '全天' ? 'selected' : ''}>全天</option>
+                    <option value="早班" ${item.shift === '早班' ? 'selected' : ''}>早班</option>
+                    <option value="中班" ${item.shift === '中班' ? 'selected' : ''}>中班</option>
+                    <option value="夜班" ${item.shift === '夜班' ? 'selected' : ''}>夜班</option>
+                    <option value="全天" ${item.shift === '全天' ? 'selected' : ''}>全天</option>
                 </select>
             </div>
-            <div class="form-item"><label>值班领导：</label><input type="text" class="input-text" id="dutyLeader" value="${item.leader}"></div>
-            <div class="form-item"><label>值班人员：</label><input type="text" class="input-text" id="dutyStaff" value="${item.staff}"></div>
-            <div class="form-item"><label>值班电话：</label><input type="text" class="input-text" id="dutyPhone" value="${item.phone}"></div>
-            <div class="form-item"><label>值班单位：</label><input type="text" class="input-text" id="dutyUnit" value="${item.unit}"></div>
-            <div class="form-item"><label>备勤人员：</label><input type="text" class="input-text" id="dutyBackup" value="${item.backup}"></div>
+            <div class="form-item"><label>值班领导：</label><input type="text" class="input-text" id="dutyLeader" value="${escapeHtml(item.leader)}"></div>
+            <div class="form-item"><label>值班人员：</label><input type="text" class="input-text" id="dutyStaff" value="${escapeHtml(item.staff)}"></div>
+            <div class="form-item"><label>值班电话：</label><input type="text" class="input-text" id="dutyPhone" value="${escapeHtml(item.phone)}"></div>
+            <div class="form-item"><label>值班单位：</label><input type="text" class="input-text" id="dutyUnit" value="${escapeHtml(item.unit)}"></div>
+            <div class="form-item"><label>备勤人员：</label><input type="text" class="input-text" id="dutyBackup" value="${escapeHtml(item.backup)}"></div>
             <div class="form-item"><label>值班状态：</label>
                 <select class="select-box" id="dutyStatus">
-                    <option ${item.status === '待值班' ? 'selected' : ''}>待值班</option>
-                    <option ${item.status === '值班中' ? 'selected' : ''}>值班中</option>
-                    <option ${item.status === '已结束' ? 'selected' : ''}>已结束</option>
+                    <option value="待值班" ${item.status === '待值班' ? 'selected' : ''}>待值班</option>
+                    <option value="值班中" ${item.status === '值班中' ? 'selected' : ''}>值班中</option>
+                    <option value="已结束" ${item.status === '已结束' ? 'selected' : ''}>已结束</option>
                 </select>
             </div>
         `);
@@ -7047,17 +7057,17 @@ function renderPetitionTable(data) {
     const display = Array.isArray(data) ? data : (window._petitionFiltered || window._petitionRaw || []);
     tbody.innerHTML = (display || []).map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.petitioner}</td>
-            <td>${item.phone}</td>
-            <td>${item.title}</td>
-            <td>${item.type}</td>
-            <td>${item.acceptDate}</td>
-            <td>${item.unit}</td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.petitioner)}</td>
+            <td>${escapeHtml(item.phone)}</td>
+            <td>${escapeHtml(item.title)}</td>
+            <td>${escapeHtml(item.type)}</td>
+            <td>${escapeHtml(item.acceptDate)}</td>
+            <td>${escapeHtml(item.unit)}</td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
             <td>
-                <button class="btn btn-edit" onclick="editPetition('${item.id}')">编辑</button>
-                <button class="btn btn-del" onclick="deletePetition('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="editPetition('${escapeHtml(item.id)}')">编辑</button>
+                <button class="btn btn-del" onclick="deletePetition('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -7122,7 +7132,7 @@ function addPetition() {
         <div class="form-item"><label>承办单位：</label><input type="text" class="input-text" id="petitionUnit" placeholder="请输入承办单位"></div>
         <div class="form-item"><label>办理状态：</label>
             <select class="select-box" id="petitionStatus">
-                <option>待受理</option><option>办理中</option><option>已办结</option><option>已答复</option>
+                <option value="待受理">待受理</option><option value="办理中">办理中</option><option value="已办结">已办结</option><option value="已答复">已答复</option>
             </select>
         </div>
     `);
@@ -7135,26 +7145,26 @@ function editPetition(id) {
     const item = items.find(i => i.id === id);
     if (item) {
         openModal('编辑信访事项', `
-            <div class="form-item"><label>事项编号：</label><input type="text" class="input-text" id="petitionId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>信访人：</label><input type="text" class="input-text" id="petitionPetitioner" value="${item.petitioner}"></div>
-            <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="petitionPhone" value="${item.phone}"></div>
-            <div class="form-item"><label>事项标题：</label><input type="text" class="input-text" id="petitionTitle" value="${item.title}"></div>
+            <div class="form-item"><label>事项编号：</label><input type="text" class="input-text" id="petitionId" value="${escapeHtml(item.id)}" readonly></div>
+            <div class="form-item"><label>信访人：</label><input type="text" class="input-text" id="petitionPetitioner" value="${escapeHtml(item.petitioner)}"></div>
+            <div class="form-item"><label>联系电话：</label><input type="text" class="input-text" id="petitionPhone" value="${escapeHtml(item.phone)}"></div>
+            <div class="form-item"><label>事项标题：</label><input type="text" class="input-text" id="petitionTitle" value="${escapeHtml(item.title)}"></div>
             <div class="form-item"><label>事项类型：</label>
                 <select class="select-box" id="petitionType">
-                    <option ${item.type === '咨询建议' ? 'selected' : ''}>咨询建议</option>
-                    <option ${item.type === '投诉请求' ? 'selected' : ''}>投诉请求</option>
-                    <option ${item.type === '申诉举报' ? 'selected' : ''}>申诉举报</option>
-                    <option ${item.type === '表扬肯定' ? 'selected' : ''}>表扬肯定</option>
+                    <option value="咨询建议" ${item.type === '咨询建议' ? 'selected' : ''}>咨询建议</option>
+                    <option value="投诉请求" ${item.type === '投诉请求' ? 'selected' : ''}>投诉请求</option>
+                    <option value="申诉举报" ${item.type === '申诉举报' ? 'selected' : ''}>申诉举报</option>
+                    <option value="表扬肯定" ${item.type === '表扬肯定' ? 'selected' : ''}>表扬肯定</option>
                 </select>
             </div>
-            <div class="form-item"><label>受理时间：</label><input type="date" class="input-text" id="petitionDate" value="${item.acceptDate}"></div>
-            <div class="form-item"><label>承办单位：</label><input type="text" class="input-text" id="petitionUnit" value="${item.unit}"></div>
+            <div class="form-item"><label>受理时间：</label><input type="date" class="input-text" id="petitionDate" value="${escapeHtml(item.acceptDate)}"></div>
+            <div class="form-item"><label>承办单位：</label><input type="text" class="input-text" id="petitionUnit" value="${escapeHtml(item.unit)}"></div>
             <div class="form-item"><label>办理状态：</label>
                 <select class="select-box" id="petitionStatus">
-                    <option ${item.status === '待受理' ? 'selected' : ''}>待受理</option>
-                    <option ${item.status === '办理中' ? 'selected' : ''}>办理中</option>
-                    <option ${item.status === '已办结' ? 'selected' : ''}>已办结</option>
-                    <option ${item.status === '已答复' ? 'selected' : ''}>已答复</option>
+                    <option value="待受理" ${item.status === '待受理' ? 'selected' : ''}>待受理</option>
+                    <option value="办理中" ${item.status === '办理中' ? 'selected' : ''}>办理中</option>
+                    <option value="已办结" ${item.status === '已办结' ? 'selected' : ''}>已办结</option>
+                    <option value="已答复" ${item.status === '已答复' ? 'selected' : ''}>已答复</option>
                 </select>
             </div>
         `);
@@ -7189,17 +7199,17 @@ function renderAssessmentTable(data) {
     const display = Array.isArray(data) ? data : (window._assessmentFiltered || window._assessmentRaw || []);
     tbody.innerHTML = (display || []).map(item => `
         <tr>
-            <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.policeId}</td>
-            <td>${item.unit}</td>
-            <td>${item.period}</td>
-            <td>${item.score}</td>
-            <td><span class="${item.rank === '优秀' ? 'stat-green' : item.rank === '良好' ? 'stat-blue' : 'stat-orange'}">${item.rank}</span></td>
-            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>${escapeHtml(item.id)}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.policeId)}</td>
+            <td>${escapeHtml(item.unit)}</td>
+            <td>${escapeHtml(item.period)}</td>
+            <td>${escapeHtml(item.score)}</td>
+            <td><span class="${item.rank === '优秀' ? 'stat-green' : item.rank === '良好' ? 'stat-blue' : 'stat-orange'}">${escapeHtml(item.rank)}</span></td>
+            <td><span class="${getStatusClass(item.status)}">${escapeHtml(item.status)}</span></td>
             <td>
-                <button class="btn btn-edit" onclick="editAssessment('${item.id}')">编辑</button>
-                <button class="btn btn-del" onclick="deleteAssessment('${item.id}')">删除</button>
+                <button class="btn btn-edit" onclick="editAssessment('${escapeHtml(item.id)}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteAssessment('${escapeHtml(item.id)}')">删除</button>
             </td>
         </tr>
     `).join('');
@@ -7269,31 +7279,31 @@ function editAssessment(id) {
     const item = items.find(i => i.id === id);
     if (item) {
         openModal('编辑考核', `
-            <div class="form-item"><label>考核编号：</label><input type="text" class="input-text" id="assessmentId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>民警姓名：</label><input type="text" class="input-text" id="assessmentName" value="${item.name}"></div>
-            <div class="form-item"><label>警号：</label><input type="text" class="input-text" id="assessmentPoliceId" value="${item.policeId}"></div>
-            <div class="form-item"><label>所属单位：</label><input type="text" class="input-text" id="assessmentUnit" value="${item.unit}"></div>
+            <div class="form-item"><label>考核编号：</label><input type="text" class="input-text" id="assessmentId" value="${escapeHtml(item.id)}" readonly></div>
+            <div class="form-item"><label>民警姓名：</label><input type="text" class="input-text" id="assessmentName" value="${escapeHtml(item.name)}"></div>
+            <div class="form-item"><label>警号：</label><input type="text" class="input-text" id="assessmentPoliceId" value="${escapeHtml(item.policeId)}"></div>
+            <div class="form-item"><label>所属单位：</label><input type="text" class="input-text" id="assessmentUnit" value="${escapeHtml(item.unit)}"></div>
             <div class="form-item"><label>考核周期：</label>
                 <select class="select-box" id="assessmentPeriod">
-                    <option ${item.period === '月度考核' ? 'selected' : ''}>月度考核</option>
-                    <option ${item.period === '季度考核' ? 'selected' : ''}>季度考核</option>
-                    <option ${item.period === '年度考核' ? 'selected' : ''}>年度考核</option>
+                    <option value="月度考核" ${item.period === '月度考核' ? 'selected' : ''}>月度考核</option>
+                    <option value="季度考核" ${item.period === '季度考核' ? 'selected' : ''}>季度考核</option>
+                    <option value="年度考核" ${item.period === '年度考核' ? 'selected' : ''}>年度考核</option>
                 </select>
             </div>
-            <div class="form-item"><label>考核得分：</label><input type="number" class="input-text" id="assessmentScore" value="${item.score}" min="0" max="100"></div>
+            <div class="form-item"><label>考核得分：</label><input type="number" class="input-text" id="assessmentScore" value="${escapeHtml(item.score)}" min="0" max="100"></div>
             <div class="form-item"><label>考核等级：</label>
                 <select class="select-box" id="assessmentRank">
-                    <option ${item.rank === '优秀' ? 'selected' : ''}>优秀</option>
-                    <option ${item.rank === '良好' ? 'selected' : ''}>良好</option>
-                    <option ${item.rank === '合格' ? 'selected' : ''}>合格</option>
-                    <option ${item.rank === '不合格' ? 'selected' : ''}>不合格</option>
+                    <option value="优秀" ${item.rank === '优秀' ? 'selected' : ''}>优秀</option>
+                    <option value="良好" ${item.rank === '良好' ? 'selected' : ''}>良好</option>
+                    <option value="合格" ${item.rank === '合格' ? 'selected' : ''}>合格</option>
+                    <option value="不合格" ${item.rank === '不合格' ? 'selected' : ''}>不合格</option>
                 </select>
             </div>
             <div class="form-item"><label>考核状态：</label>
                 <select class="select-box" id="assessmentStatus">
-                    <option ${item.status === '待评定' ? 'selected' : ''}>待评定</option>
-                    <option ${item.status === '评定中' ? 'selected' : ''}>评定中</option>
-                    <option ${item.status === '已评定' ? 'selected' : ''}>已评定</option>
+                    <option value="待评定" ${item.status === '待评定' ? 'selected' : ''}>待评定</option>
+                    <option value="评定中" ${item.status === '评定中' ? 'selected' : ''}>评定中</option>
+                    <option value="已评定" ${item.status === '已评定' ? 'selected' : ''}>已评定</option>
                 </select>
             </div>
         `);

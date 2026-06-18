@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>公安内网｜综合警务管理系统｜涉密专用</title>
     <script>
         // 阻止开发者工具
@@ -4015,14 +4018,18 @@ let selectedEventId = null;
 
 // 显示登录界面
 function showLoginPage() {
-    document.getElementById('loginPage').classList.add('active');
-    document.getElementById('mainSystem').classList.remove('active');
+    const loginPage = document.getElementById('loginPage');
+    const mainSystem = document.getElementById('mainSystem');
+    if (loginPage) loginPage.classList.add('active');
+    if (mainSystem) mainSystem.classList.remove('active');
 }
 
 // 显示主系统界面
 function showMainSystem() {
-    document.getElementById('loginPage').classList.remove('active');
-    document.getElementById('mainSystem').classList.add('active');
+    const loginPage = document.getElementById('loginPage');
+    const mainSystem = document.getElementById('mainSystem');
+    if (loginPage) loginPage.classList.remove('active');
+    if (mainSystem) mainSystem.classList.add('active');
     if (currentUser) {
         startSessionCheck();
     }
@@ -4219,11 +4226,11 @@ function updateHeaderUserInfo() {
     const logoutBtn = document.getElementById('logoutBtn');
     
     if (currentUser) {
-        userInfo.innerHTML = `登录账号：${currentUser.name}｜所属单位：河北省公安厅指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>`;
-        logoutBtn.style.display = 'inline';
+        if (userInfo) userInfo.innerHTML = `登录账号：${currentUser.name}｜所属单位：河北省公安厅指挥中心｜内网IP：10.26.18.145｜在线时间：<span id="nowTime"></span>`;
+        if (logoutBtn) logoutBtn.style.display = 'inline';
     } else {
-        userInfo.innerHTML = '';
-        logoutBtn.style.display = 'none';
+        if (userInfo) userInfo.innerHTML = '';
+        if (logoutBtn) logoutBtn.style.display = 'none';
     }
 }
 
@@ -4315,9 +4322,11 @@ function _deprecatedSwitchPage() {}
 // 消息提示
 function showMsg(t){
     let box = document.getElementById("msgBox");
-    box.innerText = t;
-    box.style.display = "block";
-    setTimeout(()=>box.style.display="none",2000);
+    if (box) {
+        box.innerText = t;
+        box.style.display = "block";
+        setTimeout(()=>box.style.display="none",2000);
+    }
 }
 
 // 弹窗操作
@@ -4325,15 +4334,21 @@ let currentModal = 'add';
 let editId = '';
 
 function openModal(title, content) {
-    document.getElementById('modalTitle').innerText = title;
-    document.getElementById('modalContent').innerHTML = content;
-    document.getElementById('modalMask').style.display="block";
-    document.getElementById('modalBox').style.display="block";
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+    const modalMask = document.getElementById('modalMask');
+    const modalBox = document.getElementById('modalBox');
+    if (modalTitle) modalTitle.innerText = title;
+    if (modalContent) modalContent.innerHTML = content;
+    if (modalMask) modalMask.style.display="block";
+    if (modalBox) modalBox.style.display="block";
 }
 
 function closeModal() {
-    document.getElementById('modalMask').style.display="none";
-    document.getElementById('modalBox').style.display="none";
+    const modalMask = document.getElementById('modalMask');
+    const modalBox = document.getElementById('modalBox');
+    if (modalMask) modalMask.style.display="none";
+    if (modalBox) modalBox.style.display="none";
 }
 
 // 综合工作台
@@ -5161,7 +5176,6 @@ function startSessionCheck() {
     if (sessionCheckInterval) clearInterval(sessionCheckInterval);
     sessionCheckInterval = setInterval(() => {
         if (currentUser) {
-            loadData(); // 重新加载数据，检查是否有更新
             if (!validateSession()) {
                 clearInterval(sessionCheckInterval);
                 sessionCheckInterval = null;
@@ -5392,32 +5406,32 @@ window.onload = async function(){
             showLoginPage();
         }
         
-        // 渲染所有表格
-        renderHomeTable();
-        renderMiniCalendar();
-        renderAlarmTable();
-        renderCaseTable();
-        renderPersonTable();
-        renderCarTable();
-        renderGoodsTable();
-        renderLogTable();
-        renderSysTable();
-        renderSupervisionTable();
-        renderCommandTable();
-        renderIntelTable();
-        renderCommunityTable();
-        renderPatrolTable();
-        renderRecordTable();
-        renderLawTable();
-        renderServiceTable();
-        renderTrafficTable();
-        renderMarketTable();
-        renderCombinedTable();
-        renderFileTable();
-        renderDutyTable();
-        renderPetitionTable();
-        renderAssessmentTable();
-        renderInfoTable();
+        // 渲染所有表格 - 每个函数独立try-catch，一个出错不影响其他
+        try { renderHomeTable(); } catch(e) { console.error('renderHomeTable error:', e); }
+        try { renderMiniCalendar(); } catch(e) { console.error('renderMiniCalendar error:', e); }
+        try { renderAlarmTable(); } catch(e) { console.error('renderAlarmTable error:', e); }
+        try { renderCaseTable(); } catch(e) { console.error('renderCaseTable error:', e); }
+        try { renderPersonTable(); } catch(e) { console.error('renderPersonTable error:', e); }
+        try { renderCarTable(); } catch(e) { console.error('renderCarTable error:', e); }
+        try { renderGoodsTable(); } catch(e) { console.error('renderGoodsTable error:', e); }
+        try { renderLogTable(); } catch(e) { console.error('renderLogTable error:', e); }
+        try { renderSysTable(); } catch(e) { console.error('renderSysTable error:', e); }
+        try { renderSupervisionTable(); } catch(e) { console.error('renderSupervisionTable error:', e); }
+        try { renderCommandTable(); } catch(e) { console.error('renderCommandTable error:', e); }
+        try { renderIntelTable(); } catch(e) { console.error('renderIntelTable error:', e); }
+        try { renderCommunityTable(); } catch(e) { console.error('renderCommunityTable error:', e); }
+        try { renderPatrolTable(); } catch(e) { console.error('renderPatrolTable error:', e); }
+        try { renderRecordTable(); } catch(e) { console.error('renderRecordTable error:', e); }
+        try { renderLawTable(); } catch(e) { console.error('renderLawTable error:', e); }
+        try { renderServiceTable(); } catch(e) { console.error('renderServiceTable error:', e); }
+        try { renderTrafficTable(); } catch(e) { console.error('renderTrafficTable error:', e); }
+        try { renderMarketTable(); } catch(e) { console.error('renderMarketTable error:', e); }
+        try { renderCombinedTable(); } catch(e) { console.error('renderCombinedTable error:', e); }
+        try { renderFileTable(); } catch(e) { console.error('renderFileTable error:', e); }
+        try { renderDutyTable(); } catch(e) { console.error('renderDutyTable error:', e); }
+        try { renderPetitionTable(); } catch(e) { console.error('renderPetitionTable error:', e); }
+        try { renderAssessmentTable(); } catch(e) { console.error('renderAssessmentTable error:', e); }
+        try { renderInfoTable(); } catch(e) { console.error('renderInfoTable error:', e); }
         
         // 显示数据加载状态（调试用）
         const debugInfo = `数据状态: events=${data.events.length}, alarms=${data.alarms.length}, cases=${data.cases.length}, persons=${data.persons.length}`;
@@ -5442,7 +5456,8 @@ window.onload = async function(){
 function renderSupervisionTable() {
     const tbody = document.getElementById('supervisionTableBody');
     if (!tbody) return;
-    tbody.innerHTML = data.supervision.evaluations.map(item => `
+    const evaluations = data.supervision && data.supervision.evaluations ? data.supervision.evaluations : [];
+    tbody.innerHTML = evaluations.map(item => `
         <tr>
             <td>${item.person}</td>
             <td>${item.score}</td>

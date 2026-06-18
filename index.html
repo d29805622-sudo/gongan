@@ -1267,16 +1267,15 @@
                 z-index:9999;
                 overflow-y:auto;
                 -webkit-overflow-scrolling:touch;
+                padding:10px 0;
             }
             .modal-box{
-                position:fixed;
-                top:10px;
-                left:3%;
+                position:relative;
+                top:auto;
+                left:auto;
                 transform:none;
                 width:94%;
-                max-height:calc(100vh - 20px);
-                display:flex;
-                flex-direction:column;
+                margin:0 auto;
                 border-width:2px;
             }
             .modal-title{
@@ -1284,18 +1283,10 @@
                 line-height:38px;
                 padding:0 12px;
                 font-size:13px;
-                flex-shrink:0;
             }
-            .modal-content{
-                padding:12px;
-                flex:1;
-                overflow-y:auto;
-                -webkit-overflow-scrolling:touch;
-                min-height:0;
-            }
+            .modal-content{ padding:12px; }
             .modal-btn{
                 padding:10px;
-                flex-shrink:0;
             }
             .form-item{
                 flex-direction:column;

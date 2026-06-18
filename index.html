@@ -3190,19 +3190,7 @@ async function loadData() {
                 if (dec) decrypted = dec;
             }
             loadedData = JSON.parse(decrypted);
-            
-            // 检查数据是否过期（少于预期数量），如果是可以合并或清除
-            const isDataOutdated = 
-                (loadedData.infoData && loadedData.infoData.items && loadedData.infoData.items.length < 15) ||
-                (loadedData.alarms && loadedData.alarms.length < 6) ||
-                (loadedData.cases && loadedData.cases.length < 5) ||
-                (loadedData.persons && loadedData.persons.length < 6);
-            
-            if (isDataOutdated) {
-                console.log('检测到旧数据，将用完整默认数据替换');
-                loadedData = null;
-                localStorage.removeItem('policeData');
-            }
+            // 注意：不再检查数据量是否"过期"，用户数据应该被保留
         } catch(e) {
             console.warn('从localStorage加载失败:', e);
             loadedData = null;

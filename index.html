@@ -3897,7 +3897,7 @@ function renderAlarmTable() {
             <td>${item.id}</td>
             <td>${item.reporter || '-'}</td>
             <td>${item.victim || '-'}</td>
-            <td>${item.type}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewAlarmDetail('${item.id}')">${item.type}</td>
             <td>${item.location || '-'}</td>
             <td>${item.time}</td>
             <td>${item.officer}</td>
@@ -3907,6 +3907,22 @@ function renderAlarmTable() {
     `).join('');
 }
 
+function viewAlarmDetail(id) {
+    const item = data.alarms.find(a => a.id === id);
+    if (item) {
+        openModal('接警详情', `
+            <div class="form-item"><label>警情编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>报警人：</label><span>${item.reporter || '-'}</span></div>
+            <div class="form-item"><label>受害人：</label><span>${item.victim || '-'}</span></div>
+            <div class="form-item"><label>警情类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>发生地点：</label><span>${item.location || '-'}</span></div>
+            <div class="form-item"><label>报警时间：</label><span>${item.time}</span></div>
+            <div class="form-item"><label>出警民警：</label><span>${item.officer}</span></div>
+            <div class="form-item"><label>警情状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+        `);
+    }
+}
+
 function renderCaseTable() {
     const tbody = document.getElementById('caseTableBody');
     if (!tbody) return;
@@ -3914,7 +3930,7 @@ function renderCaseTable() {
         <tr>
             <td>${item.id}</td>
             <td>${item.type}</td>
-            <td>${item.person}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewCaseDetail('${item.id}')">${item.person}</td>
             <td>${item.time}</td>
             <td><span class="${getStatusClass(item.caseStatus || item.progress)}">${item.caseStatus || item.progress}</span></td>
             <td>${item.investigator || '-'}</td>
@@ -3930,7 +3946,7 @@ function renderPersonTable() {
     tbody.innerHTML = data.persons.map(item => `
         <tr>
             <td>${item.id}</td>
-            <td>${item.name}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewPersonDetail('${item.id}')">${item.name}</td>
             <td>${item.idCard}</td>
             <td><span class="${getStatusClass(item.level)}">${item.level}</span></td>
             <td><span class="${getStatusClass(item.riskLevel)}">${item.riskLevel || '-'}</span></td>
@@ -3946,7 +3962,7 @@ function renderCarTable() {
     if (!tbody) return;
     tbody.innerHTML = data.cars.map(item => `
         <tr>
-            <td>${item.plate}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewCarDetail('${item.plate}')">${item.plate}</td>
             <td>${item.brand || '-'}</td>
             <td>${item.type}</td>
             <td>${item.color || '-'}</td>
@@ -3965,7 +3981,7 @@ function renderGoodsTable() {
     tbody.innerHTML = data.goods.map(item => `
         <tr>
             <td>${item.id}</td>
-            <td>${item.name}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewGoodsDetail('${item.id}')">${item.name}</td>
             <td>${item.count}</td>
             <td>${item.caseId || '-'}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status || '-'}</span></td>
@@ -3976,6 +3992,23 @@ function renderGoodsTable() {
             <td><button class="btn btn-edit" onclick="editGoods('${item.id}')">编辑</button></td>
         </tr>
     `).join('');
+}
+
+function viewGoodsDetail(id) {
+    const item = data.goods.find(g => g.id === id);
+    if (item) {
+        openModal('物品详情', `
+            <div class="form-item"><label>物品编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>物品名称：</label><span>${item.name}</span></div>
+            <div class="form-item"><label>数量：</label><span>${item.count}</span></div>
+            <div class="form-item"><label>关联案件：</label><span>${item.caseId || '-'}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status || '-'}</span></div>
+            <div class="form-item"><label>保管人：</label><span>${item.keeper || '-'}</span></div>
+            <div class="form-item"><label>入库时间：</label><span>${item.inTime || '-'}</span></div>
+            <div class="form-item"><label>出库时间：</label><span>${item.outTime || '-'}</span></div>
+            <div class="form-item"><label>存放位置：</label><span>${item.location}</span></div>
+        `);
+    }
 }
 
 function renderLogTable() {
@@ -5205,7 +5238,7 @@ function renderCommandTable(renderData) {
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
-            <td>${item.type}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewDispatch('${item.id}')">${item.type}</td>
             <td>${item.center}</td>
             <td>${item.police}</td>
             <td>${item.location}</td>
@@ -5229,7 +5262,7 @@ function renderIntelTable(renderData) {
         <tr>
             <td>${item.id}</td>
             <td>${item.type}</td>
-            <td>${item.summary}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewIntelligenceDetail('${item.id}')">${item.summary}</td>
             <td>${item.source}</td>
             <td><span class="${getStatusClass(item.risk)}">${item.risk}</span></td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
@@ -5251,7 +5284,7 @@ function renderCommunityTable(renderData) {
         const originalIndex = data.communityData ? data.communityData.visits.indexOf(item) : index;
         return `
         <tr>
-            <td>${item.community}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewCommunityDetail(${originalIndex})">${item.community}</td>
             <td>${item.police}</td>
             <td>${item.type}</td>
             <td>${item.target}</td>
@@ -5275,7 +5308,7 @@ function renderPatrolTable(renderData) {
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
-            <td>${item.area}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewPatrolDetail('${item.id}')">${item.area}</td>
             <td>${item.police}</td>
             <td>${item.type}</td>
             <td>${item.time}</td>
@@ -5298,7 +5331,7 @@ function renderRecordTable(renderData) {
         <tr>
             <td>${item.id}</td>
             <td>${item.caseId || '-'}</td>
-            <td>${item.type}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewRecordDetail('${item.id}')">${item.type}</td>
             <td>${item.target}</td>
             <td>${item.police}</td>
             <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
@@ -5319,7 +5352,7 @@ function renderLawTable(renderData) {
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
-            <td>${item.name}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewLawDetail('${item.id}')">${item.name}</td>
             <td>${item.police}</td>
             <td>${item.deadline}</td>
             <td>${item.remaining}</td>
@@ -5342,7 +5375,7 @@ function renderServiceTable(renderData) {
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
-            <td>${item.type}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewServiceDetail('${item.id}')">${item.type}</td>
             <td>${item.applicant}</td>
             <td>${item.phone}</td>
             <td>${item.time}</td>
@@ -5365,7 +5398,7 @@ function renderTrafficTable(renderData) {
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
-            <td>${item.plate}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewTrafficDetail('${item.id}')">${item.plate}</td>
             <td>${item.type}</td>
             <td>${item.party}</td>
             <td>${item.time}</td>
@@ -6477,7 +6510,7 @@ function renderMarketTable(renderData) {
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id || ''}</td>
-            <td>${item.name || ''}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewMarketDetail('${item.id}')">${item.name || ''}</td>
             <td>${item.type || ''}</td>
             <td>${item.legalRep || ''}</td>
             <td>${item.address || ''}</td>
@@ -7240,7 +7273,7 @@ function renderCombinedTable(tableData) {
     tbody.innerHTML = items.map(item => `
         <tr>
             <td>${item.id}</td>
-            <td>${item.name}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewCombinedDetail('${item.id}')">${item.name}</td>
             <td>${item.leadUnit}</td>
             <td>${item.partnerUnits}</td>
             <td>${item.level}</td>
@@ -7253,6 +7286,23 @@ function renderCombinedTable(tableData) {
             </td>
         </tr>
     `).join('');
+}
+
+function viewCombinedDetail(id) {
+    const items = window._combinedRaw || (data.combined && data.combined.tasks) || [];
+    const item = items.find(i => i.id === id);
+    if (item) {
+        openModal('作战任务详情', `
+            <div class="form-item"><label>任务编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>任务名称：</label><span>${item.name}</span></div>
+            <div class="form-item"><label>牵头单位：</label><span>${item.leadUnit}</span></div>
+            <div class="form-item"><label>配合单位：</label><span>${item.partnerUnits}</span></div>
+            <div class="form-item"><label>任务级别：</label><span>${item.level}</span></div>
+            <div class="form-item"><label>开始时间：</label><span>${item.startTime}</span></div>
+            <div class="form-item"><label>指挥员：</label><span>${item.commander}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+        `);
+    }
 }
 
 function searchCombined() {
@@ -7369,7 +7419,7 @@ function renderFileTable(tableData) {
     tbody.innerHTML = (display || []).map(item => `
         <tr>
             <td>${item.id}</td>
-            <td>${item.name}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewFileDetail('${item.id}')">${item.name}</td>
             <td>${item.caseId}</td>
             <td>${item.type}</td>
             <td>${item.archiveDate}</td>
@@ -7382,6 +7432,23 @@ function renderFileTable(tableData) {
             </td>
         </tr>
     `).join('');
+}
+
+function viewFileDetail(id) {
+    const items = window._fileRaw || [];
+    const item = items.find(i => i.id === id);
+    if (item) {
+        openModal('卷宗详情', `
+            <div class="form-item"><label>卷宗编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>卷宗名称：</label><span>${item.name}</span></div>
+            <div class="form-item"><label>关联案件：</label><span>${item.caseId}</span></div>
+            <div class="form-item"><label>卷宗类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>归档日期：</label><span>${item.archiveDate}</span></div>
+            <div class="form-item"><label>归档单位：</label><span>${item.unit}</span></div>
+            <div class="form-item"><label>保管期限：</label><span>${item.period}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+        `);
+    }
 }
 
 function searchFile() {
@@ -7511,7 +7578,7 @@ function renderDutyTable(tableData) {
         <tr>
             <td>${item.date}</td>
             <td>${item.shift}</td>
-            <td>${item.leader}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewDutyDetail('${item.date}_${item.shift}')">${item.leader}</td>
             <td>${item.staff}</td>
             <td>${item.phone}</td>
             <td>${item.unit}</td>
@@ -7523,6 +7590,24 @@ function renderDutyTable(tableData) {
             </td>
         </tr>
     `).join('');
+}
+
+function viewDutyDetail(key) {
+    const items = window._dutyRaw || [];
+    const [date, shift] = key.split('_');
+    const item = items.find(i => i.date === date && i.shift === shift);
+    if (item) {
+        openModal('排班详情', `
+            <div class="form-item"><label>值班日期：</label><span>${item.date}</span></div>
+            <div class="form-item"><label>班次：</label><span>${item.shift}</span></div>
+            <div class="form-item"><label>值班领导：</label><span>${item.leader}</span></div>
+            <div class="form-item"><label>值班人员：</label><span>${item.staff}</span></div>
+            <div class="form-item"><label>值班电话：</label><span>${item.phone}</span></div>
+            <div class="form-item"><label>值班单位：</label><span>${item.unit}</span></div>
+            <div class="form-item"><label>备勤人员：</label><span>${item.backup}</span></div>
+            <div class="form-item"><label>值班状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+        `);
+    }
 }
 
 function searchDuty() {
@@ -7643,7 +7728,7 @@ function renderPetitionTable(tableData) {
             <td>${item.id}</td>
             <td>${item.petitioner}</td>
             <td>${item.phone}</td>
-            <td>${item.title}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewPetitionDetail('${item.id}')">${item.title}</td>
             <td>${item.type}</td>
             <td>${item.acceptDate}</td>
             <td>${item.unit}</td>
@@ -7654,6 +7739,23 @@ function renderPetitionTable(tableData) {
             </td>
         </tr>
     `).join('');
+}
+
+function viewPetitionDetail(id) {
+    const items = window._petitionRaw || [];
+    const item = items.find(i => i.id === id);
+    if (item) {
+        openModal('信访事项详情', `
+            <div class="form-item"><label>事项编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>信访人：</label><span>${item.petitioner}</span></div>
+            <div class="form-item"><label>联系电话：</label><span>${item.phone}</span></div>
+            <div class="form-item"><label>事项标题：</label><span>${item.title}</span></div>
+            <div class="form-item"><label>事项类型：</label><span>${item.type}</span></div>
+            <div class="form-item"><label>受理时间：</label><span>${item.acceptDate}</span></div>
+            <div class="form-item"><label>承办单位：</label><span>${item.unit}</span></div>
+            <div class="form-item"><label>办理状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+        `);
+    }
 }
 
 function searchPetition() {
@@ -7783,7 +7885,7 @@ function renderAssessmentTable(tableData) {
     tbody.innerHTML = (display || []).map(item => `
         <tr>
             <td>${item.id}</td>
-            <td>${item.name}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewAssessmentDetail('${item.id}')">${item.name}</td>
             <td>${item.policeId}</td>
             <td>${item.unit}</td>
             <td>${item.period}</td>
@@ -7796,6 +7898,23 @@ function renderAssessmentTable(tableData) {
             </td>
         </tr>
     `).join('');
+}
+
+function viewAssessmentDetail(id) {
+    const items = window._assessmentRaw || [];
+    const item = items.find(i => i.id === id);
+    if (item) {
+        openModal('考核详情', `
+            <div class="form-item"><label>考核编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>姓名：</label><span>${item.name}</span></div>
+            <div class="form-item"><label>警号：</label><span>${item.policeId}</span></div>
+            <div class="form-item"><label>所属单位：</label><span>${item.unit}</span></div>
+            <div class="form-item"><label>考核周期：</label><span>${item.period}</span></div>
+            <div class="form-item"><label>考核得分：</label><span>${item.score}</span></div>
+            <div class="form-item"><label>考核等级：</label><span class="${item.rank === '优秀' ? 'stat-green' : item.rank === '良好' ? 'stat-blue' : 'stat-orange'}">${item.rank}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+        `);
+    }
 }
 
 function searchAssessment() {
@@ -7919,7 +8038,7 @@ function renderInfoTable(tableData) {
         <tr>
             <td>${item.id}</td>
             <td><span class="${getStatusClass(item.type)}">${item.type}</span></td>
-            <td>${item.title}</td>
+            <td style="color:#1a73e8;cursor:pointer;" onclick="viewInfoDetail('${item.id}')">${item.title}</td>
             <td>${item.summary}</td>
             <td>${item.unit}</td>
             <td>${item.date}</td>
@@ -7931,6 +8050,22 @@ function renderInfoTable(tableData) {
             </td>
         </tr>
     `).join('');
+}
+
+function viewInfoDetail(id) {
+    const item = (data.infoData && data.infoData.items || []).find(i => i.id === id);
+    if (item) {
+        openModal('信息详情', `
+            <div class="form-item"><label>编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>类型：</label><span class="${getStatusClass(item.type)}">${item.type}</span></div>
+            <div class="form-item"><label>标题：</label><span>${item.title}</span></div>
+            <div class="form-item"><label>摘要：</label><span>${item.summary}</span></div>
+            <div class="form-item"><label>发布单位：</label><span>${item.unit}</span></div>
+            <div class="form-item"><label>发布日期：</label><span>${item.date}</span></div>
+            <div class="form-item"><label>浏览次数：</label><span>${item.views}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+        `);
+    }
 }
 
 function searchInfo() {

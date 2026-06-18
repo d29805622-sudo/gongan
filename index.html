@@ -1711,7 +1711,7 @@
                     <tr>
                         <th>接警编号</th>
                         <th>报警人</th>
-                        <th>联系电话</th>
+                        <th>受害方</th>
                         <th>报警类型</th>
                         <th>事发地点</th>
                         <th>报警时间</th>
@@ -1765,13 +1765,13 @@
                 <thead>
                     <tr>
                         <th>案件编号</th>
-                        <th>案件名称</th>
                         <th>案件类别</th>
                         <th>涉案人员</th>
                         <th>立案时间</th>
                         <th>案件状态</th>
                         <th>主办单位</th>
-                        <th>操作管理</th>
+                        <th>编辑</th>
+                        <th>详情</th>
                     </tr>
                 </thead>
                 <tbody id="caseTableBody">
@@ -1797,8 +1797,8 @@
                         <th>管控等级</th>
                         <th>风险等级</th>
                         <th>居住地址</th>
-                        <th>操作</th>
-                        <th>操作</th>
+                        <th>编辑</th>
+                        <th>详情</th>
                     </tr>
                 </thead>
                 <tbody id="personTableBody">
@@ -1825,40 +1825,11 @@
                         <th>车主姓名</th>
                         <th>登记状态</th>
                         <th>风险等级</th>
-                        <th>操作</th>
-                        <th>操作</th>
+                        <th>编辑</th>
+                        <th>详情</th>
                     </tr>
                 </thead>
                 <tbody id="carTableBody">
-                </tbody>
-            </table>
-        </div>
-
-        <!-- 涉案物品登记 -->
-        <div class="page-content" id="goods">
-            <div class="title-txt">涉案扣押物品登记台账</div>
-            <div class="search-bar">
-                <input type="text" class="input-text" placeholder="物品搜索" id="goodsSearch">
-                <button class="btn btn-search" onclick="searchGoods()">搜索</button>
-                <button class="btn btn-add" onclick="addGoods()">新增物品</button>
-                <button class="btn btn-close" onclick="resetGoods()">重置</button>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>物品编号</th>
-                        <th>物品名称</th>
-                        <th>数量</th>
-                        <th>关联案件</th>
-                        <th>保管状态</th>
-                        <th>保管人</th>
-                        <th>入库时间</th>
-                        <th>出库时间</th>
-                        <th>存放位置</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody id="goodsTableBody">
                 </tbody>
             </table>
         </div>
@@ -2408,12 +2379,13 @@
                     <tr>
                         <th>物品编号</th>
                         <th>物品名称</th>
-                        <th>物品类型</th>
                         <th>数量</th>
                         <th>关联案件</th>
-                        <th>入库时间</th>
-                        <th>保管场所</th>
                         <th>保管状态</th>
+                        <th>保管人</th>
+                        <th>入库时间</th>
+                        <th>出库时间</th>
+                        <th>存放位置</th>
                         <th>操作管理</th>
                     </tr>
                 </thead>
@@ -4674,9 +4646,9 @@ function renderIntelTable(renderData) {
 function renderCommunityTable(renderData) {
     const tbody = document.getElementById('communityTableBody');
     if (!tbody) return;
-    const displayData = renderData || (data.communityData && data.data.data.communityData.visits) || [];
+    const displayData = renderData || (data.communityData && data.communityData.visits) || [];
     tbody.innerHTML = displayData.map((item, index) => {
-        const originalIndex = data.communityData ? data.data.data.communityData.visits.indexOf(item) : index;
+        const originalIndex = data.communityData ? data.communityData.visits.indexOf(item) : index;
         return `
         <tr>
             <td>${item.community}</td>
@@ -4699,7 +4671,7 @@ function renderCommunityTable(renderData) {
 function renderPatrolTable(renderData) {
     const tbody = document.getElementById('patrolTableBody');
     if (!tbody) return;
-    const displayData = renderData || (data.patrolData && data.data.data.patrolData.patrols) || [];
+    const displayData = renderData || (data.patrolData && data.patrolData.patrols) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -4721,7 +4693,7 @@ function renderPatrolTable(renderData) {
 function renderRecordTable(renderData) {
     const tbody = document.getElementById('recordTableBody');
     if (!tbody) return;
-    const displayData = renderData || (data.recordData && data.data.data.recordData.records) || [];
+    const displayData = renderData || (data.recordData && data.recordData.records) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -4743,7 +4715,7 @@ function renderRecordTable(renderData) {
 function renderLawTable(renderData) {
     const tbody = document.getElementById('lawTableBody');
     if (!tbody) return;
-    const displayData = renderData || (data.lawSupervisionData && data.data.data.lawSupervisionData.cases) || [];
+    const displayData = renderData || (data.lawSupervisionData && data.lawSupervisionData.cases) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -4766,7 +4738,7 @@ function renderLawTable(renderData) {
 function renderServiceTable(renderData) {
     const tbody = document.getElementById('serviceTableBody');
     if (!tbody) return;
-    const displayData = renderData || (data.serviceData && data.data.data.serviceData.services) || [];
+    const displayData = renderData || (data.serviceData && data.serviceData.services) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -4789,7 +4761,7 @@ function renderServiceTable(renderData) {
 function renderTrafficTable(renderData) {
     const tbody = document.getElementById('trafficTableBody');
     if (!tbody) return;
-    const displayData = renderData || (data.trafficData && data.data.data.trafficData.services) || [];
+    const displayData = renderData || (data.trafficData && data.trafficData.services) || [];
     tbody.innerHTML = displayData.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -5357,7 +5329,7 @@ function searchLawSupervision() {
 }
 
 function superviseCase(id) {
-    const item = data.data.lawSupervisionData.cases.find(c => c.id === id);
+    const item = data.lawSupervisionData.cases.find(c => c.id === id);
     if (item) {
         item.supervision = '督办中';
         showMsg("已启动督办");
@@ -5412,7 +5384,7 @@ function addService() {
 }
 
 function completeService(id) {
-    const item = data.data.serviceData.services.find(s => s.id === id);
+    const item = data.serviceData.services.find(s => s.id === id);
     if (item) {
         item.status = '已办结';
         showMsg("业务已办结");
@@ -5511,7 +5483,7 @@ function updateSaveForm() {
                 renderIntelTable();
             } else if (currentModal === 'addVisit') {
                 const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
-                data.data.communityData.visits.unshift({
+                data.communityData.visits.unshift({
                     community: document.getElementById('visitCommunity').value,
                     police: document.getElementById('visitPolice').value,
                     type: document.getElementById('visitType').value,
@@ -5526,7 +5498,7 @@ function updateSaveForm() {
                 const id = document.getElementById('patrolId').value;
                 if (!id) { showMsg("请填写巡逻编号"); return; }
                 const now = new Date().toLocaleString('zh-CN').replace(/\//g, '-').replace(/年|月|日/g, '-');
-                data.data.patrolData.patrols.unshift({
+                data.patrolData.patrols.unshift({
                     id: id,
                     area: document.getElementById('patrolArea').value,
                     police: document.getElementById('patrolPolice').value,
@@ -5541,7 +5513,7 @@ function updateSaveForm() {
                 const id = document.getElementById('recordId').value;
                 if (!id) { showMsg("请填写笔录编号"); return; }
                 const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
-                data.data.recordData.records.unshift({
+                data.recordData.records.unshift({
                     id: id,
                     caseId: document.getElementById('recordCaseId').value,
                     type: document.getElementById('recordType').value,
@@ -5556,7 +5528,7 @@ function updateSaveForm() {
                 const id = document.getElementById('serviceId').value;
                 if (!id) { showMsg("请填写业务编号"); return; }
                 const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
-                data.data.serviceData.services.unshift({
+                data.serviceData.services.unshift({
                     id: id,
                     type: document.getElementById('serviceType').value,
                     applicant: document.getElementById('serviceApplicant').value,
@@ -5571,7 +5543,7 @@ function updateSaveForm() {
                 const id = document.getElementById('trafficId').value;
                 if (!id) { showMsg("请填写业务编号"); return; }
                 const now = new Date().toLocaleDateString('zh-CN').replace(/\//g, '-');
-                data.data.trafficData.services.unshift({
+                data.trafficData.services.unshift({
                     id: id,
                     plate: document.getElementById('trafficPlate').value,
                     type: document.getElementById('trafficType').value,
@@ -5643,7 +5615,7 @@ function updateSaveForm() {
                     renderCommandTable();
                 }
             } else if (currentModal === 'editVisit') {
-                const item = data.data.communityData.visits[editId];
+                const item = data.communityData.visits[editId];
                 if (item) {
                     item.community = document.getElementById('editVisitCommunity').value;
                     item.police = document.getElementById('editVisitPolice').value;
@@ -5656,7 +5628,7 @@ function updateSaveForm() {
                     renderCommunityTable();
                 }
             } else if (currentModal === 'editPatrol') {
-                const item = data.data.patrolData.patrols.find(p => p.id === editId);
+                const item = data.patrolData.patrols.find(p => p.id === editId);
                 if (item) {
                     item.area = document.getElementById('editPatrolArea').value;
                     item.police = document.getElementById('editPatrolPolice').value;
@@ -5668,7 +5640,7 @@ function updateSaveForm() {
                     renderPatrolTable();
                 }
             } else if (currentModal === 'editRecord') {
-                const item = data.data.recordData.records.find(r => r.id === editId);
+                const item = data.recordData.records.find(r => r.id === editId);
                 if (item) {
                     item.caseId = document.getElementById('editRecordCaseId').value;
                     item.type = document.getElementById('editRecordType').value;
@@ -5692,7 +5664,7 @@ function updateSaveForm() {
                     renderIntelTable();
                 }
             } else if (currentModal === 'editLawCase') {
-                const item = data.data.lawSupervisionData.cases.find(c => c.id === editId);
+                const item = data.lawSupervisionData.cases.find(c => c.id === editId);
                 if (item) {
                     item.name = document.getElementById('editLawCaseName').value;
                     item.police = document.getElementById('editLawCasePolice').value;
@@ -5705,7 +5677,7 @@ function updateSaveForm() {
                     renderLawTable();
                 }
             } else if (currentModal === 'editService') {
-                const item = data.data.serviceData.services.find(s => s.id === editId);
+                const item = data.serviceData.services.find(s => s.id === editId);
                 if (item) {
                     item.type = document.getElementById('editServiceType').value;
                     item.applicant = document.getElementById('editServiceApplicant').value;
@@ -5717,7 +5689,7 @@ function updateSaveForm() {
                     renderServiceTable();
                 }
             } else if (currentModal === 'editTrafficService') {
-                const item = data.data.trafficData.services.find(t => t.id === editId);
+                const item = data.trafficData.services.find(t => t.id === editId);
                 if (item) {
                     item.plate = document.getElementById('editTrafficPlate').value;
                     item.type = document.getElementById('editTrafficType').value;
@@ -5917,7 +5889,7 @@ function viewIntelligenceDetail(id) {
 }
 
 function viewCommunityDetail(index) {
-    const item = data.data.communityData.visits[index];
+    const item = data.communityData.visits[index];
     if (item) {
         openModal('走访详情', `
             <div class="form-item"><label>社区名称：</label><span>${item.community}</span></div>
@@ -5932,7 +5904,7 @@ function viewCommunityDetail(index) {
 }
 
 function viewPatrolDetail(id) {
-    const item = data.data.patrolData.patrols.find(p => p.id === id);
+    const item = data.patrolData.patrols.find(p => p.id === id);
     if (item) {
         openModal('巡逻详情', `
             <div class="form-item"><label>巡逻编号：</label><span>${item.id}</span></div>
@@ -5947,7 +5919,7 @@ function viewPatrolDetail(id) {
 }
 
 function viewRecordDetail(id) {
-    const item = data.data.recordData.records.find(r => r.id === id);
+    const item = data.recordData.records.find(r => r.id === id);
     if (item) {
         openModal('笔录详情', `
             <div class="form-item"><label>笔录编号：</label><span>${item.id}</span></div>
@@ -5967,7 +5939,7 @@ function exportRecord(id) {
 }
 
 function viewLawDetail(id) {
-    const item = data.data.lawSupervisionData.cases.find(c => c.id === id);
+    const item = data.lawSupervisionData.cases.find(c => c.id === id);
     if (item) {
         openModal('执法监督详情', `
             <div class="form-item"><label>案件编号：</label><span>${item.id}</span></div>
@@ -5982,7 +5954,7 @@ function viewLawDetail(id) {
 }
 
 function viewServiceDetail(id) {
-    const item = data.data.serviceData.services.find(s => s.id === id);
+    const item = data.serviceData.services.find(s => s.id === id);
     if (item) {
         openModal('便民服务详情', `
             <div class="form-item"><label>业务编号：</label><span>${item.id}</span></div>
@@ -5997,7 +5969,7 @@ function viewServiceDetail(id) {
 }
 
 function viewTrafficDetail(id) {
-    const item = data.data.trafficData.services.find(t => t.id === id);
+    const item = data.trafficData.services.find(t => t.id === id);
     if (item) {
         openModal('交通管理详情', `
             <div class="form-item"><label>业务编号：</label><span>${item.id}</span></div>
@@ -6027,8 +5999,8 @@ function deleteDispatch(id) {
 
 function deleteVisit(index) {
     if (confirm('确定要删除这个走访记录吗？')) {
-        const item = data.data.communityData.visits[index];
-        data.data.communityData.visits.splice(index, 1);
+        const item = data.communityData.visits[index];
+        data.communityData.visits.splice(index, 1);
         showMsg('删除成功');
         addLog('删除走访', item.target);
         renderCommunityTable();
@@ -6038,9 +6010,9 @@ function deleteVisit(index) {
 
 function deletePatrol(id) {
     if (confirm('确定要删除这个巡逻记录吗？')) {
-        const idx = data.data.patrolData.patrols.findIndex(p => p.id === id);
+        const idx = data.patrolData.patrols.findIndex(p => p.id === id);
         if (idx > -1) {
-            data.data.patrolData.patrols.splice(idx, 1);
+            data.patrolData.patrols.splice(idx, 1);
             showMsg('删除成功');
             addLog('删除巡逻', id);
             renderPatrolTable();
@@ -6051,9 +6023,9 @@ function deletePatrol(id) {
 
 function deleteRecord(id) {
     if (confirm('确定要删除这个笔录吗？')) {
-        const idx = data.data.recordData.records.findIndex(r => r.id === id);
+        const idx = data.recordData.records.findIndex(r => r.id === id);
         if (idx > -1) {
-            data.data.recordData.records.splice(idx, 1);
+            data.recordData.records.splice(idx, 1);
             showMsg('删除成功');
             addLog('删除笔录', id);
             renderRecordTable();
@@ -6064,9 +6036,9 @@ function deleteRecord(id) {
 
 function deleteLawCase(id) {
     if (confirm('确定要删除这个执法监督案件吗？')) {
-        const idx = data.data.lawSupervisionData.cases.findIndex(c => c.id === id);
+        const idx = data.lawSupervisionData.cases.findIndex(c => c.id === id);
         if (idx > -1) {
-            data.data.lawSupervisionData.cases.splice(idx, 1);
+            data.lawSupervisionData.cases.splice(idx, 1);
             showMsg('删除成功');
             addLog('删除执法案件', id);
             renderLawTable();
@@ -6077,9 +6049,9 @@ function deleteLawCase(id) {
 
 function deleteService(id) {
     if (confirm('确定要删除这个服务记录吗？')) {
-        const idx = data.data.serviceData.services.findIndex(s => s.id === id);
+        const idx = data.serviceData.services.findIndex(s => s.id === id);
         if (idx > -1) {
-            data.data.serviceData.services.splice(idx, 1);
+            data.serviceData.services.splice(idx, 1);
             showMsg('删除成功');
             addLog('删除服务', id);
             renderServiceTable();
@@ -6090,9 +6062,9 @@ function deleteService(id) {
 
 function deleteTrafficService(id) {
     if (confirm('确定要删除这个交通服务记录吗？')) {
-        const idx = data.data.trafficData.services.findIndex(t => t.id === id);
+        const idx = data.trafficData.services.findIndex(t => t.id === id);
         if (idx > -1) {
-            data.data.trafficData.services.splice(idx, 1);
+            data.trafficData.services.splice(idx, 1);
             showMsg('删除成功');
             addLog('删除交通服务', id);
             renderTrafficTable();
@@ -6124,7 +6096,7 @@ function editDispatch(id) {
 }
 
 function editVisit(index) {
-    const item = data.data.communityData.visits[index];
+    const item = data.communityData.visits[index];
     if (!item) return;
     currentModal = 'editVisit';
     editId = index;
@@ -6145,7 +6117,7 @@ function editVisit(index) {
 }
 
 function editPatrol(id) {
-    const item = data.data.patrolData.patrols.find(p => p.id === id);
+    const item = data.patrolData.patrols.find(p => p.id === id);
     if (!item) return;
     currentModal = 'editPatrol';
     editId = id;
@@ -6166,7 +6138,7 @@ function editPatrol(id) {
 }
 
 function editRecord(id) {
-    const item = data.data.recordData.records.find(r => r.id === id);
+    const item = data.recordData.records.find(r => r.id === id);
     if (!item) return;
     currentModal = 'editRecord';
     editId = id;
@@ -6186,7 +6158,7 @@ function editRecord(id) {
 }
 
 function editLawCase(id) {
-    const item = data.data.lawSupervisionData.cases.find(c => c.id === id);
+    const item = data.lawSupervisionData.cases.find(c => c.id === id);
     if (!item) return;
     currentModal = 'editLawCase';
     editId = id;
@@ -6215,7 +6187,7 @@ function editLawCase(id) {
 }
 
 function editService(id) {
-    const item = data.data.serviceData.services.find(s => s.id === id);
+    const item = data.serviceData.services.find(s => s.id === id);
     if (!item) return;
     currentModal = 'editService';
     editId = id;
@@ -6236,7 +6208,7 @@ function editService(id) {
 }
 
 function editTrafficService(id) {
-    const item = data.data.trafficData.services.find(t => t.id === id);
+    const item = data.trafficData.services.find(t => t.id === id);
     if (!item) return;
     currentModal = 'editTrafficService';
     editId = id;

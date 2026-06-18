@@ -5349,64 +5349,83 @@ function renderTrafficTable(renderData) {
 
 // 初始化
 window.onload = async function(){
-    await loadData();
-    // 检查并更新过期用户
-    checkAndUpdateExpiredUsers();
-    // 检查登录状态
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        // 从data.users中同步最新的用户数据（包括会话信息）
-        const user = data.users.find(u => u.account === currentUser.account);
-        if (user) {
-            currentUser = {...user};
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    try {
+        await loadData();
+        // 检查并更新过期用户
+        checkAndUpdateExpiredUsers();
+        // 检查登录状态
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            // 从data.users中同步最新的用户数据（包括会话信息）
+            const user = data.users.find(u => u.account === currentUser.account);
+            if (user) {
+                currentUser = {...user};
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            // 如果当前登录用户已过期，强制退出
+            if (currentUser && (checkUserExpire(currentUser) || currentUser.status === '已失效' || currentUser.status === '已禁用')) {
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('sessionId');
+            } else if (currentUser && !validateSession()) {
+                // 会话验证失败，强制退出
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('sessionId');
+            }
         }
-        // 如果当前登录用户已过期，强制退出
-        if (currentUser && (checkUserExpire(currentUser) || currentUser.status === '已失效' || currentUser.status === '已禁用')) {
-            currentUser = null;
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('sessionId');
-        } else if (currentUser && !validateSession()) {
-            // 会话验证失败，强制退出
-            currentUser = null;
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('sessionId');
+        updateHeaderUserInfo();
+        // 如果已登录，显示主系统；否则显示登录界面
+        if (currentUser) {
+            showMainSystem();
+            startSessionCheck();
+        } else {
+            showLoginPage();
         }
+        
+        // 渲染所有表格
+        renderHomeTable();
+        renderMiniCalendar();
+        renderAlarmTable();
+        renderCaseTable();
+        renderPersonTable();
+        renderCarTable();
+        renderGoodsTable();
+        renderLogTable();
+        renderSysTable();
+        renderSupervisionTable();
+        renderCommandTable();
+        renderIntelTable();
+        renderCommunityTable();
+        renderPatrolTable();
+        renderRecordTable();
+        renderLawTable();
+        renderServiceTable();
+        renderTrafficTable();
+        renderMarketTable();
+        renderCombinedTable();
+        renderFileTable();
+        renderDutyTable();
+        renderPetitionTable();
+        renderAssessmentTable();
+        renderInfoTable();
+        
+        // 显示数据加载状态（调试用）
+        const debugInfo = `数据状态: events=${data.events.length}, alarms=${data.alarms.length}, cases=${data.cases.length}, persons=${data.persons.length}`;
+        console.log(debugInfo);
+        
+        // 在页面上显示调试信息（临时）
+        const debugDiv = document.createElement('div');
+        debugDiv.style.cssText = 'position:fixed;top:0;left:0;background:yellow;color:black;padding:10px;z-index:99999;font-size:12px;max-width:100%;overflow:auto;';
+        debugDiv.textContent = debugInfo;
+        document.body.appendChild(debugDiv);
+        setTimeout(() => debugDiv.remove(), 5000);
+        
+    } catch(error) {
+        console.error('页面初始化错误:', error);
+        alert('页面加载错误: ' + error.message);
     }
-    updateHeaderUserInfo();
-    // 如果已登录，显示主系统；否则显示登录界面
-    if (currentUser) {
-        showMainSystem();
-        startSessionCheck();
-    } else {
-        showLoginPage();
-    }
-    renderHomeTable();
-    renderMiniCalendar();
-    renderAlarmTable();
-    renderCaseTable();
-    renderPersonTable();
-    renderCarTable();
-    renderGoodsTable();
-    renderLogTable();
-    renderSysTable();
-    renderSupervisionTable();
-    renderCommandTable();
-    renderIntelTable();
-    renderCommunityTable();
-    renderPatrolTable();
-    renderRecordTable();
-    renderLawTable();
-    renderServiceTable();
-    renderTrafficTable();
-    renderMarketTable();
-    renderCombinedTable();
-    renderFileTable();
-    renderDutyTable();
-    renderPetitionTable();
-    renderAssessmentTable();
-    renderInfoTable();
 };
 
 // ==================== 统计分析和执法监督功能 ====================

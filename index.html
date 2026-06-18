@@ -3173,7 +3173,7 @@ async function loadData() {
     if (!loadedData) {
         const saved = localStorage.getItem('policeData');
         const savedVersion = localStorage.getItem('policeDataVersion');
-        const currentVersion = '4.1';
+        const currentVersion = '4.2';
         
         if (saved) {
             try {
@@ -3195,11 +3195,20 @@ async function loadData() {
             (!loadedData.events || loadedData.events.length === 0) &&
             (!loadedData.alarms || loadedData.alarms.length === 0) &&
             (!loadedData.cases || loadedData.cases.length === 0) &&
-            (!loadedData.persons || loadedData.persons.length === 0)
+            (!loadedData.persons || loadedData.persons.length === 0) &&
+            (!loadedData.infoData || !loadedData.infoData.items || loadedData.infoData.items.length === 0)
         );
         
-        if (savedVersion !== currentVersion || isDataEmpty) {
-            console.log('数据版本不匹配或数据为空，使用默认数据');
+        // 检查数据是否过期（少于预期数量），如果是也需要重置
+        const isDataOutdated = loadedData && (
+            (loadedData.infoData && loadedData.infoData.items && loadedData.infoData.items.length < 15) ||
+            (loadedData.alarms && loadedData.alarms.length < 6) ||
+            (loadedData.cases && loadedData.cases.length < 5) ||
+            (loadedData.persons && loadedData.persons.length < 6)
+        );
+        
+        if (savedVersion !== currentVersion || isDataEmpty || isDataOutdated) {
+            console.log('数据版本不匹配、数据为空或数据过期，使用默认数据');
             localStorage.setItem('policeDataVersion', currentVersion);
             localStorage.removeItem('policeData');
             loadedData = null;
@@ -3685,7 +3694,7 @@ function saveData() {
         const jsonStr = JSON.stringify(allData);
         const encrypted = ENCRYPTION_KEY ? encryptData(jsonStr, ENCRYPTION_KEY) : jsonStr;
         localStorage.setItem('policeData', encrypted);
-        localStorage.setItem('policeDataVersion', '4.1');
+        localStorage.setItem('policeDataVersion', '4.2');
         
         const syncService = getSyncService();
         if (syncService === 'jsonbin') {

@@ -2964,11 +2964,23 @@ let originalData = {
     goods: [...data.goods],
     logs: [...data.logs],
     users: [...data.users],
+    statistics: {...data.statistics},
+    supervision: {...data.supervision},
     combined: {...data.combined, tasks: [...data.combined.tasks]},
     fileData: {...data.fileData, files: [...data.fileData.files]},
     duty: {...data.duty, rosters: [...data.duty.rosters]},
     petition: {...data.petition, items: [...data.petition.items]},
-    assessment: {...data.assessment, records: [...data.assessment.records]}
+    assessment: {...data.assessment, records: [...data.assessment.records]},
+    infoData: {...data.infoData, items: [...data.infoData.items]},
+    commandData: {...data.commandData, dispatches: [...(data.commandData.dispatches || [])]},
+    intelligenceData: {...data.intelligenceData, items: [...(data.intelligenceData.items || [])]},
+    communityData: {...data.communityData, visits: [...(data.communityData.visits || [])]},
+    patrolData: {...data.patrolData, patrols: [...(data.patrolData.patrols || [])]},
+    recordData: {...data.recordData, records: [...(data.recordData.records || [])]},
+    lawSupervisionData: {...data.lawSupervisionData, cases: [...(data.lawSupervisionData.cases || [])], evaluations: [...(data.lawSupervisionData.evaluations || [])]},
+    serviceData: {...data.serviceData, services: [...(data.serviceData.services || [])]},
+    trafficData: {...data.trafficData, services: [...(data.trafficData.services || [])]},
+    marketData: {...data.marketData, entities: [...(data.marketData.entities || [])]}
 };
 
 // 从localStorage加载数据
@@ -3163,17 +3175,21 @@ async function saveDataToJsonBin() {
 async function loadData() {
     let loadedData = null;
     const syncService = getSyncService();
+    console.log('loadData 开始执行, syncService:', syncService);
     
     if (syncService === 'jsonbin') {
         loadedData = await loadDataFromJsonBin();
+        console.log('从 JSONBin 加载的数据:', loadedData ? '有数据' : '无数据');
     } else if (syncService === 'gist' && GIST_CONFIG.token && GIST_CONFIG.gistId) {
         loadedData = await loadDataFromGist();
+        console.log('从 Gist 加载的数据:', loadedData ? '有数据' : '无数据');
     }
     
     // 强制检查：如果localStorage中有旧版本数据，直接清除并使用默认数据
     const saved = localStorage.getItem('policeData');
     const savedVersion = localStorage.getItem('policeDataVersion');
     const currentVersion = '4.2';
+    console.log('localStorage 状态 - saved:', saved ? '有数据' : '无数据', 'version:', savedVersion);
     
     if (saved && savedVersion !== currentVersion) {
         console.log('数据版本过旧，清除并使用默认数据');
@@ -3190,13 +3206,15 @@ async function loadData() {
                 if (dec) decrypted = dec;
             }
             loadedData = JSON.parse(decrypted);
-            // 注意：不再检查数据量是否"过期"，用户数据应该被保留
+            console.log('从 localStorage 加载的数据 keys:', loadedData ? Object.keys(loadedData) : '无');
         } catch(e) {
             console.warn('从localStorage加载失败:', e);
             loadedData = null;
             localStorage.removeItem('policeData');
         }
     }
+    
+    console.log('最终 loadedData 状态:', loadedData ? Object.keys(loadedData) : 'null');
     
     // 如果没有任何有效数据，直接使用代码中的默认数据（data对象已经初始化为完整默认数据）
     // 只有当loadedData存在且有效时才覆盖
@@ -3677,10 +3695,19 @@ function saveData() {
             assessment: data.assessment,
             infoData: data.infoData
         };
+        console.log('saveData 保存数据，alarms数量:', data.alarms.length, 'events数量:', data.events.length);
         const jsonStr = JSON.stringify(allData);
         const encrypted = ENCRYPTION_KEY ? encryptData(jsonStr, ENCRYPTION_KEY) : jsonStr;
         localStorage.setItem('policeData', encrypted);
         localStorage.setItem('policeDataVersion', '4.2');
+        
+        // 验证保存是否成功
+        const saved = localStorage.getItem('policeData');
+        if (saved) {
+            console.log('数据已保存到localStorage，长度:', saved.length);
+        } else {
+            console.warn('数据保存失败：localStorage中没有数据');
+        }
         
         const syncService = getSyncService();
         if (syncService === 'jsonbin') {

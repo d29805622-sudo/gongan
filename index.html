@@ -3758,6 +3758,7 @@ function getStatusClass(status) {
 // 渲染表格
 function renderHomeTable() {
     const tbody = document.getElementById('homeTableBody');
+    if (!tbody) return;
     
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -3875,6 +3876,7 @@ function renderMiniCalendarNext() {
 
 function renderAlarmTable() {
     const tbody = document.getElementById('alarmTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.alarms.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -3892,6 +3894,7 @@ function renderAlarmTable() {
 
 function renderCaseTable() {
     const tbody = document.getElementById('caseTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.cases.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -3908,6 +3911,7 @@ function renderCaseTable() {
 
 function renderPersonTable() {
     const tbody = document.getElementById('personTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.persons.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -3924,6 +3928,7 @@ function renderPersonTable() {
 
 function renderCarTable() {
     const tbody = document.getElementById('carTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.cars.map(item => `
         <tr>
             <td>${item.plate}</td>
@@ -3941,6 +3946,7 @@ function renderCarTable() {
 
 function renderGoodsTable() {
     const tbody = document.getElementById('goodsTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.goods.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -3959,6 +3965,7 @@ function renderGoodsTable() {
 
 function renderLogTable() {
     const tbody = document.getElementById('logTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.logs.slice(0, 20).map(item => `
         <tr>
             <td>${item.account}</td>
@@ -3972,6 +3979,7 @@ function renderLogTable() {
 
 function renderSysTable() {
     const tbody = document.getElementById('sysTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.users.map(item => `
         <tr>
             <td>${item.account}</td>
@@ -7175,14 +7183,14 @@ async function syncNow() {
 }
 
 // ==================== 合成作战模块 ====================
-function renderCombinedTable(data) {
+function renderCombinedTable(tableData) {
     const tbody = document.getElementById('combinedTableBody');
     if (!tbody) return;
-    const displayData = data || (window._combinedFiltered || null);
+    const displayData = tableData || (window._combinedFiltered || null);
     let items = displayData || (data.combined ? data.combined.tasks : []);
     // 兼容逻辑：优先使用传入数据
-    if (data && Array.isArray(data)) {
-        items = data;
+    if (tableData && Array.isArray(tableData)) {
+        items = tableData;
     } else if (!displayData && window._combinedFiltered === undefined) {
         items = window._combinedRaw || [];
     }
@@ -7319,10 +7327,10 @@ function deleteCombined(id) {
 }
 
 // ==================== 电子卷宗模块 ====================
-function renderFileTable(data) {
+function renderFileTable(tableData) {
     const tbody = document.getElementById('fileTableBody');
     if (!tbody) return;
-    const items = Array.isArray(data) ? data : (window._fileRaw || []);
+    const items = Array.isArray(tableData) ? tableData : (window._fileRaw || []);
     if (items.length === 0 && window._fileRaw === undefined) {
         window._fileRaw = [
             {id: 'JZ2026001', name: '盗窃案卷宗', caseId: 'XA2026021', type: '刑事案件', archiveDate: '2026-05-18', unit: '刑侦大队', period: '永久', status: '已归档'},
@@ -7330,7 +7338,7 @@ function renderFileTable(data) {
             {id: 'JZ2026003', name: '接处警卷宗', caseId: 'JJ2026051801', type: '接处警', archiveDate: '2026-05-20', unit: '城东派出所', period: '30年', status: '已归档'}
         ];
     }
-    const display = Array.isArray(data) ? data : (window._fileFiltered || window._fileRaw || []);
+    const display = Array.isArray(tableData) ? tableData : (window._fileFiltered || window._fileRaw || []);
     tbody.innerHTML = (display || []).map(item => `
         <tr>
             <td>${item.id}</td>
@@ -7460,10 +7468,10 @@ function deleteFile(id) {
 }
 
 // ==================== 勤务排班模块 ====================
-function renderDutyTable(data) {
+function renderDutyTable(tableData) {
     const tbody = document.getElementById('dutyTableBody');
     if (!tbody) return;
-    const items = Array.isArray(data) ? data : (window._dutyRaw || []);
+    const items = Array.isArray(tableData) ? tableData : (window._dutyRaw || []);
     if (items.length === 0 && window._dutyRaw === undefined) {
         window._dutyRaw = [
             {date: '2026-05-20', shift: '全天', leader: '张所长', staff: '王警官、李警官', phone: '110-001', unit: '城东派出所', backup: '赵警官、孙警官', status: '值班中'},
@@ -7471,7 +7479,7 @@ function renderDutyTable(data) {
             {date: '2026-05-20', shift: '夜班', leader: '王教导员', staff: '陈警官、刘警官', phone: '110-003', unit: '指挥中心', backup: '郑警官、周警官', status: '待值班'}
         ];
     }
-    const display = Array.isArray(data) ? data : (window._dutyFiltered || window._dutyRaw || []);
+    const display = Array.isArray(tableData) ? tableData : (window._dutyFiltered || window._dutyRaw || []);
     tbody.innerHTML = (display || []).map(item => `
         <tr>
             <td>${item.date}</td>
@@ -7591,10 +7599,10 @@ function deleteDuty(id) {
 }
 
 // ==================== 信访事项管理 ====================
-function renderPetitionTable(data) {
+function renderPetitionTable(tableData) {
     const tbody = document.getElementById('petitionTableBody');
     if (!tbody) return;
-    const items = Array.isArray(data) ? data : (window._petitionRaw || []);
+    const items = Array.isArray(tableData) ? tableData : (window._petitionRaw || []);
     if (items.length === 0 && window._petitionRaw === undefined) {
         window._petitionRaw = [
             {id: 'XF202601', petitioner: '陈先生', phone: '138****5678', title: '关于户籍迁移问题的咨询', type: '咨询建议', acceptDate: '2026-05-18', unit: '户籍科', status: '办理中'},
@@ -7602,7 +7610,7 @@ function renderPetitionTable(data) {
             {id: 'XF202603', petitioner: '赵先生', phone: '135****3456', title: '身份证办理进度查询', type: '咨询建议', acceptDate: '2026-05-19', unit: '便民服务中心', status: '已答复'}
         ];
     }
-    const display = Array.isArray(data) ? data : (window._petitionFiltered || window._petitionRaw || []);
+    const display = Array.isArray(tableData) ? tableData : (window._petitionFiltered || window._petitionRaw || []);
     tbody.innerHTML = (display || []).map(item => `
         <tr>
             <td>${item.id}</td>
@@ -7733,10 +7741,10 @@ function deletePetition(id) {
 }
 
 // ==================== 绩效考核管理 ====================
-function renderAssessmentTable(data) {
+function renderAssessmentTable(tableData) {
     const tbody = document.getElementById('assessmentTableBody');
     if (!tbody) return;
-    const items = Array.isArray(data) ? data : (window._assessmentRaw || []);
+    const items = Array.isArray(tableData) ? tableData : (window._assessmentRaw || []);
     if (items.length === 0 && window._assessmentRaw === undefined) {
         window._assessmentRaw = [
             {id: 'KH20260501', name: '张三', policeId: '110001', unit: '刑侦大队', period: '月度考核', score: 95, rank: '优秀', status: '已评定'},
@@ -7744,7 +7752,7 @@ function renderAssessmentTable(data) {
             {id: 'KH20260503', name: '王五', policeId: '110003', unit: '指挥中心', period: '月度考核', score: 92, rank: '优秀', status: '评定中'}
         ];
     }
-    const display = Array.isArray(data) ? data : (window._assessmentFiltered || window._assessmentRaw || []);
+    const display = Array.isArray(tableData) ? tableData : (window._assessmentFiltered || window._assessmentRaw || []);
     tbody.innerHTML = (display || []).map(item => `
         <tr>
             <td>${item.id}</td>
@@ -7872,14 +7880,14 @@ function deleteAssessment(id) {
 }
 
 // 信息发布中心渲染
-function renderInfoTable(data) {
+function renderInfoTable(tableData) {
     const tbody = document.getElementById('infoTableBody');
     if (!tbody) return;
-    const items = Array.isArray(data) ? data : (data.infoData ? data.infoData.items : (window._infoRaw || []));
+    const items = Array.isArray(tableData) ? tableData : (data.infoData ? data.infoData.items : (window._infoRaw || []));
     if (!Array.isArray(items) && window._infoRaw === undefined && data.infoData) {
         window._infoRaw = [...data.infoData.items];
     }
-    const display = Array.isArray(data) ? data : (window._infoFiltered || window._infoRaw || data.infoData.items || []);
+    const display = Array.isArray(tableData) ? tableData : (window._infoFiltered || window._infoRaw || data.infoData.items || []);
     tbody.innerHTML = (display || []).map(item => `
         <tr>
             <td>${item.id}</td>

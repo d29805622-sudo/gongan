@@ -5627,16 +5627,8 @@ window.onload = async function(){
         const debugInfo = `数据状态: events=${data.events.length}, alarms=${data.alarms.length}, cases=${data.cases.length}, persons=${data.persons.length}`;
         console.log(debugInfo);
         
-        // 在页面上显示调试信息（临时）
-        const debugDiv = document.createElement('div');
-        debugDiv.style.cssText = 'position:fixed;top:0;left:0;background:yellow;color:black;padding:10px;z-index:99999;font-size:12px;max-width:100%;overflow:auto;';
-        debugDiv.textContent = debugInfo;
-        document.body.appendChild(debugDiv);
-        setTimeout(() => debugDiv.remove(), 5000);
-        
     } catch(error) {
         console.error('页面初始化错误:', error);
-        alert('页面加载错误: ' + error.message);
     }
 };
 

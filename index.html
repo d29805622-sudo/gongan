@@ -3067,12 +3067,16 @@ async function loadData() {
                 loadedData = JSON.parse(decrypted);
             } catch(e) {
                 console.warn('从localStorage加载失败:', e);
+                loadedData = null;
             }
         }
-        if (savedVersion !== currentVersion) {
-            console.log('数据版本不匹配，使用默认数据');
+        
+        // 版本不匹配或加载的数据为空对象时，强制使用默认数据
+        if (savedVersion !== currentVersion || (loadedData && Object.keys(loadedData).length === 0)) {
+            console.log('数据版本不匹配或数据为空，使用默认数据');
             localStorage.setItem('policeDataVersion', currentVersion);
-            saveData();
+            localStorage.removeItem('policeData');
+            loadedData = null;
         }
     }
     
@@ -3133,7 +3137,263 @@ async function loadData() {
         if (loadedData.assessment && Object.keys(loadedData.assessment).length > 0) data.assessment = loadedData.assessment;
     }
     
+    // 确保所有模块都有默认数据
+    ensureDefaultData();
+    
     backupOriginalData();
+}
+
+// 确保所有模块都有默认数据
+function ensureDefaultData() {
+    // 确保基础数组模块有数据
+    if (!data.events || data.events.length === 0) {
+        data.events = [
+            {id: '2026001', type: '治安事件', address: '城东幸福小区', status: '已办结'},
+            {id: '2026002', type: '邻里纠纷', address: '城西花园社区', status: '待处理'},
+            {id: '2026003', type: '治安巡查', address: '城北工业园区', status: '处理中'},
+            {id: '2026004', type: '商铺扰民纠纷', address: '市中心商业街', status: '已办结'},
+            {id: '2026005', type: '寻衅滋事', address: '南站广场周边', status: '待处理'},
+            {id: '2026006', type: '盗窃案件', address: '东城花园小区', status: '处理中'},
+            {id: '2026007', type: '治安事件', address: '西区公园', status: '待处理'},
+            {id: '2026008', type: '邻里纠纷', address: '南城居住区', status: '已办结'},
+            {id: '2026009', type: '治安巡查', address: '北区商贸中心', status: '处理中'},
+            {id: '2026010', type: '寻衅滋事', address: '火车站广场', status: '待处理'},
+            {id: '2026011', type: '商铺扰民纠纷', address: '市中心步行街', status: '已办结'},
+            {id: '2026012', type: '盗窃案件', address: '科技园区', status: '处理中'}
+        ];
+    }
+    
+    if (!data.alarms || data.alarms.length === 0) {
+        data.alarms = [
+            {id: 'JJ2026051801', reporter: '张某', victim: '王某', type: '财物丢失', time: '2026-05-18 08:20', location: '幸福小区12号楼', officer: '执勤一组', status: '处置中',
+             process: '已派警', records: ['接到报警', '派员处置', '现场勘查']},
+            {id: 'JJ2026051802', reporter: '李某', victim: '赵某', type: '民事纠纷', time: '2026-05-18 10:12', location: '花园社区广场', officer: '调解班组', status: '已办结',
+             process: '已结案', records: ['接到报警', '派员处置', '现场调解', '达成协议', '结案归档']}
+        ];
+    }
+    
+    if (!data.cases || data.cases.length === 0) {
+        data.cases = [
+            {id: 'XA2026021', type: '盗窃案', person: '王某', time: '2026-05-10', progress: '侦查取证',
+             caseStatus: '办理中', investigator: '刑侦大队', evidence: ['现场照片', '指纹采集', '监控录像'],
+             timeline: ['2026-05-10 报案', '2026-05-11 立案', '2026-05-12 侦查取证']},
+            {id: 'XA2026022', type: '寻衅滋事', person: '赵某', time: '2026-05-12', progress: '结案归档',
+             caseStatus: '已结案', investigator: '治安大队', evidence: ['当事人陈述', '证人证言'],
+             timeline: ['2026-05-12 报案', '2026-05-13 立案', '2026-05-14 调查取证', '2026-05-18 结案归档']}
+        ];
+    }
+    
+    if (!data.persons || data.persons.length === 0) {
+        data.persons = [
+            {id: 'RY001', name: '陈某', idCard: '130XXXX8976', level: '一级管控', address: '市区幸福路小区',
+             relatedPersons: ['王某', '刘某'], trackRecords: ['2026-05-15 火车站', '2026-05-16 幸福小区', '2026-05-17 商业中心'],
+             riskLevel: '高风险', notes: '有盗窃前科'},
+            {id: 'RY002', name: '刘某', idCard: '152XXXX1234', level: '二级管控', address: '城西惠民社区',
+             relatedPersons: ['陈某'], trackRecords: ['2026-05-14 公园', '2026-05-16 超市'],
+             riskLevel: '中风险', notes: '重点关注人员'}
+        ];
+    }
+    
+    if (!data.cars || data.cars.length === 0) {
+        data.cars = [
+            {plate: '冀A12345', type: '小型轿车', owner: '周某', status: '重点布控',
+             color: '黑色', brand: '大众', trackRecords: ['2026-05-17 幸福路', '2026-05-18 人民路'], riskLevel: '高'},
+            {plate: '冀B67890', type: '面包车', owner: '吴某', status: '正常备案',
+             color: '白色', brand: '五菱', trackRecords: [], riskLevel: '低'}
+        ];
+    }
+    
+    if (!data.goods || data.goods.length === 0) {
+        data.goods = [
+            {id: 'WP011', name: '手机', count: '2部', time: '2026-05-15', location: '物证保管室A区',
+             caseId: 'XA2026021', status: '已登记', keeper: '物证管理员', inTime: '2026-05-15 14:30', outTime: ''},
+            {id: 'WP012', name: '现金', count: '5000元', time: '2026-05-16', location: '财务封存库房',
+             caseId: 'XA2026022', status: '已移交', keeper: '财务室', inTime: '2026-05-16 09:00', outTime: '2026-05-18 10:00'}
+        ];
+    }
+    
+    if (!data.logs || data.logs.length === 0) {
+        data.logs = [
+            {account: 'admin01', name: '系统管理员', action: '新增案件数据', time: '2026-05-18 09:15', ip: '10.26.18.145'},
+            {account: 'police02', name: '执勤民警', action: '修改人员信息', time: '2026-05-18 10:02', ip: '10.26.18.156'}
+        ];
+    }
+    
+    if (!data.users || data.users.length === 0) {
+        data.users = [
+            {account: 'admin', password: '123456', name: '超级管理员', role: '系统运维', level: '最高全权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'police', password: '123456', name: '普通警员账号', role: '一线执勤', level: '查看+新增权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'trainee', password: '123456', name: '实习账号', role: '实习人员', level: '仅查看权限', status: '临时开通', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'zhangsan', password: '123456', name: '张三', role: '指挥中心', level: '指挥调度权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'lisi', password: '123456', name: '李四', role: '刑侦大队', level: '案件管理权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'wangwu', password: '123456', name: '王五', role: '社区警务', level: '社区管理权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'zhaoliu', password: '123456', name: '赵六', role: '情报研判', level: '情报分析权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'sunqi', password: '123456', name: '孙七', role: '交通管理', level: '交通执法权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'zhouba', password: '123456', name: '周八', role: '法制监督', level: '执法监督权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'wujiu', password: '123456', name: '吴九', role: '户籍管理', level: '便民服务权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'zhengshi', password: '123456', name: '郑十', role: '市场监督', level: '市场主体管理权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'tdzdy', password: '123456', name: '特警支队', role: '特警突击', level: '最高全权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'xck', password: '123456', name: '宣传科', role: '舆情管理', level: '查看+编辑权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'wa', password: '123456', name: '网安支队', role: '网络安全', level: '技术侦查权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+            {account: 'jdzd', password: '123456', name: '禁毒支队', role: '禁毒管理', level: '案件管理权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''}
+        ];
+    }
+    
+    // 确保对象模块有数据
+    if (!data.statistics || Object.keys(data.statistics).length === 0) {
+        data.statistics = {
+            todayAlarms: 5,
+            todayCases: 2,
+            pendingCases: 12,
+            closedCases: 85,
+            alarmTypes: {'治安事件': 45, '邻里纠纷': 32, '盗窃案件': 28, '其他': 15},
+            caseTrend: [12, 8, 15, 10, 18, 14, 11]
+        };
+    }
+    
+    if (!data.supervision || !data.supervision.evaluations || data.supervision.evaluations.length === 0) {
+        data.supervision = {
+            evaluations: [
+                {person: '张三', score: 95, rank: '优秀', month: '2026-05'},
+                {person: '李四', score: 88, rank: '良好', month: '2026-05'},
+                {person: '王五', score: 76, rank: '合格', month: '2026-05'}
+            ],
+            pendingAudits: 3,
+            issues: 1
+        };
+    }
+    
+    if (!data.combined || !data.combined.tasks || data.combined.tasks.length === 0) {
+        data.combined = {
+            tasks: [
+                {id: 'ZZ202601', name: '夏季治安打击整治行动', leadUnit: '刑侦支队', partnerUnits: '交警/治安/网安', level: '一级', startTime: '2026-05-15', commander: '张大队长', status: '执行中'},
+                {id: 'ZZ202602', name: '重点人员联合布控', leadUnit: '指挥中心', partnerUnits: '情报/刑侦/派出所', level: '二级', startTime: '2026-05-10', commander: '李主任', status: '执行中'},
+                {id: 'ZZ202603', name: '禁毒专项行动', leadUnit: '禁毒支队', partnerUnits: '刑侦/交警/巡特警', level: '一级', startTime: '2026-05-08', commander: '王支队长', status: '待启动'}
+            ]
+        };
+    }
+    
+    if (!data.fileData || !data.fileData.files || data.fileData.files.length === 0) {
+        data.fileData = {
+            files: [
+                {id: 'JZ2026001', name: '盗窃案卷宗', caseId: 'XA2026021', type: '刑事案件', archiveDate: '2026-05-18', unit: '刑侦大队', period: '永久', status: '已归档'},
+                {id: 'JZ2026002', name: '寻衅滋事案卷宗', caseId: 'XA2026022', type: '行政案件', archiveDate: '2026-05-15', unit: '治安大队', period: '长期', status: '查阅中'},
+                {id: 'JZ2026003', name: '接处警卷宗', caseId: 'JJ2026051801', type: '接处警', archiveDate: '2026-05-20', unit: '城东派出所', period: '30年', status: '已归档'}
+            ]
+        };
+    }
+    
+    if (!data.duty || !data.duty.rosters || data.duty.rosters.length === 0) {
+        data.duty = {
+            rosters: [
+                {date: '2026-05-20', shift: '全天', leader: '张所长', staff: '王警官、李警官', phone: '110-001', unit: '城东派出所', backup: '赵警官、孙警官', status: '值班中'},
+                {date: '2026-05-21', shift: '早班', leader: '李副所长', staff: '王警官、周警官', phone: '110-002', unit: '城西派出所', backup: '钱警官、吴警官', status: '待值班'},
+                {date: '2026-05-20', shift: '夜班', leader: '王教导员', staff: '陈警官、刘警官', phone: '110-003', unit: '指挥中心', backup: '郑警官、周警官', status: '待值班'}
+            ]
+        };
+    }
+    
+    if (!data.petition || !data.petition.items || data.petition.items.length === 0) {
+        data.petition = {
+            items: [
+                {id: 'XF202601', petitioner: '陈先生', phone: '138****5678', title: '关于户籍迁移问题的咨询', type: '咨询建议', acceptDate: '2026-05-18', unit: '户籍科', status: '办理中'},
+                {id: 'XF202602', petitioner: '王女士', phone: '139****9012', title: '邻里噪声扰民问题投诉', type: '投诉请求', acceptDate: '2026-05-15', unit: '社区警务室', status: '已办结'},
+                {id: 'XF202603', petitioner: '赵先生', phone: '135****3456', title: '身份证办理进度查询', type: '咨询建议', acceptDate: '2026-05-19', unit: '便民服务中心', status: '已答复'}
+            ]
+        };
+    }
+    
+    if (!data.assessment || !data.assessment.records || data.assessment.records.length === 0) {
+        data.assessment = {
+            records: [
+                {id: 'KH20260501', name: '张三', policeId: '110001', unit: '刑侦大队', period: '月度考核', score: 95, rank: '优秀', status: '已评定'},
+                {id: 'KH20260502', name: '李四', policeId: '110002', unit: '社区警务', period: '月度考核', score: 88, rank: '良好', status: '已评定'},
+                {id: 'KH20260503', name: '王五', policeId: '110003', unit: '指挥中心', period: '月度考核', score: 92, rank: '优秀', status: '评定中'}
+            ]
+        };
+    }
+    
+    if (!data.marketData || !data.marketData.entities || data.marketData.entities.length === 0) {
+        data.marketData = {
+            entities: [
+                {id: '91130100MA12345678', name: '石家庄科技有限公司', type: '有限责任公司', legalRep: '张三', address: '石家庄市高新区科技路123号', date: '2020-05-15', status: '存续', scope: '计算机软硬件开发、技术咨询、技术服务', phone: '13800138001', regCapital: '500万元人民币'},
+                {id: '92130102MA87654321', name: '桥西区便民超市', type: '个体工商户', legalRep: '李四', address: '石家庄市桥西区中华大街456号', date: '2018-08-20', status: '在业', scope: '预包装食品、日用百货零售', phone: '13900139002', regCapital: '-'},
+                {id: '93130100MA55556666', name: '石家庄种植专业合作社', type: '农民专业合作社', legalRep: '王五', address: '石家庄市正定县农业产业园789号', date: '2019-03-10', status: '存续', scope: '农作物种植、销售，农业技术服务', phone: '13700137003', regCapital: '100万元人民币'}
+            ]
+        };
+    }
+    
+    if (!data.commandData || !data.commandData.dispatches || data.commandData.dispatches.length === 0) {
+        data.commandData = {
+            dispatches: [
+                {id: 'DP20260518001', time: '2026-05-18 08:25', type: '紧急出警', location: '幸福小区12号楼', targetUnit: '城东派出所', status: '已派警', commander: '张主任', remark: '接到110报警，有人财物丢失'},
+                {id: 'DP20260518002', time: '2026-05-18 10:30', type: '日常巡逻', location: '市中心商业街', targetUnit: '巡警大队', status: '执行中', commander: '李大队长', remark: '加强商业区治安巡逻'}
+            ]
+        };
+    }
+    
+    if (!data.intelligenceData || !data.intelligenceData.items || data.intelligenceData.items.length === 0) {
+        data.intelligenceData = {
+            items: [
+                {id: 'QB202505001', type: '人员预警', summary: '重点人员张某近日频繁出入娱乐场所', source: '社区走访', risk: '高', status: '待研判', time: '2025-05-25 10:00'},
+                {id: 'QB202505002', type: '线索通报', summary: '发现可疑车辆在城东区域徘徊', source: '视频监控', risk: '中', status: '已核查', time: '2025-05-24 14:30'}
+            ]
+        };
+    }
+    
+    if (!data.communityData || !data.communityData.items || data.communityData.items.length === 0) {
+        data.communityData = {
+            items: [
+                {id: 'SQ2026001', name: '幸福小区', type: '居民区', population: 3500, policeRoom: '城东派出所', officer: '王警官', address: '幸福路123号'},
+                {id: 'SQ2026002', name: '花园社区', type: '居民区', population: 2800, policeRoom: '城西派出所', officer: '李警官', address: '花园大道45号'}
+            ]
+        };
+    }
+    
+    if (!data.patrolData || !data.patrolData.routes || data.patrolData.routes.length === 0) {
+        data.patrolData = {
+            routes: [
+                {id: 'XL001', name: '城东商业区巡逻线', length: '5.2公里', points: '火车站-商业街-公园-小区', patrolType: '车巡', frequency: '每30分钟', officer: '张警官、王警官'},
+                {id: 'XL002', name: '城西居民区巡逻线', length: '3.8公里', points: '花园社区-惠民小区-学校', patrolType: '步巡', frequency: '每小时', officer: '李警官、赵警官'}
+            ]
+        };
+    }
+    
+    if (!data.recordData || !data.recordData.records || data.recordData.records.length === 0) {
+        data.recordData = {
+            records: [
+                {id: 'BL20260518001', caseId: 'XA2026021', type: '询问笔录', suspect: '王某', officer: '张警官', time: '2026-05-18 09:00', content: '询问当事人关于案件经过的陈述'},
+                {id: 'BL20260518002', caseId: 'XA2026022', type: '讯问笔录', suspect: '赵某', officer: '李警官', time: '2026-05-18 14:00', content: '讯问犯罪嫌疑人'}
+            ]
+        };
+    }
+    
+    if (!data.lawSupervisionData || !data.lawSupervisionData.items || data.lawSupervisionData.items.length === 0) {
+        data.lawSupervisionData = {
+            items: [
+                {id: 'JD202605001', caseId: 'XA2026021', type: '立案监督', status: '已通过', checkDate: '2026-05-11', checker: '法制科'},
+                {id: 'JD202605002', caseId: 'XA2026022', type: '执法质量', status: '待审核', checkDate: '2026-05-18', checker: '法制科'}
+            ]
+        };
+    }
+    
+    if (!data.serviceData || !data.serviceData.items || data.serviceData.items.length === 0) {
+        data.serviceData = {
+            items: [
+                {id: 'FW20260518001', type: '身份证办理', applicant: '张三', phone: '138****1234', status: '办理中', applyDate: '2026-05-18', finishDate: '2026-06-01'},
+                {id: 'FW20260518002', type: '户口迁移', applicant: '李四', phone: '139****5678', status: '已办结', applyDate: '2026-05-15', finishDate: '2026-05-18'}
+            ]
+        };
+    }
+    
+    if (!data.trafficData || !data.trafficData.items || data.trafficData.items.length === 0) {
+        data.trafficData = {
+            items: [
+                {id: 'JT20260518001', plate: '冀A12345', type: '违章停车', time: '2026-05-18 09:30', location: '中山路', status: '已处理'},
+                {id: 'JT20260518002', plate: '冀B67890', type: '闯红灯', time: '2026-05-18 10:15', location: '建设大街', status: '待处理'}
+            ]
+        };
+    }
 }
 
 // 备份原始数据

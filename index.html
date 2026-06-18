@@ -3077,60 +3077,60 @@ async function loadData() {
     }
     
     if (loadedData) {
-        // 原有模块
-        data.events = loadedData.events || data.events;
-        data.alarms = loadedData.alarms || data.alarms;
-        data.cases = (loadedData.cases || data.cases).map(c => ({
+        // 原有模块 - 只有当加载的数据非空时才覆盖默认数据
+        data.events = (loadedData.events && loadedData.events.length > 0) ? loadedData.events : data.events;
+        data.alarms = (loadedData.alarms && loadedData.alarms.length > 0) ? loadedData.alarms : data.alarms;
+        data.cases = (loadedData.cases && loadedData.cases.length > 0) ? loadedData.cases.map(c => ({
             ...c,
             caseStatus: c.caseStatus || c.progress || '办理中',
             investigator: c.investigator || '',
             evidence: c.evidence || [],
             timeline: c.timeline || []
-        }));
-        data.persons = (loadedData.persons || data.persons).map(p => ({
+        })) : data.cases;
+        data.persons = (loadedData.persons && loadedData.persons.length > 0) ? loadedData.persons.map(p => ({
             ...p,
             riskLevel: p.riskLevel || '中风险',
             notes: p.notes || '',
             relatedPersons: p.relatedPersons || [],
             trackRecords: p.trackRecords || []
-        }));
-        data.cars = (loadedData.cars || data.cars).map(c => ({
+        })) : data.persons;
+        data.cars = (loadedData.cars && loadedData.cars.length > 0) ? loadedData.cars.map(c => ({
             ...c,
             brand: c.brand || '',
             color: c.color || '',
             riskLevel: c.riskLevel || '中',
             trackRecords: c.trackRecords || []
-        }));
-        data.goods = (loadedData.goods || data.goods).map(g => ({
+        })) : data.cars;
+        data.goods = (loadedData.goods && loadedData.goods.length > 0) ? loadedData.goods.map(g => ({
             ...g,
             caseId: g.caseId || '',
             status: g.status || '已登记',
             keeper: g.keeper || '',
             inTime: g.inTime || '',
             outTime: g.outTime || ''
-        }));
-        data.logs = loadedData.logs || data.logs;
-        data.users = loadedData.users || data.users;
+        })) : data.goods;
+        data.logs = (loadedData.logs && loadedData.logs.length > 0) ? loadedData.logs : data.logs;
+        data.users = (loadedData.users && loadedData.users.length > 0) ? loadedData.users : data.users;
         data.statistics = loadedData.statistics || data.statistics;
         data.supervision = loadedData.supervision || data.supervision;
         
-        // 新增模块
-        if (loadedData.commandData) data.commandData = loadedData.commandData;
-        if (loadedData.intelligenceData) data.intelligenceData = loadedData.intelligenceData;
-        if (loadedData.communityData) data.communityData = loadedData.communityData;
-        if (loadedData.patrolData) data.patrolData = loadedData.patrolData;
-        if (loadedData.recordData) data.recordData = loadedData.recordData;
-        if (loadedData.lawSupervisionData) data.lawSupervisionData = loadedData.lawSupervisionData;
-        if (loadedData.serviceData) data.serviceData = loadedData.serviceData;
-        if (loadedData.trafficData) data.trafficData = loadedData.trafficData;
-        if (loadedData.marketData) data.marketData = loadedData.marketData;
+        // 新增模块 - 检查是否有有效数据
+        if (loadedData.commandData && Object.keys(loadedData.commandData).length > 0) data.commandData = loadedData.commandData;
+        if (loadedData.intelligenceData && Object.keys(loadedData.intelligenceData).length > 0) data.intelligenceData = loadedData.intelligenceData;
+        if (loadedData.communityData && Object.keys(loadedData.communityData).length > 0) data.communityData = loadedData.communityData;
+        if (loadedData.patrolData && Object.keys(loadedData.patrolData).length > 0) data.patrolData = loadedData.patrolData;
+        if (loadedData.recordData && Object.keys(loadedData.recordData).length > 0) data.recordData = loadedData.recordData;
+        if (loadedData.lawSupervisionData && Object.keys(loadedData.lawSupervisionData).length > 0) data.lawSupervisionData = loadedData.lawSupervisionData;
+        if (loadedData.serviceData && Object.keys(loadedData.serviceData).length > 0) data.serviceData = loadedData.serviceData;
+        if (loadedData.trafficData && Object.keys(loadedData.trafficData).length > 0) data.trafficData = loadedData.trafficData;
+        if (loadedData.marketData && Object.keys(loadedData.marketData).length > 0) data.marketData = loadedData.marketData;
         
-        // 新模块
-        if (loadedData.combined) data.combined = loadedData.combined;
-        if (loadedData.fileData) data.fileData = loadedData.fileData;
-        if (loadedData.duty) data.duty = loadedData.duty;
-        if (loadedData.petition) data.petition = loadedData.petition;
-        if (loadedData.assessment) data.assessment = loadedData.assessment;
+        // 新模块 - 检查是否有有效数据
+        if (loadedData.combined && Object.keys(loadedData.combined).length > 0) data.combined = loadedData.combined;
+        if (loadedData.fileData && Object.keys(loadedData.fileData).length > 0) data.fileData = loadedData.fileData;
+        if (loadedData.duty && Object.keys(loadedData.duty).length > 0) data.duty = loadedData.duty;
+        if (loadedData.petition && Object.keys(loadedData.petition).length > 0) data.petition = loadedData.petition;
+        if (loadedData.assessment && Object.keys(loadedData.assessment).length > 0) data.assessment = loadedData.assessment;
     }
     
     backupOriginalData();

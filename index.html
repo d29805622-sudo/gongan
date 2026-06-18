@@ -2672,7 +2672,15 @@ let data = {
         {id: 'JJ2026051801', reporter: '张某', victim: '王某', type: '财物丢失', time: '2026-05-18 08:20', location: '幸福小区12号楼', officer: '执勤一组', status: '处置中',
          process: '已派警', records: ['接到报警', '派员处置', '现场勘查']},
         {id: 'JJ2026051802', reporter: '李某', victim: '赵某', type: '民事纠纷', time: '2026-05-18 10:12', location: '花园社区广场', officer: '调解班组', status: '已办结',
-         process: '已结案', records: ['接到报警', '派员处置', '现场调解', '达成协议', '结案归档']}
+         process: '已结案', records: ['接到报警', '派员处置', '现场调解', '达成协议', '结案归档']},
+        {id: 'JJ2026051803', reporter: '陈某', victim: '刘某', type: '交通肇事', time: '2026-05-18 14:35', location: '人民路与解放路交叉口', officer: '交警大队', status: '处置中',
+         process: '已立案', records: ['接到报警', '派员处置', '现场勘查', '责任认定']},
+        {id: 'JJ2026051804', reporter: '王某', victim: '吴某', type: '殴打他人', time: '2026-05-18 16:45', location: '市中心商业街', officer: '治安大队', status: '待处理',
+         process: '待受理', records: ['接到报警', '登记备案']},
+        {id: 'JJ2026051805', reporter: '赵某', victim: '周某', type: '盗窃', time: '2026-05-18 19:20', location: '科技园区办公楼', officer: '刑侦大队', status: '处置中',
+         process: '侦查中', records: ['接到报警', '派员处置', '现场勘查', '调取监控']},
+        {id: 'JJ2026051806', reporter: '孙某', victim: '陈某', type: '噪音扰民', time: '2026-05-18 22:10', location: '西城小区8号楼', officer: '社区警务', status: '已办结',
+         process: '已处理', records: ['接到报警', '现场核实', '劝导教育', '问题解决']}
     ],
     cases: [
         {id: 'XA2026021', type: '盗窃案', person: '王某', time: '2026-05-10', progress: '侦查取证',
@@ -2680,7 +2688,16 @@ let data = {
          timeline: ['2026-05-10 报案', '2026-05-11 立案', '2026-05-12 侦查取证']},
         {id: 'XA2026022', type: '寻衅滋事', person: '赵某', time: '2026-05-12', progress: '结案归档',
          caseStatus: '已结案', investigator: '治安大队', evidence: ['当事人陈述', '证人证言'],
-         timeline: ['2026-05-12 报案', '2026-05-13 立案', '2026-05-14 调查取证', '2026-05-18 结案归档']}
+         timeline: ['2026-05-12 报案', '2026-05-13 立案', '2026-05-14 调查取证', '2026-05-18 结案归档']},
+        {id: 'XA2026023', type: '故意伤害', person: '陈某', time: '2026-05-14', progress: '审查起诉',
+         caseStatus: '办理中', investigator: '刑侦大队', evidence: ['伤情鉴定', '证人证言', '现场勘查'],
+         timeline: ['2026-05-14 报案', '2026-05-15 立案', '2026-05-16 侦查取证', '2026-05-17 审查起诉']},
+        {id: 'XA2026024', type: '交通肇事', person: '刘某', time: '2026-05-15', progress: '移送起诉',
+         caseStatus: '办理中', investigator: '交警大队', evidence: ['事故认定书', '监控视频', '酒精检测'],
+         timeline: ['2026-05-15 报案', '2026-05-15 立案', '2026-05-16 调查取证', '2026-05-18 移送起诉']},
+        {id: 'XA2026025', type: '诈骗案', person: '周某', time: '2026-05-16', progress: '立案审查',
+         caseStatus: '办理中', investigator: '刑侦大队', evidence: ['银行流水', '聊天记录'],
+         timeline: ['2026-05-16 报案', '2026-05-17 立案']}
     ],
     persons: [
         {id: 'RY001', name: '陈某', idCard: '130XXXX8976', level: '一级管控', address: '市区幸福路小区',
@@ -2688,23 +2705,53 @@ let data = {
          riskLevel: '高风险', notes: '有盗窃前科'},
         {id: 'RY002', name: '刘某', idCard: '152XXXX1234', level: '二级管控', address: '城西惠民社区',
          relatedPersons: ['陈某'], trackRecords: ['2026-05-14 公园', '2026-05-16 超市'],
-         riskLevel: '中风险', notes: '重点关注人员'}
+         riskLevel: '中风险', notes: '重点关注人员'},
+        {id: 'RY003', name: '周某', idCard: '131XXXX5678', level: '一级管控', address: '北区工业园附近',
+         relatedPersons: ['吴某'], trackRecords: ['2026-05-13 工业园区', '2026-05-15 物流中心', '2026-05-18 火车站'],
+         riskLevel: '高风险', notes: '涉毒人员'},
+        {id: 'RY004', name: '吴某', idCard: '132XXXX9012', level: '二级管控', address: '东区花园小区',
+         relatedPersons: ['周某'], trackRecords: ['2026-05-14 购物中心', '2026-05-17 医院'],
+         riskLevel: '中风险', notes: '涉毒关联人员'},
+        {id: 'RY005', name: '杨某', idCard: '133XXXX3456', level: '三级管控', address: '南区商业街',
+         relatedPersons: [], trackRecords: ['2026-05-16 商业街', '2026-05-18 超市'],
+         riskLevel: '低风险', notes: '社区矫正人员'},
+        {id: 'RY006', name: '赵某', idCard: '134XXXX7890', level: '一级管控', address: '西区城中村',
+         relatedPersons: ['陈某', '刘某'], trackRecords: ['2026-05-15 汽车站', '2026-05-17 网吧', '2026-05-18 酒店'],
+         riskLevel: '高风险', notes: '多次寻衅滋事'}
     ],
     cars: [
         {plate: '冀A12345', type: '小型轿车', owner: '周某', status: '重点布控',
          color: '黑色', brand: '大众', trackRecords: ['2026-05-17 幸福路', '2026-05-18 人民路'], riskLevel: '高'},
         {plate: '冀B67890', type: '面包车', owner: '吴某', status: '正常备案',
-         color: '白色', brand: '五菱', trackRecords: [], riskLevel: '低'}
+         color: '白色', brand: '五菱', trackRecords: [], riskLevel: '低'},
+        {plate: '冀C00112', type: '小型轿车', owner: '陈某', status: '重点布控',
+         color: '红色', brand: '丰田', trackRecords: ['2026-05-16 火车站', '2026-05-17 商业中心'], riskLevel: '高'},
+        {plate: '冀D33445', type: 'SUV', owner: '刘某', status: '临时布控',
+         color: '银色', brand: '本田', trackRecords: ['2026-05-18 工业园区'], riskLevel: '中'},
+        {plate: '冀E66778', type: '货车', owner: '赵某', status: '正常备案',
+         color: '蓝色', brand: '江淮', trackRecords: [], riskLevel: '低'}
     ],
     goods: [
         {id: 'WP011', name: '手机', count: '2部', time: '2026-05-15', location: '物证保管室A区',
          caseId: 'XA2026021', status: '已登记', keeper: '物证管理员', inTime: '2026-05-15 14:30', outTime: ''},
         {id: 'WP012', name: '现金', count: '5000元', time: '2026-05-16', location: '财务封存库房',
-         caseId: 'XA2026022', status: '已移交', keeper: '财务室', inTime: '2026-05-16 09:00', outTime: '2026-05-18 10:00'}
+         caseId: 'XA2026022', status: '已移交', keeper: '财务室', inTime: '2026-05-16 09:00', outTime: '2026-05-18 10:00'},
+        {id: 'WP013', name: '笔记本电脑', count: '1台', time: '2026-05-17', location: '物证保管室B区',
+         caseId: 'XA2026023', status: '已登记', keeper: '物证管理员', inTime: '2026-05-17 16:00', outTime: ''},
+        {id: 'WP014', name: '管制刀具', count: '3把', time: '2026-05-18', location: '涉案物品专管库',
+         caseId: 'XA2026024', status: '已登记', keeper: '治安大队', inTime: '2026-05-18 11:30', outTime: ''},
+        {id: 'WP015', name: '银行卡', count: '5张', time: '2026-05-18', location: '物证保管室A区',
+         caseId: 'XA2026025', status: '已登记', keeper: '刑侦大队', inTime: '2026-05-18 15:00', outTime: ''}
     ],
     logs: [
         {account: 'admin01', name: '系统管理员', action: '新增案件数据', time: '2026-05-18 09:15', ip: '10.26.18.145'},
-        {account: 'police02', name: '执勤民警', action: '修改人员信息', time: '2026-05-18 10:02', ip: '10.26.18.156'}
+        {account: 'police02', name: '执勤民警', action: '修改人员信息', time: '2026-05-18 10:02', ip: '10.26.18.156'},
+        {account: 'zhangsan', name: '张三', action: '录入接警记录', time: '2026-05-18 11:30', ip: '10.26.18.148'},
+        {account: 'lisi', name: '李四', action: '上传案件证据', time: '2026-05-18 13:45', ip: '10.26.18.152'},
+        {account: 'wangwu', name: '王五', action: '更新重点人员轨迹', time: '2026-05-18 14:20', ip: '10.26.18.146'},
+        {account: 'admin', name: '超级管理员', action: '系统数据备份', time: '2026-05-18 15:00', ip: '10.26.18.100'},
+        {account: 'zhouba', name: '周八', action: '执法监督检查', time: '2026-05-18 16:30', ip: '10.26.18.158'},
+        {account: 'xck', name: '宣传科', action: '发布工作要闻', time: '2026-05-18 17:15', ip: '10.26.18.160'}
     ],
     users: [
         {account: 'admin', password: '123456', name: '超级管理员', role: '系统运维', level: '最高全权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
@@ -2744,35 +2791,50 @@ let data = {
         tasks: [
             {id: 'ZZ202601', name: '夏季治安打击整治行动', leadUnit: '刑侦支队', partnerUnits: '交警/治安/网安', level: '一级', startTime: '2026-05-15', commander: '张大队长', status: '执行中'},
             {id: 'ZZ202602', name: '重点人员联合布控', leadUnit: '指挥中心', partnerUnits: '情报/刑侦/派出所', level: '二级', startTime: '2026-05-10', commander: '李主任', status: '执行中'},
-            {id: 'ZZ202603', name: '禁毒专项行动', leadUnit: '禁毒支队', partnerUnits: '刑侦/交警/巡特警', level: '一级', startTime: '2026-05-08', commander: '王支队长', status: '待启动'}
+            {id: 'ZZ202603', name: '禁毒专项行动', leadUnit: '禁毒支队', partnerUnits: '刑侦/交警/巡特警', level: '一级', startTime: '2026-05-08', commander: '王支队长', status: '待启动'},
+            {id: 'ZZ202604', name: '反诈宣传专项行动', leadUnit: '刑侦支队', partnerUnits: '社区警务/宣传科', level: '二级', startTime: '2026-05-12', commander: '刘大队长', status: '执行中'},
+            {id: 'ZZ202605', name: '交通秩序整治', leadUnit: '交警大队', partnerUnits: '巡警/城管', level: '二级', startTime: '2026-05-18', commander: '孙大队长', status: '执行中'},
+            {id: 'ZZ202606', name: '校园周边安全排查', leadUnit: '治安大队', partnerUnits: '派出所/教育部门', level: '三级', startTime: '2026-05-20', commander: '赵大队长', status: '待启动'}
         ]
     },
     fileData: {
         files: [
             {id: 'JZ2026001', name: '盗窃案卷宗', caseId: 'XA2026021', type: '刑事案件', archiveDate: '2026-05-18', unit: '刑侦大队', period: '永久', status: '已归档'},
             {id: 'JZ2026002', name: '寻衅滋事案卷宗', caseId: 'XA2026022', type: '行政案件', archiveDate: '2026-05-15', unit: '治安大队', period: '长期', status: '查阅中'},
-            {id: 'JZ2026003', name: '接处警卷宗', caseId: 'JJ2026051801', type: '接处警', archiveDate: '2026-05-20', unit: '城东派出所', period: '30年', status: '已归档'}
+            {id: 'JZ2026003', name: '接处警卷宗', caseId: 'JJ2026051801', type: '接处警', archiveDate: '2026-05-20', unit: '城东派出所', period: '30年', status: '已归档'},
+            {id: 'JZ2026004', name: '故意伤害案卷宗', caseId: 'XA2026023', type: '刑事案件', archiveDate: '2026-05-17', unit: '刑侦大队', period: '永久', status: '归档中'},
+            {id: 'JZ2026005', name: '交通肇事案卷宗', caseId: 'XA2026024', type: '行政案件', archiveDate: '2026-05-18', unit: '交警大队', period: '长期', status: '已归档'},
+            {id: 'JZ2026006', name: '诈骗案卷宗', caseId: 'XA2026025', type: '刑事案件', archiveDate: '2026-05-18', unit: '刑侦大队', period: '永久', status: '归档中'}
         ]
     },
     duty: {
         rosters: [
             {date: '2026-05-20', shift: '全天', leader: '张所长', staff: '王警官、李警官', phone: '110-001', unit: '城东派出所', backup: '赵警官、孙警官', status: '值班中'},
             {date: '2026-05-21', shift: '早班', leader: '李副所长', staff: '王警官、周警官', phone: '110-002', unit: '城西派出所', backup: '钱警官、吴警官', status: '待值班'},
-            {date: '2026-05-20', shift: '夜班', leader: '王教导员', staff: '陈警官、刘警官', phone: '110-003', unit: '指挥中心', backup: '郑警官、周警官', status: '待值班'}
+            {date: '2026-05-20', shift: '夜班', leader: '王教导员', staff: '陈警官、刘警官', phone: '110-003', unit: '指挥中心', backup: '郑警官、周警官', status: '待值班'},
+            {date: '2026-05-21', shift: '中班', leader: '刘所长', staff: '赵警官、钱警官', phone: '110-004', unit: '北区派出所', backup: '孙警官、李警官', status: '待值班'},
+            {date: '2026-05-22', shift: '全天', leader: '周所长', staff: '吴警官、郑警官', phone: '110-005', unit: '南区派出所', backup: '王警官、赵警官', status: '待值班'},
+            {date: '2026-05-21', shift: '夜班', leader: '孙主任', staff: '李警官、王警官', phone: '110-006', unit: '指挥中心', backup: '刘警官、陈警官', status: '待值班'}
         ]
     },
     petition: {
         items: [
             {id: 'XF202601', petitioner: '陈先生', phone: '138****5678', title: '关于户籍迁移问题的咨询', type: '咨询建议', acceptDate: '2026-05-18', unit: '户籍科', status: '办理中'},
             {id: 'XF202602', petitioner: '王女士', phone: '139****9012', title: '邻里噪声扰民问题投诉', type: '投诉请求', acceptDate: '2026-05-15', unit: '社区警务室', status: '已办结'},
-            {id: 'XF202603', petitioner: '赵先生', phone: '135****3456', title: '身份证办理进度查询', type: '咨询建议', acceptDate: '2026-05-19', unit: '便民服务中心', status: '已答复'}
+            {id: 'XF202603', petitioner: '赵先生', phone: '135****3456', title: '身份证办理进度查询', type: '咨询建议', acceptDate: '2026-05-19', unit: '便民服务中心', status: '已答复'},
+            {id: 'XF202604', petitioner: '刘女士', phone: '136****7890', title: '出入境证件办理咨询', type: '咨询建议', acceptDate: '2026-05-17', unit: '出入境管理科', status: '已答复'},
+            {id: 'XF202605', petitioner: '周先生', phone: '137****2345', title: '小区治安问题反映', type: '投诉请求', acceptDate: '2026-05-16', unit: '社区警务室', status: '办理中'},
+            {id: 'XF202606', petitioner: '孙女士', phone: '133****6789', title: '交通违章处理异议', type: '投诉请求', acceptDate: '2026-05-14', unit: '交警大队', status: '已办结'}
         ]
     },
     assessment: {
         records: [
             {id: 'KH20260501', name: '张三', policeId: '110001', unit: '刑侦大队', period: '月度考核', score: 95, rank: '优秀', status: '已评定'},
             {id: 'KH20260502', name: '李四', policeId: '110002', unit: '社区警务', period: '月度考核', score: 88, rank: '良好', status: '已评定'},
-            {id: 'KH20260503', name: '王五', policeId: '110003', unit: '指挥中心', period: '月度考核', score: 92, rank: '优秀', status: '评定中'}
+            {id: 'KH20260503', name: '王五', policeId: '110003', unit: '指挥中心', period: '月度考核', score: 92, rank: '优秀', status: '评定中'},
+            {id: 'KH20260504', name: '赵六', policeId: '110004', unit: '情报研判', period: '月度考核', score: 85, rank: '良好', status: '已评定'},
+            {id: 'KH20260505', name: '孙七', policeId: '110005', unit: '交通管理', period: '月度考核', score: 78, rank: '合格', status: '已评定'},
+            {id: 'KH20260506', name: '周八', policeId: '110006', unit: '法制监督', period: '月度考核', score: 90, rank: '优秀', status: '评定中'}
         ]
     },
     infoData: {
@@ -2780,13 +2842,18 @@ let data = {
             {id: 'XX20260524001', type: '工作要闻', title: '全省公安机关夏季治安打击整治专项行动动员部署会召开', summary: '省厅召开专题会议，部署夏季治安打击整治专项行动相关工作', unit: '省公安厅', date: '2026-05-24', views: 1256, status: '已发布'},
             {id: 'XX20260523002', type: '工作要闻', title: '省厅领导视察指挥中心信息化建设工作', summary: '省厅领导一行莅临我市视察情指行一体化实战平台建设情况', unit: '指挥中心', date: '2026-05-23', views: 986, status: '已发布'},
             {id: 'XX20260522003', type: '工作要闻', title: '我市公安大数据智能化建设经验获全省推广', summary: '我市公安大数据建设经验在全省公安信息化工作会议上作典型发言', unit: '科信支队', date: '2026-05-22', views: 1120, status: '已发布'},
+            {id: 'XX20260521011', type: '工作要闻', title: '市公安局召开党风廉政建设专题会议', summary: '传达学习上级党风廉政建设会议精神，部署下一阶段工作', unit: '政治部', date: '2026-05-21', views: 856, status: '已发布'},
+            {id: 'XX20260520012', type: '工作要闻', title: '全市公安系统实战大练兵活动正式启动', summary: '为期三个月的实战大练兵活动全面展开，提升队伍战斗力', unit: '训练支队', date: '2026-05-20', views: 1023, status: '已发布'},
             {id: 'XX20260524004', type: '通知通报', title: '关于开展夏季治安打击整治专项行动的通知', summary: '各相关单位按照通知要求做好专项行动组织部署工作', unit: '指挥中心', date: '2026-05-24', views: 2341, status: '置顶'},
             {id: 'XX20260523005', type: '通知通报', title: '警务综合应用平台系统升级维护公告', summary: '系统将于本周末进行升级维护，请提前做好准备', unit: '科信支队', date: '2026-05-23', views: 1890, status: '已发布'},
             {id: 'XX20260522006', type: '通知通报', title: '关于加强警情数据安全管理的紧急通知', summary: '各单位要严格落实警情数据安全管理规定，杜绝数据泄露', unit: '网安支队', date: '2026-05-22', views: 1567, status: '已发布'},
             {id: 'XX20260520007', type: '通知通报', title: '2025年度第二期警务执法培训报名通知', summary: '请各单位组织符合条件民警报名参加执法培训', unit: '法制支队', date: '2026-05-20', views: 987, status: '已发布'},
+            {id: 'XX20260519013', type: '通知通报', title: '关于做好"五一"假期安保工作的通知', summary: '各单位要加强值班备勤，确保节日期间社会治安稳定', unit: '指挥中心', date: '2026-05-19', views: 2100, status: '已发布'},
+            {id: 'XX20260518014', type: '通知通报', title: '户籍窗口延时服务公告', summary: '为方便群众办理业务，户籍窗口延长服务时间至下午6点', unit: '户政科', date: '2026-05-18', views: 1680, status: '已发布'},
             {id: 'XX20260524008', type: '各地动态', title: '桥西派出所成功化解一起邻里纠纷', summary: '桥西派出所通过耐心调解，成功化解一起长期邻里纠纷', unit: '桥西派出所', date: '2026-05-24', views: 678, status: '已发布'},
             {id: 'XX20260523009', type: '各地动态', title: '朝阳派出所开展反诈入户宣传活动', summary: '朝阳派出所组织民警深入社区开展反电信网络诈骗宣传', unit: '朝阳派出所', date: '2026-05-23', views: 789, status: '已发布'},
-            {id: 'XX20260522010', type: '各地动态', title: '新东派出所联合多部门调解噪声扰民纠纷', summary: '新东派出所联合环保、城管等部门妥善解决噪声扰民问题', unit: '新东派出所', date: '2026-05-22', views: 543, status: '已发布'}
+            {id: 'XX20260522010', type: '各地动态', title: '新东派出所联合多部门调解噪声扰民纠纷', summary: '新东派出所联合环保、城管等部门妥善解决噪声扰民问题', unit: '新东派出所', date: '2026-05-22', views: 543, status: '已发布'},
+            {id: 'XX20260521015', type: '各地动态', title: '北城派出所组织校园安全检查', summary: '对辖区内中小学幼儿园进行安全隐患排查，确保校园安全', unit: '北城派出所', date: '2026-05-21', views: 624, status: '已发布'}
         ]
     },
     marketData: {
@@ -3228,7 +3295,15 @@ function ensureDefaultData() {
             {id: 'JJ2026051801', reporter: '张某', victim: '王某', type: '财物丢失', time: '2026-05-18 08:20', location: '幸福小区12号楼', officer: '执勤一组', status: '处置中',
              process: '已派警', records: ['接到报警', '派员处置', '现场勘查']},
             {id: 'JJ2026051802', reporter: '李某', victim: '赵某', type: '民事纠纷', time: '2026-05-18 10:12', location: '花园社区广场', officer: '调解班组', status: '已办结',
-             process: '已结案', records: ['接到报警', '派员处置', '现场调解', '达成协议', '结案归档']}
+             process: '已结案', records: ['接到报警', '派员处置', '现场调解', '达成协议', '结案归档']},
+            {id: 'JJ2026051803', reporter: '陈某', victim: '刘某', type: '交通肇事', time: '2026-05-18 14:35', location: '人民路与解放路交叉口', officer: '交警大队', status: '处置中',
+             process: '已立案', records: ['接到报警', '派员处置', '现场勘查', '责任认定']},
+            {id: 'JJ2026051804', reporter: '王某', victim: '吴某', type: '殴打他人', time: '2026-05-18 16:45', location: '市中心商业街', officer: '治安大队', status: '待处理',
+             process: '待受理', records: ['接到报警', '登记备案']},
+            {id: 'JJ2026051805', reporter: '赵某', victim: '周某', type: '盗窃', time: '2026-05-18 19:20', location: '科技园区办公楼', officer: '刑侦大队', status: '处置中',
+             process: '侦查中', records: ['接到报警', '派员处置', '现场勘查', '调取监控']},
+            {id: 'JJ2026051806', reporter: '孙某', victim: '陈某', type: '噪音扰民', time: '2026-05-18 22:10', location: '西城小区8号楼', officer: '社区警务', status: '已办结',
+             process: '已处理', records: ['接到报警', '现场核实', '劝导教育', '问题解决']}
         ];
     }
     
@@ -3239,7 +3314,16 @@ function ensureDefaultData() {
              timeline: ['2026-05-10 报案', '2026-05-11 立案', '2026-05-12 侦查取证']},
             {id: 'XA2026022', type: '寻衅滋事', person: '赵某', time: '2026-05-12', progress: '结案归档',
              caseStatus: '已结案', investigator: '治安大队', evidence: ['当事人陈述', '证人证言'],
-             timeline: ['2026-05-12 报案', '2026-05-13 立案', '2026-05-14 调查取证', '2026-05-18 结案归档']}
+             timeline: ['2026-05-12 报案', '2026-05-13 立案', '2026-05-14 调查取证', '2026-05-18 结案归档']},
+            {id: 'XA2026023', type: '故意伤害', person: '陈某', time: '2026-05-14', progress: '审查起诉',
+             caseStatus: '办理中', investigator: '刑侦大队', evidence: ['伤情鉴定', '证人证言', '现场勘查'],
+             timeline: ['2026-05-14 报案', '2026-05-15 立案', '2026-05-16 侦查取证', '2026-05-17 审查起诉']},
+            {id: 'XA2026024', type: '交通肇事', person: '刘某', time: '2026-05-15', progress: '移送起诉',
+             caseStatus: '办理中', investigator: '交警大队', evidence: ['事故认定书', '监控视频', '酒精检测'],
+             timeline: ['2026-05-15 报案', '2026-05-15 立案', '2026-05-16 调查取证', '2026-05-18 移送起诉']},
+            {id: 'XA2026025', type: '诈骗案', person: '周某', time: '2026-05-16', progress: '立案审查',
+             caseStatus: '办理中', investigator: '刑侦大队', evidence: ['银行流水', '聊天记录'],
+             timeline: ['2026-05-16 报案', '2026-05-17 立案']}
         ];
     }
     
@@ -3250,7 +3334,19 @@ function ensureDefaultData() {
              riskLevel: '高风险', notes: '有盗窃前科'},
             {id: 'RY002', name: '刘某', idCard: '152XXXX1234', level: '二级管控', address: '城西惠民社区',
              relatedPersons: ['陈某'], trackRecords: ['2026-05-14 公园', '2026-05-16 超市'],
-             riskLevel: '中风险', notes: '重点关注人员'}
+             riskLevel: '中风险', notes: '重点关注人员'},
+            {id: 'RY003', name: '周某', idCard: '131XXXX5678', level: '一级管控', address: '北区工业园附近',
+             relatedPersons: ['吴某'], trackRecords: ['2026-05-13 工业园区', '2026-05-15 物流中心', '2026-05-18 火车站'],
+             riskLevel: '高风险', notes: '涉毒人员'},
+            {id: 'RY004', name: '吴某', idCard: '132XXXX9012', level: '二级管控', address: '东区花园小区',
+             relatedPersons: ['周某'], trackRecords: ['2026-05-14 购物中心', '2026-05-17 医院'],
+             riskLevel: '中风险', notes: '涉毒关联人员'},
+            {id: 'RY005', name: '杨某', idCard: '133XXXX3456', level: '三级管控', address: '南区商业街',
+             relatedPersons: [], trackRecords: ['2026-05-16 商业街', '2026-05-18 超市'],
+             riskLevel: '低风险', notes: '社区矫正人员'},
+            {id: 'RY006', name: '赵某', idCard: '134XXXX7890', level: '一级管控', address: '西区城中村',
+             relatedPersons: ['陈某', '刘某'], trackRecords: ['2026-05-15 汽车站', '2026-05-17 网吧', '2026-05-18 酒店'],
+             riskLevel: '高风险', notes: '多次寻衅滋事'}
         ];
     }
     
@@ -3259,7 +3355,13 @@ function ensureDefaultData() {
             {plate: '冀A12345', type: '小型轿车', owner: '周某', status: '重点布控',
              color: '黑色', brand: '大众', trackRecords: ['2026-05-17 幸福路', '2026-05-18 人民路'], riskLevel: '高'},
             {plate: '冀B67890', type: '面包车', owner: '吴某', status: '正常备案',
-             color: '白色', brand: '五菱', trackRecords: [], riskLevel: '低'}
+             color: '白色', brand: '五菱', trackRecords: [], riskLevel: '低'},
+            {plate: '冀C00112', type: '小型轿车', owner: '陈某', status: '重点布控',
+             color: '红色', brand: '丰田', trackRecords: ['2026-05-16 火车站', '2026-05-17 商业中心'], riskLevel: '高'},
+            {plate: '冀D33445', type: 'SUV', owner: '刘某', status: '临时布控',
+             color: '银色', brand: '本田', trackRecords: ['2026-05-18 工业园区'], riskLevel: '中'},
+            {plate: '冀E66778', type: '货车', owner: '赵某', status: '正常备案',
+             color: '蓝色', brand: '江淮', trackRecords: [], riskLevel: '低'}
         ];
     }
     
@@ -3268,14 +3370,26 @@ function ensureDefaultData() {
             {id: 'WP011', name: '手机', count: '2部', time: '2026-05-15', location: '物证保管室A区',
              caseId: 'XA2026021', status: '已登记', keeper: '物证管理员', inTime: '2026-05-15 14:30', outTime: ''},
             {id: 'WP012', name: '现金', count: '5000元', time: '2026-05-16', location: '财务封存库房',
-             caseId: 'XA2026022', status: '已移交', keeper: '财务室', inTime: '2026-05-16 09:00', outTime: '2026-05-18 10:00'}
+             caseId: 'XA2026022', status: '已移交', keeper: '财务室', inTime: '2026-05-16 09:00', outTime: '2026-05-18 10:00'},
+            {id: 'WP013', name: '笔记本电脑', count: '1台', time: '2026-05-17', location: '物证保管室B区',
+             caseId: 'XA2026023', status: '已登记', keeper: '物证管理员', inTime: '2026-05-17 16:00', outTime: ''},
+            {id: 'WP014', name: '管制刀具', count: '3把', time: '2026-05-18', location: '涉案物品专管库',
+             caseId: 'XA2026024', status: '已登记', keeper: '治安大队', inTime: '2026-05-18 11:30', outTime: ''},
+            {id: 'WP015', name: '银行卡', count: '5张', time: '2026-05-18', location: '物证保管室A区',
+             caseId: 'XA2026025', status: '已登记', keeper: '刑侦大队', inTime: '2026-05-18 15:00', outTime: ''}
         ];
     }
     
     if (!data.logs || data.logs.length === 0) {
         data.logs = [
             {account: 'admin01', name: '系统管理员', action: '新增案件数据', time: '2026-05-18 09:15', ip: '10.26.18.145'},
-            {account: 'police02', name: '执勤民警', action: '修改人员信息', time: '2026-05-18 10:02', ip: '10.26.18.156'}
+            {account: 'police02', name: '执勤民警', action: '修改人员信息', time: '2026-05-18 10:02', ip: '10.26.18.156'},
+            {account: 'zhangsan', name: '张三', action: '录入接警记录', time: '2026-05-18 11:30', ip: '10.26.18.148'},
+            {account: 'lisi', name: '李四', action: '上传案件证据', time: '2026-05-18 13:45', ip: '10.26.18.152'},
+            {account: 'wangwu', name: '王五', action: '更新重点人员轨迹', time: '2026-05-18 14:20', ip: '10.26.18.146'},
+            {account: 'admin', name: '超级管理员', action: '系统数据备份', time: '2026-05-18 15:00', ip: '10.26.18.100'},
+            {account: 'zhouba', name: '周八', action: '执法监督检查', time: '2026-05-18 16:30', ip: '10.26.18.158'},
+            {account: 'xck', name: '宣传科', action: '发布工作要闻', time: '2026-05-18 17:15', ip: '10.26.18.160'}
         ];
     }
     
@@ -3328,7 +3442,10 @@ function ensureDefaultData() {
             tasks: [
                 {id: 'ZZ202601', name: '夏季治安打击整治行动', leadUnit: '刑侦支队', partnerUnits: '交警/治安/网安', level: '一级', startTime: '2026-05-15', commander: '张大队长', status: '执行中'},
                 {id: 'ZZ202602', name: '重点人员联合布控', leadUnit: '指挥中心', partnerUnits: '情报/刑侦/派出所', level: '二级', startTime: '2026-05-10', commander: '李主任', status: '执行中'},
-                {id: 'ZZ202603', name: '禁毒专项行动', leadUnit: '禁毒支队', partnerUnits: '刑侦/交警/巡特警', level: '一级', startTime: '2026-05-08', commander: '王支队长', status: '待启动'}
+                {id: 'ZZ202603', name: '禁毒专项行动', leadUnit: '禁毒支队', partnerUnits: '刑侦/交警/巡特警', level: '一级', startTime: '2026-05-08', commander: '王支队长', status: '待启动'},
+                {id: 'ZZ202604', name: '反诈宣传专项行动', leadUnit: '刑侦支队', partnerUnits: '社区警务/宣传科', level: '二级', startTime: '2026-05-12', commander: '刘大队长', status: '执行中'},
+                {id: 'ZZ202605', name: '交通秩序整治', leadUnit: '交警大队', partnerUnits: '巡警/城管', level: '二级', startTime: '2026-05-18', commander: '孙大队长', status: '执行中'},
+                {id: 'ZZ202606', name: '校园周边安全排查', leadUnit: '治安大队', partnerUnits: '派出所/教育部门', level: '三级', startTime: '2026-05-20', commander: '赵大队长', status: '待启动'}
             ]
         };
     }
@@ -3338,7 +3455,10 @@ function ensureDefaultData() {
             files: [
                 {id: 'JZ2026001', name: '盗窃案卷宗', caseId: 'XA2026021', type: '刑事案件', archiveDate: '2026-05-18', unit: '刑侦大队', period: '永久', status: '已归档'},
                 {id: 'JZ2026002', name: '寻衅滋事案卷宗', caseId: 'XA2026022', type: '行政案件', archiveDate: '2026-05-15', unit: '治安大队', period: '长期', status: '查阅中'},
-                {id: 'JZ2026003', name: '接处警卷宗', caseId: 'JJ2026051801', type: '接处警', archiveDate: '2026-05-20', unit: '城东派出所', period: '30年', status: '已归档'}
+                {id: 'JZ2026003', name: '接处警卷宗', caseId: 'JJ2026051801', type: '接处警', archiveDate: '2026-05-20', unit: '城东派出所', period: '30年', status: '已归档'},
+                {id: 'JZ2026004', name: '故意伤害案卷宗', caseId: 'XA2026023', type: '刑事案件', archiveDate: '2026-05-17', unit: '刑侦大队', period: '永久', status: '归档中'},
+                {id: 'JZ2026005', name: '交通肇事案卷宗', caseId: 'XA2026024', type: '行政案件', archiveDate: '2026-05-18', unit: '交警大队', period: '长期', status: '已归档'},
+                {id: 'JZ2026006', name: '诈骗案卷宗', caseId: 'XA2026025', type: '刑事案件', archiveDate: '2026-05-18', unit: '刑侦大队', period: '永久', status: '归档中'}
             ]
         };
     }
@@ -3348,7 +3468,10 @@ function ensureDefaultData() {
             rosters: [
                 {date: '2026-05-20', shift: '全天', leader: '张所长', staff: '王警官、李警官', phone: '110-001', unit: '城东派出所', backup: '赵警官、孙警官', status: '值班中'},
                 {date: '2026-05-21', shift: '早班', leader: '李副所长', staff: '王警官、周警官', phone: '110-002', unit: '城西派出所', backup: '钱警官、吴警官', status: '待值班'},
-                {date: '2026-05-20', shift: '夜班', leader: '王教导员', staff: '陈警官、刘警官', phone: '110-003', unit: '指挥中心', backup: '郑警官、周警官', status: '待值班'}
+                {date: '2026-05-20', shift: '夜班', leader: '王教导员', staff: '陈警官、刘警官', phone: '110-003', unit: '指挥中心', backup: '郑警官、周警官', status: '待值班'},
+                {date: '2026-05-21', shift: '中班', leader: '刘所长', staff: '赵警官、钱警官', phone: '110-004', unit: '北区派出所', backup: '孙警官、李警官', status: '待值班'},
+                {date: '2026-05-22', shift: '全天', leader: '周所长', staff: '吴警官、郑警官', phone: '110-005', unit: '南区派出所', backup: '王警官、赵警官', status: '待值班'},
+                {date: '2026-05-21', shift: '夜班', leader: '孙主任', staff: '李警官、王警官', phone: '110-006', unit: '指挥中心', backup: '刘警官、陈警官', status: '待值班'}
             ]
         };
     }
@@ -3358,7 +3481,10 @@ function ensureDefaultData() {
             items: [
                 {id: 'XF202601', petitioner: '陈先生', phone: '138****5678', title: '关于户籍迁移问题的咨询', type: '咨询建议', acceptDate: '2026-05-18', unit: '户籍科', status: '办理中'},
                 {id: 'XF202602', petitioner: '王女士', phone: '139****9012', title: '邻里噪声扰民问题投诉', type: '投诉请求', acceptDate: '2026-05-15', unit: '社区警务室', status: '已办结'},
-                {id: 'XF202603', petitioner: '赵先生', phone: '135****3456', title: '身份证办理进度查询', type: '咨询建议', acceptDate: '2026-05-19', unit: '便民服务中心', status: '已答复'}
+                {id: 'XF202603', petitioner: '赵先生', phone: '135****3456', title: '身份证办理进度查询', type: '咨询建议', acceptDate: '2026-05-19', unit: '便民服务中心', status: '已答复'},
+                {id: 'XF202604', petitioner: '刘女士', phone: '136****7890', title: '出入境证件办理咨询', type: '咨询建议', acceptDate: '2026-05-17', unit: '出入境管理科', status: '已答复'},
+                {id: 'XF202605', petitioner: '周先生', phone: '137****2345', title: '小区治安问题反映', type: '投诉请求', acceptDate: '2026-05-16', unit: '社区警务室', status: '办理中'},
+                {id: 'XF202606', petitioner: '孙女士', phone: '133****6789', title: '交通违章处理异议', type: '投诉请求', acceptDate: '2026-05-14', unit: '交警大队', status: '已办结'}
             ]
         };
     }
@@ -3368,7 +3494,10 @@ function ensureDefaultData() {
             records: [
                 {id: 'KH20260501', name: '张三', policeId: '110001', unit: '刑侦大队', period: '月度考核', score: 95, rank: '优秀', status: '已评定'},
                 {id: 'KH20260502', name: '李四', policeId: '110002', unit: '社区警务', period: '月度考核', score: 88, rank: '良好', status: '已评定'},
-                {id: 'KH20260503', name: '王五', policeId: '110003', unit: '指挥中心', period: '月度考核', score: 92, rank: '优秀', status: '评定中'}
+                {id: 'KH20260503', name: '王五', policeId: '110003', unit: '指挥中心', period: '月度考核', score: 92, rank: '优秀', status: '评定中'},
+                {id: 'KH20260504', name: '赵六', policeId: '110004', unit: '情报研判', period: '月度考核', score: 85, rank: '良好', status: '已评定'},
+                {id: 'KH20260505', name: '孙七', policeId: '110005', unit: '交通管理', period: '月度考核', score: 78, rank: '合格', status: '已评定'},
+                {id: 'KH20260506', name: '周八', policeId: '110006', unit: '法制监督', period: '月度考核', score: 90, rank: '优秀', status: '评定中'}
             ]
         };
     }
@@ -3379,13 +3508,18 @@ function ensureDefaultData() {
                 {id: 'XX20260524001', type: '工作要闻', title: '全省公安机关夏季治安打击整治专项行动动员部署会召开', summary: '省厅召开专题会议，部署夏季治安打击整治专项行动相关工作', unit: '省公安厅', date: '2026-05-24', views: 1256, status: '已发布'},
                 {id: 'XX20260523002', type: '工作要闻', title: '省厅领导视察指挥中心信息化建设工作', summary: '省厅领导一行莅临我市视察情指行一体化实战平台建设情况', unit: '指挥中心', date: '2026-05-23', views: 986, status: '已发布'},
                 {id: 'XX20260522003', type: '工作要闻', title: '我市公安大数据智能化建设经验获全省推广', summary: '我市公安大数据建设经验在全省公安信息化工作会议上作典型发言', unit: '科信支队', date: '2026-05-22', views: 1120, status: '已发布'},
+                {id: 'XX20260521011', type: '工作要闻', title: '市公安局召开党风廉政建设专题会议', summary: '传达学习上级党风廉政建设会议精神，部署下一阶段工作', unit: '政治部', date: '2026-05-21', views: 856, status: '已发布'},
+                {id: 'XX20260520012', type: '工作要闻', title: '全市公安系统实战大练兵活动正式启动', summary: '为期三个月的实战大练兵活动全面展开，提升队伍战斗力', unit: '训练支队', date: '2026-05-20', views: 1023, status: '已发布'},
                 {id: 'XX20260524004', type: '通知通报', title: '关于开展夏季治安打击整治专项行动的通知', summary: '各相关单位按照通知要求做好专项行动组织部署工作', unit: '指挥中心', date: '2026-05-24', views: 2341, status: '置顶'},
                 {id: 'XX20260523005', type: '通知通报', title: '警务综合应用平台系统升级维护公告', summary: '系统将于本周末进行升级维护，请提前做好准备', unit: '科信支队', date: '2026-05-23', views: 1890, status: '已发布'},
                 {id: 'XX20260522006', type: '通知通报', title: '关于加强警情数据安全管理的紧急通知', summary: '各单位要严格落实警情数据安全管理规定，杜绝数据泄露', unit: '网安支队', date: '2026-05-22', views: 1567, status: '已发布'},
                 {id: 'XX20260520007', type: '通知通报', title: '2025年度第二期警务执法培训报名通知', summary: '请各单位组织符合条件民警报名参加执法培训', unit: '法制支队', date: '2026-05-20', views: 987, status: '已发布'},
+                {id: 'XX20260519013', type: '通知通报', title: '关于做好"五一"假期安保工作的通知', summary: '各单位要加强值班备勤，确保节日期间社会治安稳定', unit: '指挥中心', date: '2026-05-19', views: 2100, status: '已发布'},
+                {id: 'XX20260518014', type: '通知通报', title: '户籍窗口延时服务公告', summary: '为方便群众办理业务，户籍窗口延长服务时间至下午6点', unit: '户政科', date: '2026-05-18', views: 1680, status: '已发布'},
                 {id: 'XX20260524008', type: '各地动态', title: '桥西派出所成功化解一起邻里纠纷', summary: '桥西派出所通过耐心调解，成功化解一起长期邻里纠纷', unit: '桥西派出所', date: '2026-05-24', views: 678, status: '已发布'},
                 {id: 'XX20260523009', type: '各地动态', title: '朝阳派出所开展反诈入户宣传活动', summary: '朝阳派出所组织民警深入社区开展反电信网络诈骗宣传', unit: '朝阳派出所', date: '2026-05-23', views: 789, status: '已发布'},
-                {id: 'XX20260522010', type: '各地动态', title: '新东派出所联合多部门调解噪声扰民纠纷', summary: '新东派出所联合环保、城管等部门妥善解决噪声扰民问题', unit: '新东派出所', date: '2026-05-22', views: 543, status: '已发布'}
+                {id: 'XX20260522010', type: '各地动态', title: '新东派出所联合多部门调解噪声扰民纠纷', summary: '新东派出所联合环保、城管等部门妥善解决噪声扰民问题', unit: '新东派出所', date: '2026-05-22', views: 543, status: '已发布'},
+                {id: 'XX20260521015', type: '各地动态', title: '北城派出所组织校园安全检查', summary: '对辖区内中小学幼儿园进行安全隐患排查，确保校园安全', unit: '北城派出所', date: '2026-05-21', views: 624, status: '已发布'}
             ]
         };
     }

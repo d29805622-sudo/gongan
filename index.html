@@ -1491,17 +1491,17 @@
                         <div class="info-list">
                             <div class="info-item">
                                 <span class="info-dot"></span>
-                                <span class="info-text">全省公安机关夏季治安打击整治专项行动动员部署会召开</span>
+                                <span class="info-text" style="color:#1a73e8;cursor:pointer;" onclick="viewHomeNews('XX20260524001')">全省公安机关夏季治安打击整治专项行动动员部署会召开</span>
                                 <span class="info-date">05-24</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-dot"></span>
-                                <span class="info-text">省厅领导视察指挥中心信息化建设工作</span>
+                                <span class="info-text" style="color:#1a73e8;cursor:pointer;" onclick="viewHomeNews('XX20260523002')">省厅领导视察指挥中心信息化建设工作</span>
                                 <span class="info-date">05-23</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-dot"></span>
-                                <span class="info-text">我市公安大数据智能化建设经验获全省推广</span>
+                                <span class="info-text" style="color:#1a73e8;cursor:pointer;" onclick="viewHomeNews('XX20260522003')">我市公安大数据智能化建设经验获全省推广</span>
                                 <span class="info-date">05-22</span>
                             </div>
                         </div>
@@ -1516,22 +1516,22 @@
                         <div class="info-list">
                             <div class="info-item important">
                                 <span class="info-dot red"></span>
-                                <span class="info-text">关于开展夏季治安打击整治专项行动的通知</span>
+                                <span class="info-text" style="color:#1a73e8;cursor:pointer;" onclick="viewHomeNews('XX20260524004')">关于开展夏季治安打击整治专项行动的通知</span>
                                 <span class="info-date">05-24</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-dot"></span>
-                                <span class="info-text">警务综合应用平台系统升级维护公告</span>
+                                <span class="info-text" style="color:#1a73e8;cursor:pointer;" onclick="viewHomeNews('XX20260523005')">警务综合应用平台系统升级维护公告</span>
                                 <span class="info-date">05-23</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-dot"></span>
-                                <span class="info-text">关于加强警情数据安全管理的紧急通知</span>
+                                <span class="info-text" style="color:#1a73e8;cursor:pointer;" onclick="viewHomeNews('XX20260522006')">关于加强警情数据安全管理的紧急通知</span>
                                 <span class="info-date">05-22</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-dot"></span>
-                                <span class="info-text">2025年度第二期警务执法培训报名通知</span>
+                                <span class="info-text" style="color:#1a73e8;cursor:pointer;" onclick="viewHomeNews('XX20260520007')">2025年度第二期警务执法培训报名通知</span>
                                 <span class="info-date">05-20</span>
                             </div>
                         </div>
@@ -1546,17 +1546,17 @@
                         <div class="info-list">
                             <div class="info-item">
                                 <span class="info-dot blue"></span>
-                                <span class="info-text">桥西派出所成功化解一起邻里纠纷</span>
+                                <span class="info-text" style="color:#1a73e8;cursor:pointer;" onclick="viewHomeNews('XX20260524008')">桥西派出所成功化解一起邻里纠纷</span>
                                 <span class="info-date">05-24</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-dot blue"></span>
-                                <span class="info-text">朝阳派出所开展反诈入户宣传活动</span>
+                                <span class="info-text" style="color:#1a73e8;cursor:pointer;" onclick="viewHomeNews('XX20260523009')">朝阳派出所开展反诈入户宣传活动</span>
                                 <span class="info-date">05-23</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-dot blue"></span>
-                                <span class="info-text">新东派出所联合多部门调解噪声扰民纠纷</span>
+                                <span class="info-text" style="color:#1a73e8;cursor:pointer;" onclick="viewHomeNews('XX20260522010')">新东派出所联合多部门调解噪声扰民纠纷</span>
                                 <span class="info-date">05-22</span>
                             </div>
                         </div>
@@ -3768,6 +3768,23 @@ function getStatusClass(status) {
     if (status.includes('中') || status.includes('布控')) return 'stat-blue';
     if (status.includes('一')) return 'stat-red';
     return '';
+}
+
+// 查看工作台新闻详情
+function viewHomeNews(id) {
+    const item = (data.infoData && data.infoData.items || []).find(i => i.id === id);
+    if (item) {
+        openModal('信息详情', `
+            <div class="form-item"><label>编号：</label><span>${item.id}</span></div>
+            <div class="form-item"><label>类型：</label><span class="${getStatusClass(item.type)}">${item.type}</span></div>
+            <div class="form-item"><label>标题：</label><span>${item.title}</span></div>
+            <div class="form-item"><label>摘要：</label><span>${item.summary}</span></div>
+            <div class="form-item"><label>发布单位：</label><span>${item.unit}</span></div>
+            <div class="form-item"><label>发布日期：</label><span>${item.date}</span></div>
+            <div class="form-item"><label>浏览次数：</label><span>${item.views}</span></div>
+            <div class="form-item"><label>状态：</label><span class="${getStatusClass(item.status)}">${item.status}</span></div>
+        `);
+    }
 }
 
 // 渲染表格

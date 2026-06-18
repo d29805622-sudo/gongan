@@ -1403,6 +1403,9 @@
         <div class="menu-first">系统运维管理</div>
         <div class="menu-second" onclick="switchPage('log')">操作日志审计</div>
         <div class="menu-second" onclick="switchPage('sys')">账号权限管理</div>
+        
+        <div class="menu-first">信息宣传</div>
+        <div class="menu-second" onclick="switchPage('info')">信息发布中心</div>
     </div>
 
     <div class="content-wrap">
@@ -1480,7 +1483,7 @@
                     <div class="info-section">
                         <div class="info-header">
                             <span class="info-title">工作要闻</span>
-                            <a href="#" class="info-more" onclick="event.preventDefault(); switchPage('command');">更多 &raquo;</a>
+                            <a href="#" class="info-more" onclick="event.preventDefault(); switchPage('info');">更多 &raquo;</a>
                         </div>
                         <div class="info-list">
                             <div class="info-item">
@@ -1505,7 +1508,7 @@
                     <div class="info-section">
                         <div class="info-header">
                             <span class="info-title">通知通报</span>
-                            <a href="#" class="info-more" onclick="event.preventDefault(); switchPage('supervision');">更多 &raquo;</a>
+                            <a href="#" class="info-more" onclick="event.preventDefault(); switchPage('info');">更多 &raquo;</a>
                         </div>
                         <div class="info-list">
                             <div class="info-item important">
@@ -1535,7 +1538,7 @@
                     <div class="info-section">
                         <div class="info-header">
                             <span class="info-title">各地动态</span>
-                            <a href="#" class="info-more" onclick="event.preventDefault(); switchPage('community');">更多 &raquo;</a>
+                            <a href="#" class="info-more" onclick="event.preventDefault(); switchPage('info');">更多 &raquo;</a>
                         </div>
                         <div class="info-list">
                             <div class="info-item">
@@ -2544,6 +2547,40 @@
                 </tbody>
             </table>
         </div>
+        <!-- 信息发布中心 -->
+        <div class="page-content" id="info">
+            <div class="title-txt">信息发布与公告中心</div>
+            
+            <div class="search-bar">
+                <input type="text" class="input-text" placeholder="标题/内容关键词搜索" id="infoSearch">
+                <select class="select-box" id="infoTypeFilter">
+                    <option value="">全部栏目</option>
+                    <option value="工作要闻">工作要闻</option>
+                    <option value="通知通报">通知通报</option>
+                    <option value="各地动态">各地动态</option>
+                </select>
+                <button class="btn btn-search" onclick="searchInfo()">搜索</button>
+                <button class="btn btn-add" onclick="addInfo()">新增发布</button>
+                <button class="btn btn-close" onclick="resetInfo()">重置</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>信息编号</th>
+                        <th>栏目分类</th>
+                        <th>信息标题</th>
+                        <th>内容摘要</th>
+                        <th>发布单位</th>
+                        <th>发布日期</th>
+                        <th>浏览量</th>
+                        <th>状态</th>
+                        <th>操作管理</th>
+                    </tr>
+                </thead>
+                <tbody id="infoTableBody">
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -2736,6 +2773,20 @@ let data = {
             {id: 'KH20260501', name: '张三', policeId: '110001', unit: '刑侦大队', period: '月度考核', score: 95, rank: '优秀', status: '已评定'},
             {id: 'KH20260502', name: '李四', policeId: '110002', unit: '社区警务', period: '月度考核', score: 88, rank: '良好', status: '已评定'},
             {id: 'KH20260503', name: '王五', policeId: '110003', unit: '指挥中心', period: '月度考核', score: 92, rank: '优秀', status: '评定中'}
+        ]
+    },
+    infoData: {
+        items: [
+            {id: 'XX20260524001', type: '工作要闻', title: '全省公安机关夏季治安打击整治专项行动动员部署会召开', summary: '省厅召开专题会议，部署夏季治安打击整治专项行动相关工作', unit: '省公安厅', date: '2026-05-24', views: 1256, status: '已发布'},
+            {id: 'XX20260523002', type: '工作要闻', title: '省厅领导视察指挥中心信息化建设工作', summary: '省厅领导一行莅临我市视察情指行一体化实战平台建设情况', unit: '指挥中心', date: '2026-05-23', views: 986, status: '已发布'},
+            {id: 'XX20260522003', type: '工作要闻', title: '我市公安大数据智能化建设经验获全省推广', summary: '我市公安大数据建设经验在全省公安信息化工作会议上作典型发言', unit: '科信支队', date: '2026-05-22', views: 1120, status: '已发布'},
+            {id: 'XX20260524004', type: '通知通报', title: '关于开展夏季治安打击整治专项行动的通知', summary: '各相关单位按照通知要求做好专项行动组织部署工作', unit: '指挥中心', date: '2026-05-24', views: 2341, status: '置顶'},
+            {id: 'XX20260523005', type: '通知通报', title: '警务综合应用平台系统升级维护公告', summary: '系统将于本周末进行升级维护，请提前做好准备', unit: '科信支队', date: '2026-05-23', views: 1890, status: '已发布'},
+            {id: 'XX20260522006', type: '通知通报', title: '关于加强警情数据安全管理的紧急通知', summary: '各单位要严格落实警情数据安全管理规定，杜绝数据泄露', unit: '网安支队', date: '2026-05-22', views: 1567, status: '已发布'},
+            {id: 'XX20260520007', type: '通知通报', title: '2025年度第二期警务执法培训报名通知', summary: '请各单位组织符合条件民警报名参加执法培训', unit: '法制支队', date: '2026-05-20', views: 987, status: '已发布'},
+            {id: 'XX20260524008', type: '各地动态', title: '桥西派出所成功化解一起邻里纠纷', summary: '桥西派出所通过耐心调解，成功化解一起长期邻里纠纷', unit: '桥西派出所', date: '2026-05-24', views: 678, status: '已发布'},
+            {id: 'XX20260523009', type: '各地动态', title: '朝阳派出所开展反诈入户宣传活动', summary: '朝阳派出所组织民警深入社区开展反电信网络诈骗宣传', unit: '朝阳派出所', date: '2026-05-23', views: 789, status: '已发布'},
+            {id: 'XX20260522010', type: '各地动态', title: '新东派出所联合多部门调解噪声扰民纠纷', summary: '新东派出所联合环保、城管等部门妥善解决噪声扰民问题', unit: '新东派出所', date: '2026-05-22', views: 543, status: '已发布'}
         ]
     },
     marketData: {
@@ -3143,6 +3194,7 @@ async function loadData() {
         if (loadedData.duty && Object.keys(loadedData.duty).length > 0) data.duty = loadedData.duty;
         if (loadedData.petition && Object.keys(loadedData.petition).length > 0) data.petition = loadedData.petition;
         if (loadedData.assessment && Object.keys(loadedData.assessment).length > 0) data.assessment = loadedData.assessment;
+        if (loadedData.infoData && Object.keys(loadedData.infoData).length > 0) data.infoData = loadedData.infoData;
     }
     
     // 确保所有模块都有默认数据
@@ -3321,6 +3373,23 @@ function ensureDefaultData() {
         };
     }
     
+    if (!data.infoData || !data.infoData.items || data.infoData.items.length === 0) {
+        data.infoData = {
+            items: [
+                {id: 'XX20260524001', type: '工作要闻', title: '全省公安机关夏季治安打击整治专项行动动员部署会召开', summary: '省厅召开专题会议，部署夏季治安打击整治专项行动相关工作', unit: '省公安厅', date: '2026-05-24', views: 1256, status: '已发布'},
+                {id: 'XX20260523002', type: '工作要闻', title: '省厅领导视察指挥中心信息化建设工作', summary: '省厅领导一行莅临我市视察情指行一体化实战平台建设情况', unit: '指挥中心', date: '2026-05-23', views: 986, status: '已发布'},
+                {id: 'XX20260522003', type: '工作要闻', title: '我市公安大数据智能化建设经验获全省推广', summary: '我市公安大数据建设经验在全省公安信息化工作会议上作典型发言', unit: '科信支队', date: '2026-05-22', views: 1120, status: '已发布'},
+                {id: 'XX20260524004', type: '通知通报', title: '关于开展夏季治安打击整治专项行动的通知', summary: '各相关单位按照通知要求做好专项行动组织部署工作', unit: '指挥中心', date: '2026-05-24', views: 2341, status: '置顶'},
+                {id: 'XX20260523005', type: '通知通报', title: '警务综合应用平台系统升级维护公告', summary: '系统将于本周末进行升级维护，请提前做好准备', unit: '科信支队', date: '2026-05-23', views: 1890, status: '已发布'},
+                {id: 'XX20260522006', type: '通知通报', title: '关于加强警情数据安全管理的紧急通知', summary: '各单位要严格落实警情数据安全管理规定，杜绝数据泄露', unit: '网安支队', date: '2026-05-22', views: 1567, status: '已发布'},
+                {id: 'XX20260520007', type: '通知通报', title: '2025年度第二期警务执法培训报名通知', summary: '请各单位组织符合条件民警报名参加执法培训', unit: '法制支队', date: '2026-05-20', views: 987, status: '已发布'},
+                {id: 'XX20260524008', type: '各地动态', title: '桥西派出所成功化解一起邻里纠纷', summary: '桥西派出所通过耐心调解，成功化解一起长期邻里纠纷', unit: '桥西派出所', date: '2026-05-24', views: 678, status: '已发布'},
+                {id: 'XX20260523009', type: '各地动态', title: '朝阳派出所开展反诈入户宣传活动', summary: '朝阳派出所组织民警深入社区开展反电信网络诈骗宣传', unit: '朝阳派出所', date: '2026-05-23', views: 789, status: '已发布'},
+                {id: 'XX20260522010', type: '各地动态', title: '新东派出所联合多部门调解噪声扰民纠纷', summary: '新东派出所联合环保、城管等部门妥善解决噪声扰民问题', unit: '新东派出所', date: '2026-05-22', views: 543, status: '已发布'}
+            ]
+        };
+    }
+    
     if (!data.marketData || !data.marketData.entities || data.marketData.entities.length === 0) {
         data.marketData = {
             entities: [
@@ -3428,6 +3497,7 @@ function backupOriginalData() {
     originalData.duty = {...data.duty, rosters: [...data.duty.rosters]};
     originalData.petition = {...data.petition, items: [...data.petition.items]};
     originalData.assessment = {...data.assessment, records: [...data.assessment.records]};
+    originalData.infoData = {...data.infoData, items: [...data.infoData.items]};
 }
 
 // 批量保存标识，用于减少localStorage写入
@@ -3475,7 +3545,8 @@ function saveData() {
             fileData: data.fileData,
             duty: data.duty,
             petition: data.petition,
-            assessment: data.assessment
+            assessment: data.assessment,
+            infoData: data.infoData
         };
         const jsonStr = JSON.stringify(allData);
         const encrypted = ENCRYPTION_KEY ? encryptData(jsonStr, ENCRYPTION_KEY) : jsonStr;
@@ -4807,6 +4878,39 @@ async function saveForm() {
                 renderSupervisionTable();
                 addLog('编辑考评', editId);
             }
+        } else if (currentModal === 'addInfo') {
+            const type = document.getElementById('infoType').value;
+            const title = document.getElementById('infoTitle').value;
+            if (!title) { showMsg("请填写信息标题"); return; }
+            const dateStr = document.getElementById('infoDate').value || getTodayStr();
+            const prefix = type === '工作要闻' ? 'YW' : type === '通知通报' ? 'TZ' : 'DT';
+            const newId = 'XX' + dateStr.replace(/-/g, '') + prefix + String(data.infoData.items.length + 1).padStart(3, '0');
+            data.infoData.items.unshift({
+                id: newId,
+                type: type,
+                title: title,
+                summary: document.getElementById('infoSummary').value || '',
+                unit: document.getElementById('infoUnit').value || '',
+                date: dateStr,
+                views: 0,
+                status: document.getElementById('infoStatus').value
+            });
+            window._infoRaw = [...data.infoData.items];
+            renderInfoTable();
+            addLog('新增信息发布', newId);
+        } else if (currentModal === 'editInfo') {
+            const idx = data.infoData.items.findIndex(i => i.id === editId);
+            if (idx > -1) {
+                data.infoData.items[idx].type = document.getElementById('infoType').value;
+                data.infoData.items[idx].title = document.getElementById('infoTitle').value;
+                data.infoData.items[idx].summary = document.getElementById('infoSummary').value;
+                data.infoData.items[idx].unit = document.getElementById('infoUnit').value;
+                data.infoData.items[idx].date = document.getElementById('infoDate').value;
+                data.infoData.items[idx].status = document.getElementById('infoStatus').value;
+                window._infoRaw = [...data.infoData.items];
+                renderInfoTable();
+                addLog('编辑信息发布', editId);
+            }
         }
         scheduleSave();
         backupOriginalData(); // 更新备份
@@ -5136,6 +5240,7 @@ window.onload = async function(){
     renderDutyTable();
     renderPetitionTable();
     renderAssessmentTable();
+    renderInfoTable();
 };
 
 // ==================== 统计分析和执法监督功能 ====================
@@ -7577,6 +7682,129 @@ function deleteAssessment(id) {
             window._assessmentRaw = items;
             showMsg('删除成功');
             renderAssessmentTable();
+        }
+    }
+}
+
+// 信息发布中心渲染
+function renderInfoTable(data) {
+    const tbody = document.getElementById('infoTableBody');
+    if (!tbody) return;
+    const items = Array.isArray(data) ? data : (data.infoData ? data.infoData.items : (window._infoRaw || []));
+    if (!Array.isArray(items) && window._infoRaw === undefined && data.infoData) {
+        window._infoRaw = [...data.infoData.items];
+    }
+    const display = Array.isArray(data) ? data : (window._infoFiltered || window._infoRaw || data.infoData.items || []);
+    tbody.innerHTML = (display || []).map(item => `
+        <tr>
+            <td>${item.id}</td>
+            <td><span class="${getStatusClass(item.type)}">${item.type}</span></td>
+            <td>${item.title}</td>
+            <td>${item.summary}</td>
+            <td>${item.unit}</td>
+            <td>${item.date}</td>
+            <td>${item.views}</td>
+            <td><span class="${getStatusClass(item.status)}">${item.status}</span></td>
+            <td>
+                <button class="btn btn-edit" onclick="editInfo('${item.id}')">编辑</button>
+                <button class="btn btn-del" onclick="deleteInfo('${item.id}')">删除</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function searchInfo() {
+    const keyword = document.getElementById('infoSearch').value.toLowerCase().trim();
+    const typeFilter = document.getElementById('infoTypeFilter').value;
+    const allData = window._infoRaw || data.infoData.items || [];
+    let filtered = allData;
+    if (keyword) {
+        filtered = filtered.filter(item => 
+            (item.id && item.id.toLowerCase().includes(keyword)) || 
+            (item.title && item.title.toLowerCase().includes(keyword)) ||
+            (item.summary && item.summary.toLowerCase().includes(keyword)) ||
+            (item.unit && item.unit.toLowerCase().includes(keyword))
+        );
+    }
+    if (typeFilter && typeFilter !== '全部栏目') {
+        filtered = filtered.filter(item => item.type === typeFilter);
+    }
+    window._infoFiltered = filtered;
+    renderInfoTable(filtered);
+    showMsg(`查询完成，共 ${filtered.length} 条结果`);
+}
+
+function resetInfo() {
+    const searchInput = document.getElementById('infoSearch');
+    if (searchInput) searchInput.value = '';
+    const typeSel = document.getElementById('infoTypeFilter');
+    if (typeSel) typeSel.value = '';
+    window._infoFiltered = null;
+    renderInfoTable();
+    showMsg('已重置筛选条件');
+}
+
+function addInfo() {
+    currentModal = 'addInfo';
+    openModal('新增信息发布', `
+        <div class="form-item"><label>栏目分类<span class="required">*</span>：</label>
+            <select class="select-box" id="infoType">
+                <option>工作要闻</option><option>通知通报</option><option>各地动态</option>
+            </select>
+        </div>
+        <div class="form-item"><label>信息标题<span class="required">*</span>：</label><input type="text" class="input-text" id="infoTitle" placeholder="请输入信息标题"></div>
+        <div class="form-item"><label>内容摘要：</label><input type="text" class="input-text" id="infoSummary" placeholder="请输入内容摘要"></div>
+        <div class="form-item"><label>发布单位：</label><input type="text" class="input-text" id="infoUnit" placeholder="请输入发布单位"></div>
+        <div class="form-item"><label>发布日期：</label><input type="date" class="input-text" id="infoDate" value="${getTodayStr()}"></div>
+        <div class="form-item"><label>状态：</label>
+            <select class="select-box" id="infoStatus">
+                <option>已发布</option><option>置顶</option><option>草稿</option>
+            </select>
+        </div>
+    `);
+}
+
+function editInfo(id) {
+    currentModal = 'editInfo';
+    editId = id;
+    const items = window._infoRaw || data.infoData.items || [];
+    const item = items.find(i => i.id === id);
+    if (item) {
+        openModal('编辑信息', `
+            <div class="form-item"><label>信息编号：</label><input type="text" class="input-text" id="infoId" value="${item.id}" readonly></div>
+            <div class="form-item"><label>栏目分类：</label>
+                <select class="select-box" id="infoType">
+                    <option ${item.type === '工作要闻' ? 'selected' : ''}>工作要闻</option>
+                    <option ${item.type === '通知通报' ? 'selected' : ''}>通知通报</option>
+                    <option ${item.type === '各地动态' ? 'selected' : ''}>各地动态</option>
+                </select>
+            </div>
+            <div class="form-item"><label>信息标题：</label><input type="text" class="input-text" id="infoTitle" value="${item.title}"></div>
+            <div class="form-item"><label>内容摘要：</label><input type="text" class="input-text" id="infoSummary" value="${item.summary}"></div>
+            <div class="form-item"><label>发布单位：</label><input type="text" class="input-text" id="infoUnit" value="${item.unit}"></div>
+            <div class="form-item"><label>发布日期：</label><input type="date" class="input-text" id="infoDate" value="${item.date}"></div>
+            <div class="form-item"><label>状态：</label>
+                <select class="select-box" id="infoStatus">
+                    <option ${item.status === '已发布' ? 'selected' : ''}>已发布</option>
+                    <option ${item.status === '置顶' ? 'selected' : ''}>置顶</option>
+                    <option ${item.status === '草稿' ? 'selected' : ''}>草稿</option>
+                </select>
+            </div>
+        `);
+    }
+}
+
+function deleteInfo(id) {
+    if (confirm('确定要删除该信息发布？')) {
+        const items = window._infoRaw || data.infoData.items || [];
+        const idx = items.findIndex(i => i.id === id);
+        if (idx > -1) {
+            items.splice(idx, 1);
+            window._infoRaw = items;
+            data.infoData.items = items;
+            scheduleSave();
+            showMsg('删除成功');
+            renderInfoTable();
         }
     }
 }

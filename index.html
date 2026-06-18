@@ -3270,24 +3270,24 @@ async function loadData() {
         if (loadedData.statistics) data.statistics = loadedData.statistics;
         if (loadedData.supervision) data.supervision = loadedData.supervision;
         
-        // 嵌套对象模块
-        if (loadedData.commandData && Object.keys(loadedData.commandData).length > 0) data.commandData = loadedData.commandData;
-        if (loadedData.intelligenceData && Object.keys(loadedData.intelligenceData).length > 0) data.intelligenceData = loadedData.intelligenceData;
-        if (loadedData.communityData && Object.keys(loadedData.communityData).length > 0) data.communityData = loadedData.communityData;
-        if (loadedData.patrolData && Object.keys(loadedData.patrolData).length > 0) data.patrolData = loadedData.patrolData;
-        if (loadedData.recordData && Object.keys(loadedData.recordData).length > 0) data.recordData = loadedData.recordData;
-        if (loadedData.lawSupervisionData && Object.keys(loadedData.lawSupervisionData).length > 0) data.lawSupervisionData = loadedData.lawSupervisionData;
-        if (loadedData.serviceData && Object.keys(loadedData.serviceData).length > 0) data.serviceData = loadedData.serviceData;
-        if (loadedData.trafficData && Object.keys(loadedData.trafficData).length > 0) data.trafficData = loadedData.trafficData;
-        if (loadedData.marketData && Object.keys(loadedData.marketData).length > 0) data.marketData = loadedData.marketData;
+        // 嵌套对象模块 - 只合并属性名正确的数据
+        if (loadedData.commandData && loadedData.commandData.dispatches) data.commandData = loadedData.commandData;
+        if (loadedData.intelligenceData && loadedData.intelligenceData.items) data.intelligenceData = loadedData.intelligenceData;
+        if (loadedData.communityData && loadedData.communityData.visits) data.communityData = loadedData.communityData;
+        if (loadedData.patrolData && loadedData.patrolData.patrols) data.patrolData = loadedData.patrolData;
+        if (loadedData.recordData && loadedData.recordData.records) data.recordData = loadedData.recordData;
+        if (loadedData.lawSupervisionData && loadedData.lawSupervisionData.cases) data.lawSupervisionData = loadedData.lawSupervisionData;
+        if (loadedData.serviceData && loadedData.serviceData.services) data.serviceData = loadedData.serviceData;
+        if (loadedData.trafficData && loadedData.trafficData.services) data.trafficData = loadedData.trafficData;
+        if (loadedData.marketData && loadedData.marketData.entities) data.marketData = loadedData.marketData;
         
         // 新模块
-        if (loadedData.combined && Object.keys(loadedData.combined).length > 0) data.combined = loadedData.combined;
-        if (loadedData.fileData && Object.keys(loadedData.fileData).length > 0) data.fileData = loadedData.fileData;
-        if (loadedData.duty && Object.keys(loadedData.duty).length > 0) data.duty = loadedData.duty;
-        if (loadedData.petition && Object.keys(loadedData.petition).length > 0) data.petition = loadedData.petition;
-        if (loadedData.assessment && Object.keys(loadedData.assessment).length > 0) data.assessment = loadedData.assessment;
-        if (loadedData.infoData && Object.keys(loadedData.infoData).length > 0) data.infoData = loadedData.infoData;
+        if (loadedData.combined && loadedData.combined.tasks) data.combined = loadedData.combined;
+        if (loadedData.fileData && loadedData.fileData.files) data.fileData = loadedData.fileData;
+        if (loadedData.duty && loadedData.duty.rosters) data.duty = loadedData.duty;
+        if (loadedData.petition && loadedData.petition.items) data.petition = loadedData.petition;
+        if (loadedData.assessment && loadedData.assessment.records) data.assessment = loadedData.assessment;
+        if (loadedData.infoData && loadedData.infoData.items) data.infoData = loadedData.infoData;
     }
     
     // 确保所有模块都有默认数据
@@ -3578,20 +3578,24 @@ function ensureDefaultData() {
         };
     }
     
-    if (!data.communityData || !data.communityData.items || data.communityData.items.length === 0) {
+    if (!data.communityData || !data.communityData.visits || data.communityData.visits.length === 0) {
         data.communityData = {
-            items: [
-                {id: 'SQ2026001', name: '幸福小区', type: '居民区', population: 3500, policeRoom: '城东派出所', officer: '王警官', address: '幸福路123号'},
-                {id: 'SQ2026002', name: '花园社区', type: '居民区', population: 2800, policeRoom: '城西派出所', officer: '李警官', address: '花园大道45号'}
+            visits: [
+                {id: 'SQ2026001', community: '幸福小区', police: '王警官', type: '入户走访', target: '重点人员陈某', content: '了解重点人员近期动态', status: '已完成', time: '2026-05-18 09:00'},
+                {id: 'SQ2026002', community: '花园社区', police: '李警官', type: '矛盾排查', target: '邻里纠纷', content: '排查社区矛盾纠纷隐患', status: '已完成', time: '2026-05-18 10:30'},
+                {id: 'SQ2026003', community: '惠民小区', police: '赵警官', type: '安全宣传', target: '全体居民', content: '发放反诈宣传册50份', status: '已完成', time: '2026-05-18 14:00'},
+                {id: 'SQ2026004', community: '工业园区', police: '周警官', type: '企业走访', target: '园区企业', content: '排查安全隐患2处', status: '进行中', time: '2026-05-18 15:30'}
             ]
         };
     }
     
-    if (!data.patrolData || !data.patrolData.routes || data.patrolData.routes.length === 0) {
+    if (!data.patrolData || !data.patrolData.patrols || data.patrolData.patrols.length === 0) {
         data.patrolData = {
-            routes: [
-                {id: 'XL001', name: '城东商业区巡逻线', length: '5.2公里', points: '火车站-商业街-公园-小区', patrolType: '车巡', frequency: '每30分钟', officer: '张警官、王警官'},
-                {id: 'XL002', name: '城西居民区巡逻线', length: '3.8公里', points: '花园社区-惠民小区-学校', patrolType: '步巡', frequency: '每小时', officer: '李警官、赵警官'}
+            patrols: [
+                {id: 'XL001', area: '城东商业区', police: '张警官、王警官', type: '车巡', time: '2026-05-18 08:00-12:00', status: '已完成', checkins: '4次'},
+                {id: 'XL002', area: '城西居民区', police: '李警官、赵警官', type: '步巡', time: '2026-05-18 09:00-11:00', status: '已完成', checkins: '2次'},
+                {id: 'XL003', area: '火车站周边', police: '刘警官、陈警官', type: '车巡', time: '2026-05-18 14:00-18:00', status: '执行中', checkins: '3次'},
+                {id: 'XL004', area: '校园周边', police: '孙警官、郑警官', type: '步巡', time: '2026-05-18 07:30-08:30', status: '已完成', checkins: '2次'}
             ]
         };
     }
@@ -3599,35 +3603,43 @@ function ensureDefaultData() {
     if (!data.recordData || !data.recordData.records || data.recordData.records.length === 0) {
         data.recordData = {
             records: [
-                {id: 'BL20260518001', caseId: 'XA2026021', type: '询问笔录', suspect: '王某', officer: '张警官', time: '2026-05-18 09:00', content: '询问当事人关于案件经过的陈述'},
-                {id: 'BL20260518002', caseId: 'XA2026022', type: '讯问笔录', suspect: '赵某', officer: '李警官', time: '2026-05-18 14:00', content: '讯问犯罪嫌疑人'}
+                {id: 'BL20260518001', caseId: 'XA2026021', type: '询问笔录', target: '王某', police: '张警官', time: '2026-05-18 09:00', status: '已完成', content: '询问当事人关于案件经过的陈述'},
+                {id: 'BL20260518002', caseId: 'XA2026022', type: '讯问笔录', target: '赵某', police: '李警官', time: '2026-05-18 14:00', status: '已完成', content: '讯问犯罪嫌疑人'},
+                {id: 'BL20260518003', caseId: 'XA2026023', type: '现场勘查', target: '陈某', police: '王警官', time: '2026-05-18 16:00', status: '进行中', content: '对案发现场进行勘查取证'},
+                {id: 'BL20260518004', caseId: 'XA2026024', type: '询问笔录', target: '刘某', police: '赵警官', time: '2026-05-18 10:00', status: '已完成', content: '询问交通事故当事人'}
             ]
         };
     }
     
-    if (!data.lawSupervisionData || !data.lawSupervisionData.items || data.lawSupervisionData.items.length === 0) {
+    if (!data.lawSupervisionData || !data.lawSupervisionData.cases || data.lawSupervisionData.cases.length === 0) {
         data.lawSupervisionData = {
-            items: [
-                {id: 'JD202605001', caseId: 'XA2026021', type: '立案监督', status: '已通过', checkDate: '2026-05-11', checker: '法制科'},
-                {id: 'JD202605002', caseId: 'XA2026022', type: '执法质量', status: '待审核', checkDate: '2026-05-18', checker: '法制科'}
+            cases: [
+                {id: 'JD2026001', name: '盗窃案侦查监督', police: '张警官', deadline: '2026-06-10', remaining: 15, status: '正常', supervision: '正常'},
+                {id: 'JD2026002', name: '寻衅滋事案监督', police: '李警官', deadline: '2026-05-25', remaining: 3, status: '预警', supervision: '督办中'},
+                {id: 'JD2026003', name: '交通肇事案监督', police: '王警官', deadline: '2026-05-20', remaining: -2, status: '异常', supervision: '超期预警'},
+                {id: 'JD2026004', name: '故意伤害案监督', police: '赵警官', deadline: '2026-06-05', remaining: 10, status: '正常', supervision: '正常'}
             ]
         };
     }
     
-    if (!data.serviceData || !data.serviceData.items || data.serviceData.items.length === 0) {
+    if (!data.serviceData || !data.serviceData.services || data.serviceData.services.length === 0) {
         data.serviceData = {
-            items: [
-                {id: 'FW20260518001', type: '身份证办理', applicant: '张三', phone: '138****1234', status: '办理中', applyDate: '2026-05-18', finishDate: '2026-06-01'},
-                {id: 'FW20260518002', type: '户口迁移', applicant: '李四', phone: '139****5678', status: '已办结', applyDate: '2026-05-15', finishDate: '2026-05-18'}
+            services: [
+                {id: 'FW20260518001', type: '身份证办理', applicant: '张三', phone: '138****1234', time: '2026-05-18', status: '办理中', police: '户籍科'},
+                {id: 'FW20260518002', type: '户口迁移', applicant: '李四', phone: '139****5678', time: '2026-05-15', status: '已办结', police: '户籍科'},
+                {id: 'FW20260518003', type: '居住证办理', applicant: '王五', phone: '137****9012', time: '2026-05-18', status: '办理中', police: '社区警务室'},
+                {id: 'FW20260518004', type: '无犯罪证明', applicant: '赵六', phone: '136****3456', time: '2026-05-17', status: '已办结', police: '治安大队'}
             ]
         };
     }
     
-    if (!data.trafficData || !data.trafficData.items || data.trafficData.items.length === 0) {
+    if (!data.trafficData || !data.trafficData.services || data.trafficData.services.length === 0) {
         data.trafficData = {
-            items: [
-                {id: 'JT20260518001', plate: '冀A12345', type: '违章停车', time: '2026-05-18 09:30', location: '中山路', status: '已处理'},
-                {id: 'JT20260518002', plate: '冀B67890', type: '闯红灯', time: '2026-05-18 10:15', location: '建设大街', status: '待处理'}
+            services: [
+                {id: 'JT20260518001', plate: '冀A12345', type: '违章停车', party: '张三', time: '2026-05-18 09:30', location: '中山路', status: '已处理', officer: '孙警官'},
+                {id: 'JT20260518002', plate: '冀B67890', type: '闯红灯', party: '李四', time: '2026-05-18 10:15', location: '建设大街', status: '待处理', officer: '周警官'},
+                {id: 'JT20260518003', plate: '冀C11223', type: '超速行驶', party: '王五', time: '2026-05-18 11:00', location: '和平路', status: '已处理', officer: '孙警官'},
+                {id: 'JT20260518004', plate: '冀D44556', type: '不按规定车道', party: '赵六', time: '2026-05-18 14:20', location: '裕华路', status: '待处理', officer: '周警官'}
             ]
         };
     }

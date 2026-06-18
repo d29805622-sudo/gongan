@@ -3192,11 +3192,10 @@ async function loadData() {
         // 版本不匹配、加载的数据为空对象、或者关键模块数据为空时，强制使用默认数据
         const isDataEmpty = loadedData && (
             Object.keys(loadedData).length === 0 ||
-            (!loadedData.events || loadedData.events.length === 0) &&
+            ((!loadedData.events || loadedData.events.length === 0) &&
             (!loadedData.alarms || loadedData.alarms.length === 0) &&
             (!loadedData.cases || loadedData.cases.length === 0) &&
-            (!loadedData.persons || loadedData.persons.length === 0) &&
-            (!loadedData.infoData || !loadedData.infoData.items || loadedData.infoData.items.length === 0)
+            (!loadedData.persons || loadedData.persons.length === 0))
         );
         
         // 检查数据是否过期（少于预期数量），如果是也需要重置

@@ -3071,8 +3071,16 @@ async function loadData() {
             }
         }
         
-        // 版本不匹配或加载的数据为空对象时，强制使用默认数据
-        if (savedVersion !== currentVersion || (loadedData && Object.keys(loadedData).length === 0)) {
+        // 版本不匹配、加载的数据为空对象、或者关键模块数据为空时，强制使用默认数据
+        const isDataEmpty = loadedData && (
+            Object.keys(loadedData).length === 0 ||
+            (!loadedData.events || loadedData.events.length === 0) &&
+            (!loadedData.alarms || loadedData.alarms.length === 0) &&
+            (!loadedData.cases || loadedData.cases.length === 0) &&
+            (!loadedData.persons || loadedData.persons.length === 0)
+        );
+        
+        if (savedVersion !== currentVersion || isDataEmpty) {
             console.log('数据版本不匹配或数据为空，使用默认数据');
             localStorage.setItem('policeDataVersion', currentVersion);
             localStorage.removeItem('policeData');

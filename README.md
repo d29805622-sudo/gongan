@@ -1,27 +1,54 @@
-# 公安内网综合警务管理系统
+# React + TypeScript + Vite
 
-## 部署说明
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-本项目已自动通过 GitHub Pages 部署。
+Currently, two official plugins are available:
 
-## 访问地址
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-**网站地址**：https://d29805622-sudo.github.io/gongan/
+## Expanding the ESLint configuration
 
-## 功能特性
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-- 顶部警示栏 - 涉密系统警告
-- 多模块页面切换
-- 110接警管理
-- 案件备案登记
-- 重点人员管控
-- 涉控车辆管理
-- 涉案物品登记
-- 操作日志审计
-- 权限管理
+```js
+export default tseslint.config({
+  extends: [
+    // Remove ...tseslint.configs.recommended and replace with this
+    ...tseslint.configs.recommendedTypeChecked,
+    // Alternatively, use this for stricter rules
+    ...tseslint.configs.strictTypeChecked,
+    // Optionally, add this for stylistic rules
+    ...tseslint.configs.stylisticTypeChecked,
+  ],
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-## 文件说明
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-- `index.html` - 主页面
-- `logo.png` - 警徽图标
-- `save_image.py` - 辅助脚本
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default tseslint.config({
+  plugins: {
+    // Add the react-x and react-dom plugins
+    'react-x': reactX,
+    'react-dom': reactDom,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended typescript rules
+    ...reactX.configs['recommended-typescript'].rules,
+    ...reactDom.configs.recommended.rules,
+  },
+})
+```

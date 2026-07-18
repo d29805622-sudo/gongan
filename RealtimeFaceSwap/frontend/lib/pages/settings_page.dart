@@ -17,20 +17,54 @@ class SettingsPage extends StatelessWidget {
       appBar: AppBar(
 
         title: const Text(
-          "设置"
+          "软件设置"
         )
 
       ),
 
-      body: const Center(
+      body: ListView(
 
-        child: Text(
+        children: [
 
-          "摄像头\n\nAI模型\n\nGPU加速"
+          SwitchListTile(
 
-        )
+            title: const Text(
+              "GPU加速"
+            ),
 
-      ),
+            value: true,
+
+            onChanged: (v) {},
+
+          ),
+
+          ListTile(
+
+            title: const Text(
+              "摄像头选择"
+            ),
+
+            subtitle: const Text(
+              "默认摄像头"
+            ),
+
+          ),
+
+          ListTile(
+
+            title: const Text(
+              "AI模型"
+            ),
+
+            subtitle: const Text(
+              "default"
+            ),
+
+          )
+
+        ]
+
+      )
 
     );
 

@@ -3,11 +3,14 @@ import asyncio
 
 from camera import Camera
 from modules.stream import encode
+from modules.face_detector import FaceDetector
 
 
 app = FastAPI()
 
 camera = Camera()
+
+face_detector = FaceDetector()
 
 
 @app.get("/")
@@ -15,7 +18,7 @@ def index():
 
     return {
         "name": "RealtimeFaceSwap",
-        "version": "0.1"
+        "version": "0.3"
     }
 
 
@@ -31,6 +34,16 @@ async def camera_ws(
         frame = camera.get_frame()
 
         if frame is not None:
+
+            faces = face_detector.detect(
+                frame
+            )
+
+            print(
+                "检测到:",
+                len(faces),
+                "张脸"
+            )
 
             data = encode(frame)
 

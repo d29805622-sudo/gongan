@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/video_view.dart';
-import '../widgets/control_bar.dart';
+import '../widgets/video_panel.dart';
+import '../widgets/status_panel.dart';
+import '../widgets/control_panel.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -20,30 +21,46 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
 
         title: const Text(
-          "RealtimeFaceSwap"
+          "RealtimeFaceSwap v1.1"
         ),
 
       ),
 
-      body: Column(
+      body: Row(
 
         children: [
 
           Expanded(
 
-            child: VideoView()
+            flex: 3,
+
+            child: const VideoPanel()
 
           ),
 
-          const SizedBox(
-            height: 20
-          ),
+          Expanded(
 
-          const ControlBar(),
+            flex: 1,
 
-          const SizedBox(
-            height: 30
-          ),
+            child: Column(
+
+              children: [
+
+                const StatusPanel(),
+
+                const Spacer(),
+
+                const ControlPanel(),
+
+                const SizedBox(
+                  height: 20
+                )
+
+              ]
+
+            )
+
+          )
 
         ],
 

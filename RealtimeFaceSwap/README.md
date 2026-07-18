@@ -1,58 +1,79 @@
 # RealtimeFaceSwap
 
-实时AI视频处理软件。
+实时 AI 视频处理软件。
 
-## 功能
+## Features
 
-- 摄像头实时采集
-- 实时视频传输
-- AI人脸处理
-- GPU加速
-- Flutter客户端
+- Real-time camera processing
+- AI face analysis pipeline
+- GPU acceleration support
+- Flutter desktop/mobile client
+- WebSocket low latency streaming
 
-## 技术
+## Architecture
 
-Backend:
+```
+Camera
+   ↓
+Python Backend
+   ↓
+AI Processing
+   ↓
+WebSocket
+   ↓
+Flutter Client
+```
 
-- Python
-- FastAPI
+## Requirements
+
+### Backend
+
+- Python 3.12
 - OpenCV
-- WebSocket
-
-Frontend:
-
-- Flutter
-
-AI:
-
-- InsightFace
+- FastAPI
 - ONNX Runtime
 
-## 启动后端
+### Client
 
-进入：
+- Flutter 3.x
 
-```
-backend
-```
-
-安装：
+## Run Backend
 
 ```
+cd backend
 pip install -r requirements.txt
-```
-
-运行：
-
-```
 python app.py
 ```
 
-## 开发计划
+## Run Frontend
 
-- [x] 项目结构
-- [ ] 摄像头模块
-- [ ] 人脸检测
-- [ ] AI推理
-- [ ] 实时换脸
-- [ ] 虚拟摄像头
+```
+cd frontend
+flutter pub get
+flutter run
+```
+
+## Build Windows Release
+
+```
+build_windows.bat
+```
+
+输出目录：`release/`
+
+## Project Structure
+
+```
+RealtimeFaceSwap/
+├── backend/          Python 后端
+├── frontend/         Flutter 客户端
+├── models/           AI 模型
+├── installer/        安装脚本
+├── docs/             文档
+├── launcher.py       启动器
+└── build_windows.bat 一键打包
+```
+
+## Version
+
+v1.0.0

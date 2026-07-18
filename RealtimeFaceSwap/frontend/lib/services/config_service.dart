@@ -1,29 +1,62 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:path_provider/path_provider.dart';
+
+import '../config/server_config.dart';
+
 
 class ConfigService {
 
-  static const String _configFile = "user.json";
-
   static Map<String, dynamic> _config = {};
+
+
+  static Future<String> _configFile() async {
+
+    try {
+
+      final dir = await getApplicationSupportDirectory();
+
+      return '${dir.path}/user.json';
+
+    } catch (_) {
+
+      // 桌面端若 path_provider 不支持，回退到当前目录
+
+      return 'user.json';
+
+    }
+
+  }
 
 
   static Future<void> load() async {
 
     try {
 
-      final file = File(_configFile);
+      final path = await _configFile();
+
+      final file = File(path);
 
       if (await file.exists()) {
 
         final content = await file.readAsString();
 
-        _config = json.decode(content);
+        final decoded = json.decode(content);
+
+        if (decoded is Map<String, dynamic>) {
+
+          _config = decoded;
+
+        } else {
+
+          _config = {};
+
+        }
 
       }
 
-    } catch (e) {
+    } catch (_) {
 
       _config = {};
 
@@ -32,17 +65,25 @@ class ConfigService {
   }
 
 
-  static Future<void> save(Map<String, dynamic> data) async {
+  static Future<bool> save(Map<String, dynamic> data) async {
 
     _config = data;
 
-    final file = File(_configFile);
+    try {
 
-    await file.writeAsString(
+      final path = await _configFile();
 
-      json.encode(data)
+      final file = File(path);
 
-    );
+      await file.writeAsString(json.encode(data));
+
+      return true;
+
+    } catch (_) {
+
+      return false;
+
+    }
 
   }
 
@@ -59,5 +100,16 @@ class ConfigService {
     _config[key] = value;
 
   }
+
+
+  // 便捷方法：获取服务器地址（带默认值）
+
+  static String get serverHost =>
+
+      _config["server_host"] as String? ?? ServerConfig.defaultHost;
+
+  static int get serverPort =>
+
+      _config["server_port"] as int? ?? ServerConfig.defaultPort;
 
 }

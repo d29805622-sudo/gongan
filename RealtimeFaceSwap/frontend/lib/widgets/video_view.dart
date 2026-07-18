@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../services/websocket_service.dart';
-
 
 class VideoView extends StatefulWidget {
 
+  final Stream<String>? stream;
+
   const VideoView({
-    super.key
+    super.key,
+    this.stream
   });
 
   @override
@@ -19,21 +20,23 @@ class VideoView extends StatefulWidget {
 
 class _VideoViewState extends State<VideoView> {
 
-  final WebSocketService service = WebSocketService();
-
-  Stream<String>? stream;
-
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
 
-    stream = service.connect();
-  }
+    final stream = widget.stream;
 
-  @override
-  Widget build(
-    BuildContext context
-  ) {
+    if (stream == null) {
+
+      return Container(
+        color: Colors.black,
+        alignment: Alignment.center,
+        child: const Text(
+          "未连接",
+          style: TextStyle(color: Colors.white54)
+        )
+      );
+
+    }
 
     return StreamBuilder<String>(
 
@@ -41,40 +44,56 @@ class _VideoViewState extends State<VideoView> {
 
       builder: (context, snapshot) {
 
-        if (!snapshot.hasData) {
+        if (snapshot.hasError) {
 
-          return const Center(
-
-            child: Text(
-              "等待视频连接..."
+          return Container(
+            color: Colors.black,
+            alignment: Alignment.center,
+            child: const Text(
+              "连接错误",
+              style: TextStyle(color: Colors.red)
             )
-
           );
 
         }
 
-        return Image.memory(
+        if (!snapshot.hasData) {
 
-          base64Decode(
-            snapshot.data!
-          ),
+          return Container(
+            color: Colors.black,
+            alignment: Alignment.center,
+            child: const CircularProgressIndicator()
+          );
 
-          fit: BoxFit.contain,
+        }
 
-          gaplessPlayback: true,
+        try {
 
-        );
+          final bytes = base64Decode(snapshot.data!);
 
-      },
+          return Image.memory(
+            bytes,
+            fit: BoxFit.contain,
+            gaplessPlayback: true
+          );
+
+        } catch (_) {
+
+          return Container(
+            color: Colors.black,
+            alignment: Alignment.center,
+            child: const Text(
+              "解码失败",
+              style: TextStyle(color: Colors.orange)
+            )
+          );
+
+        }
+
+      }
 
     );
 
-  }
-
-  @override
-  void dispose() {
-    service.close();
-    super.dispose();
   }
 
 }

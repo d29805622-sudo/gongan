@@ -1,6 +1,8 @@
 name: realtime_face_swap
 
-description: Real time AI video client
+description: RealtimeFaceSwap - 实时 AI 视频换脸客户端，基于 Flutter 桌面应用
+
+version: 1.1.1+1
 
 environment:
   sdk: ">=3.0.0"
@@ -11,6 +13,17 @@ dependencies:
 
   web_socket_channel: ^3.0.1
 
+  # 配置文件存储路径
+  path_provider: ^2.1.4
+
+  # 移动端权限请求
+  permission_handler: ^11.3.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true

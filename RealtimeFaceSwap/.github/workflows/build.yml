@@ -1,0 +1,241 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '版本号 (如 1.1.1)'
+        required: false
+        default: '1.1.1'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build backend
+        working-directory: backend
+        run: pyinstaller --clean --noconfirm backend.spec
+
+      - name: Build frontend (Windows)
+        working-directory: frontend
+        run: flutter build windows --release
+
+      - name: Build launcher
+        run: pyinstaller --clean --noconfirm launcher.spec
+
+      - name: Assemble release directory
+        run: |
+          mkdir release
+          mkdir release\backend
+          mkdir release\frontend
+          copy dist\RealtimeFaceSwap.exe release\
+          copy version.json release\
+          copy README.md release\
+          copy backend\dist\backend.exe release\backend\
+          copy backend\settings.json release\backend\
+          if (Test-Path backend\models) { xcopy backend\models release\backend\models /E /I /Y }
+          xcopy frontend\build\windows\x64\runner\Release release\frontend /E /I /Y
+        shell: pwsh
+
+      - name: Build Full package (portable zip)
+        run: |
+          mkdir dist_packages
+          Compress-Archive -Path release\* -DestinationPath dist_packages\RealtimeFaceSwap-v1.1.1-Windows-Full.zip
+        shell: pwsh
+
+      - name: Build Installer package (Inno Setup)
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\setup.iss
+          if (Test-Path installer\output) {
+            copy installer\output\*.exe dist_packages\
+          }
+        shell: pwsh
+
+      - name: Upload Full package
+        uses: actions/upload-artifact@v4
+        with:
+          name: RealtimeFaceSwap-Windows-Full
+          path: dist_packages\RealtimeFaceSwap-v1.1.1-Windows-Full.zip
+
+      - name: Upload Installer package
+        uses: actions/upload-artifact@v4
+        with:
+          name: RealtimeFaceSwap-Windows-Setup
+          path: dist_packages\*.exe
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Install Linux build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libgtk-3-dev libx11-dev libxext-dev libxrender-dev libgl1-mesa-glx xvfb dpkg-dev
+
+      - name: Enable Linux desktop
+        run: flutter config --enable-linux-desktop
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build backend
+        working-directory: backend
+        run: pyinstaller --clean --noconfirm backend.spec
+
+      - name: Build frontend (Linux)
+        working-directory: frontend
+        run: flutter build linux --release
+
+      - name: Build launcher
+        run: pyinstaller --clean --noconfirm launcher.spec
+
+      - name: Assemble release directory
+        run: |
+          mkdir -p release/backend release/frontend
+          cp dist/RealtimeFaceSwap release/
+          cp version.json release/
+          cp README.md release/
+          cp backend/dist/backend release/backend/
+          cp backend/settings.json release/backend/
+          if [ -d backend/models ]; then cp -r backend/models release/backend/models; fi
+          cp -r frontend/build/linux/x64/release/bundle/* release/frontend/
+          chmod +x release/RealtimeFaceSwap release/backend/backend
+
+      - name: Build Full package (tar.gz)
+        run: |
+          mkdir -p dist_packages
+          tar -czf dist_packages/RealtimeFaceSwap-v1.1.1-Linux-Full.tar.gz -C release .
+
+      - name: Build DEB package
+        run: |
+          VERSION="1.1.1"
+          ARCH="amd64"
+          DEB_NAME="realtimefaceswap_${VERSION}_${ARCH}"
+          DEB_DIR="/tmp/${DEB_NAME}"
+          rm -rf "${DEB_DIR}"
+          mkdir -p "${DEB_DIR}/DEBIAN" "${DEB_DIR}/opt/RealtimeFaceSwap" "${DEB_DIR}/usr/share/applications"
+          cat > "${DEB_DIR}/DEBIAN/control" <<DEBF
+          Package: realtimefaceswap
+          Version: ${VERSION}
+          Section: graphics
+          Priority: optional
+          Architecture: ${ARCH}
+          Depends: libgtk-3-0, libx11-6, libgl1, libstdc++6
+          Maintainer: RealtimeFaceSwap Team
+          Description: RealtimeFaceSwap - 实时 AI 换脸软件
+          DEBF
+          cat > "${DEB_DIR}/usr/share/applications/RealtimeFaceSwap.desktop" <<DESKTOPF
+          [Desktop Entry]
+          Name=RealtimeFaceSwap
+          Exec=/opt/RealtimeFaceSwap/RealtimeFaceSwap
+          Path=/opt/RealtimeFaceSwap
+          Type=Application
+          Categories=Graphics;
+          DESKTOPF
+          cp -r release/* "${DEB_DIR}/opt/RealtimeFaceSwap/"
+          dpkg-deb --build "${DEB_DIR}" "dist_packages/${DEB_NAME}.deb"
+          rm -rf "${DEB_DIR}"
+
+      - name: Upload Full package
+        uses: actions/upload-artifact@v4
+        with:
+          name: RealtimeFaceSwap-Linux-Full
+          path: dist_packages/RealtimeFaceSwap-v1.1.1-Linux-Full.tar.gz
+
+      - name: Upload DEB package
+        uses: actions/upload-artifact@v4
+        with:
+          name: RealtimeFaceSwap-Linux-DEB
+          path: dist_packages/*.deb
+
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: flutter pub get
+
+      - name: Build APK (debug)
+        working-directory: frontend
+        run: flutter build apk --debug
+
+      - name: Build APK (release)
+        working-directory: frontend
+        run: flutter build apk --release
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: RealtimeFaceSwap-Android-Debug
+          path: frontend/build/app/outputs/flutter-apk/app-debug.apk
+
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: RealtimeFaceSwap-Android-Release
+          path: frontend/build/app/outputs/flutter-apk/app-release.apk

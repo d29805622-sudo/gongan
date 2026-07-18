@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/status_card.dart';
-
 
 class MonitorPage extends StatelessWidget {
 
@@ -24,31 +22,21 @@ class MonitorPage extends StatelessWidget {
 
       ),
 
-      body: ListView(
+      body: const Column(
 
-        padding: const EdgeInsets.all(16),
+        children: [
 
-        children: const [
-
-          StatusCard(
-            title: "FPS",
-            value: "30"
+          Text(
+            "FPS: --"
           ),
 
-          StatusCard(
-            title: "检测到人脸",
-            value: "0"
+          Text(
+            "GPU: --"
           ),
 
-          StatusCard(
-            title: "GPU",
-            value: "启用"
-          ),
-
-          StatusCard(
-            title: "延迟",
-            value: "33ms"
-          ),
+          Text(
+            "延迟: --"
+          )
 
         ]
 

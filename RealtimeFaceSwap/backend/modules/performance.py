@@ -1,34 +1,28 @@
 import time
 
 
-class Performance:
+class FPSCounter:
 
     def __init__(self):
 
-        self.frame_count = 0
+        self.last = time.time()
+
+        self.frames = 0
 
         self.fps = 0
 
-        self.last_time = time.time()
-
     def update(self):
 
-        self.frame_count += 1
+        self.frames += 1
 
         now = time.time()
 
-        elapsed = now - self.last_time
+        if now - self.last >= 1:
 
-        if elapsed >= 1.0:
+            self.fps = self.frames
 
-            self.fps = self.frame_count / elapsed
+            self.frames = 0
 
-            self.frame_count = 0
-
-            self.last_time = now
+            self.last = now
 
         return self.fps
-
-    def get_fps(self):
-
-        return round(self.fps, 1)

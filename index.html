@@ -5260,7 +5260,7 @@ async function saveDataToSupabase() {
 function loadDataFromLocalStorage() {
     const saved = localStorage.getItem('policeData');
     const savedVersion = localStorage.getItem('policeDataVersion');
-    const currentVersion = '6.0';
+    const currentVersion = '7.0';
     
     if (saved && savedVersion === currentVersion) {
         try {
@@ -5327,7 +5327,7 @@ async function loadData() {
         if (!loaded && USE_SUPABASE) {
             const saved = localStorage.getItem('policeData');
             const savedVersion = localStorage.getItem('policeDataVersion');
-            const currentVersion = '6.0';
+            const currentVersion = '7.0';
             if (saved) {
                 localStorage.setItem('policeDataVersion', currentVersion);
                 await saveDataToSupabase();
@@ -5374,7 +5374,7 @@ async function saveData() {
     try {
         // 保存到本地存储
         localStorage.setItem('policeData', JSON.stringify(data));
-        localStorage.setItem('policeDataVersion', '6.0');
+        localStorage.setItem('policeDataVersion', '7.0');
         
         // 尝试保存到Supabase
         if (USE_SUPABASE) {

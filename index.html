@@ -1117,15 +1117,15 @@ let data = {
 const SUPABASE_URL = 'https://thdbtwdlywlvvorwanbu.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_TV9i7jH5lmgfobKM24sSaw_ZJLR1lss';
 
-// 初始化Supabase客户端
-let supabase = null;
+// 初始化Supabase客户端（使用别名避免与CDN全局变量冲突）
+let sbClient = null;
 if (window.supabase) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
 // 检查Supabase是否可用
 function isSupabaseAvailable() {
-    return supabase !== null;
+    return sbClient !== null;
 }
 
 // 使用Supabase的标志
@@ -1145,7 +1145,7 @@ let originalData = {
 
 // 从Supabase加载数据
 async function loadDataFromSupabase() {
-    if (!USE_SUPABASE || !supabase) {
+    if (!USE_SUPABASE || !sbClient) {
         return false;
     }
     
@@ -1153,7 +1153,7 @@ async function loadDataFromSupabase() {
         console.log('正在从Supabase加载数据...');
         
         // 从police_data表加载所有数据
-        const { data: dbData, error } = await supabase
+        const { data: dbData, error } = await sbClient
             .from('police_data')
             .select('*')
             .order('updated_at', { ascending: false })
@@ -1217,7 +1217,7 @@ async function loadDataFromSupabase() {
 
 // 保存数据到Supabase
 async function saveDataToSupabase() {
-    if (!USE_SUPABASE || !supabase) {
+    if (!USE_SUPABASE || !sbClient) {
         return false;
     }
     
@@ -1225,7 +1225,7 @@ async function saveDataToSupabase() {
         console.log('正在保存数据到Supabase...');
         
         // 先尝试更新，如果不存在则插入
-        const { error } = await supabase
+        const { error } = await sbClient
             .from('police_data')
             .upsert({
                 id: 1, // 使用固定ID，确保只有一条记录

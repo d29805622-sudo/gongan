@@ -232,19 +232,41 @@
             text-align:right;
             margin:15px 0;
             font-size:12px;
+            display:flex;
+            flex-wrap:wrap;
+            gap:4px;
+            justify-content:flex-end;
+            align-items:center;
+            padding:10px 5px;
+            overflow-x:auto;
+            white-space:nowrap;
         }
         .page-btn{
             display:inline-block;
-            padding:4px 9px;
+            padding:4px 10px;
             border:1px solid #b8c4d2;
             background:#fff;
-            margin:0 2px;
+            margin:0;
             cursor:pointer;
+            min-width:30px;
+            text-align:center;
+            flex-shrink:0;
+            border-radius:3px;
         }
         .page-btn.active{
             background:#003366;
             color:#fff;
             border:1px solid #003366;
+        }
+        .page-btn.btn-disable{
+            opacity:0.5;
+            cursor:not-allowed;
+            pointer-events:none;
+        }
+        .page-info{
+            margin-left:10px;
+            color:#666;
+            flex-shrink:0;
         }
 
         .form-item{
@@ -272,11 +294,15 @@
             top:50%;left:50%;
             transform:translate(-50%,-50%);
             width:580px;
+            max-width:95vw;
+            max-height:90vh;
             background:#fff;
             border:3px solid #003366;
             border-radius:4px;
             display:none;
             z-index:10000;
+            flex-direction:column;
+            overflow:hidden;
         }
         .modal-title{
             height:42px;
@@ -294,7 +320,7 @@
             font-size:16px;
             cursor:pointer;
         }
-        .modal-content{padding:22px;}
+        .modal-content{padding:22px;overflow-y:auto;flex:1;max-height:calc(90vh - 120px);}
         .modal-btn{
             text-align:center;
             padding:15px;
@@ -1065,6 +1091,7 @@
                 <tbody id="alarmTableBody">
                 </tbody>
             </table></div>
+            <div class="page-area" id="alarmPageArea"></div>
         </div>
 
         <!-- 案件备案登记 -->
@@ -1092,6 +1119,7 @@
                 <tbody id="caseTableBody">
                 </tbody>
             </table></div>
+            <div class="page-area" id="casePageArea"></div>
         </div>
 
         <!-- 身份证管理区 -->
@@ -1168,6 +1196,7 @@
                 <tbody id="personTableBody">
                 </tbody>
             </table></div>
+            <div class="page-area" id="personPageArea"></div>
         </div>
 
         <!-- 涉控车辆管理 -->
@@ -1196,6 +1225,7 @@
                 <tbody id="carTableBody">
                 </tbody>
             </table></div>
+            <div class="page-area" id="carPageArea"></div>
         </div>
 
         <!-- 涉案物品登记 -->
@@ -1225,6 +1255,7 @@
                 <tbody id="goodsTableBody">
                 </tbody>
             </table></div>
+            <div class="page-area" id="goodsPageArea"></div>
         </div>
 
         <!-- 警情分析报表 -->
@@ -1427,6 +1458,7 @@
                 <tbody id="sysTableBody">
                 </tbody>
             </table></div>
+            <div class="page-area" id="userPageArea"></div>
         </div>
     </div>
 </div>
@@ -5618,7 +5650,14 @@ function resetEvents() {
 
 function renderAlarmTable() {
     const tbody = document.getElementById('alarmTableBody');
-    tbody.innerHTML = data.alarms.map(item => `
+    const pageArea = document.getElementById('alarmPageArea');
+    const total = data.alarms.length;
+    const totalPages = Math.max(1, Math.ceil(total / defaultPageSize));
+    if (currentAlarmPage > totalPages) currentAlarmPage = totalPages;
+    const start = (currentAlarmPage - 1) * defaultPageSize;
+    const pageData = data.alarms.slice(start, start + defaultPageSize);
+    
+    tbody.innerHTML = pageData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.reporter || '-'}</td>
@@ -5631,11 +5670,22 @@ function renderAlarmTable() {
             <td><button class="btn btn-edit" onclick="editAlarm('${item.id}')">编辑</button></td>
         </tr>
     `).join('');
+    
+    if (pageArea) {
+        pageArea.innerHTML = buildPaginationHtml(currentAlarmPage, totalPages, 'setAlarmPage', 'prevAlarmPage', 'nextAlarmPage', total);
+    }
 }
 
 function renderCaseTable() {
     const tbody = document.getElementById('caseTableBody');
-    tbody.innerHTML = data.cases.map(item => `
+    const pageArea = document.getElementById('casePageArea');
+    const total = data.cases.length;
+    const totalPages = Math.max(1, Math.ceil(total / defaultPageSize));
+    if (currentCasePage > totalPages) currentCasePage = totalPages;
+    const start = (currentCasePage - 1) * defaultPageSize;
+    const pageData = data.cases.slice(start, start + defaultPageSize);
+    
+    tbody.innerHTML = pageData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.type}</td>
@@ -5647,6 +5697,10 @@ function renderCaseTable() {
             <td><button class="btn btn-modal" onclick="viewCaseDetail('${item.id}')">详情</button></td>
         </tr>
     `).join('');
+    
+    if (pageArea) {
+        pageArea.innerHTML = buildPaginationHtml(currentCasePage, totalPages, 'setCasePage', 'prevCasePage', 'nextCasePage', total);
+    }
 }
 
 function renderIdCardTable() {
@@ -5798,7 +5852,14 @@ function viewIdCardDetail(id) {
 
 function renderPersonTable() {
     const tbody = document.getElementById('personTableBody');
-    tbody.innerHTML = data.persons.map(item => `
+    const pageArea = document.getElementById('personPageArea');
+    const total = data.persons.length;
+    const totalPages = Math.max(1, Math.ceil(total / defaultPageSize));
+    if (currentPersonPage > totalPages) currentPersonPage = totalPages;
+    const start = (currentPersonPage - 1) * defaultPageSize;
+    const pageData = data.persons.slice(start, start + defaultPageSize);
+    
+    tbody.innerHTML = pageData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.name}</td>
@@ -5810,11 +5871,22 @@ function renderPersonTable() {
             <td><button class="btn btn-modal" onclick="viewPersonDetail('${item.id}')">详情</button></td>
         </tr>
     `).join('');
+    
+    if (pageArea) {
+        pageArea.innerHTML = buildPaginationHtml(currentPersonPage, totalPages, 'setPersonPage', 'prevPersonPage', 'nextPersonPage', total);
+    }
 }
 
 function renderCarTable() {
     const tbody = document.getElementById('carTableBody');
-    tbody.innerHTML = data.cars.map(item => `
+    const pageArea = document.getElementById('carPageArea');
+    const total = data.cars.length;
+    const totalPages = Math.max(1, Math.ceil(total / defaultPageSize));
+    if (currentCarPage > totalPages) currentCarPage = totalPages;
+    const start = (currentCarPage - 1) * defaultPageSize;
+    const pageData = data.cars.slice(start, start + defaultPageSize);
+    
+    tbody.innerHTML = pageData.map(item => `
         <tr>
             <td>${item.plate}</td>
             <td>${item.brand || '-'}</td>
@@ -5827,11 +5899,22 @@ function renderCarTable() {
             <td><button class="btn btn-modal" onclick="viewCarDetail('${item.plate}')">详情</button></td>
         </tr>
     `).join('');
+    
+    if (pageArea) {
+        pageArea.innerHTML = buildPaginationHtml(currentCarPage, totalPages, 'setCarPage', 'prevCarPage', 'nextCarPage', total);
+    }
 }
 
 function renderGoodsTable() {
     const tbody = document.getElementById('goodsTableBody');
-    tbody.innerHTML = data.goods.map(item => `
+    const pageArea = document.getElementById('goodsPageArea');
+    const total = data.goods.length;
+    const totalPages = Math.max(1, Math.ceil(total / defaultPageSize));
+    if (currentGoodsPage > totalPages) currentGoodsPage = totalPages;
+    const start = (currentGoodsPage - 1) * defaultPageSize;
+    const pageData = data.goods.slice(start, start + defaultPageSize);
+    
+    tbody.innerHTML = pageData.map(item => `
         <tr>
             <td>${item.id}</td>
             <td>${item.name}</td>
@@ -5845,6 +5928,10 @@ function renderGoodsTable() {
             <td><button class="btn btn-edit" onclick="editGoods('${item.id}')">编辑</button></td>
         </tr>
     `).join('');
+    
+    if (pageArea) {
+        pageArea.innerHTML = buildPaginationHtml(currentGoodsPage, totalPages, 'setGoodsPage', 'prevGoodsPage', 'nextGoodsPage', total);
+    }
 }
 
 function renderLogTable() {
@@ -5907,7 +5994,14 @@ async function syncAccessLogs() {
 
 function renderSysTable() {
     const tbody = document.getElementById('sysTableBody');
-    tbody.innerHTML = data.users.map(item => `
+    if (!tbody) return;
+    const total = data.users.length;
+    const totalPages = Math.max(1, Math.ceil(total / defaultPageSize));
+    if (currentUserPage > totalPages) currentUserPage = totalPages;
+    const start = (currentUserPage - 1) * defaultPageSize;
+    const pageData = data.users.slice(start, start + defaultPageSize);
+    
+    tbody.innerHTML = pageData.map(item => `
         <tr>
             <td>${item.account}</td>
             <td>${item.name}</td>
@@ -5922,6 +6016,11 @@ function renderSysTable() {
             </td>
         </tr>
     `).join('');
+    
+    const pageArea = document.getElementById('userPageArea');
+    if (pageArea) {
+        pageArea.innerHTML = buildPaginationHtml(currentUserPage, totalPages, 'setUserPage', 'prevUserPage', 'nextUserPage', total);
+    }
 }
 
 function deleteUser(account) {
@@ -6348,8 +6447,8 @@ function editUser(account) {
     currentModal = 'editUser';
     editId = account;
     const user = data.users.find(u => u.account === account);
-    if (user) {
-        openModal('编辑账号', `
+    if (!user) { showMsg('未找到该账号记录'); return; }
+    openModal('编辑账号', `
             <div class="form-item"><label>账号：</label><input type="text" class="input-text" id="userAccount" value="${user.account}" readonly></div>
             <div class="form-item"><label>密码：</label><input type="text" class="input-text" id="userPassword" value="${user.password}"></div>
             <div class="form-item"><label>姓名：</label><input type="text" class="input-text" id="userName" value="${user.name}"></div>
@@ -6371,7 +6470,6 @@ function editUser(account) {
             </div>
             <div class="form-item"><label>到期日期（临时账号）：</label><input type="date" class="input-text" id="userExpireDate" value="${user.expireDate || ''}"></div>
         `);
-    }
 }
 
 // ==================== 页面切换 ====================
@@ -6435,7 +6533,7 @@ function openModal(title, content) {
     document.getElementById('modalTitle').innerText = title;
     document.getElementById('modalContent').innerHTML = content;
     document.getElementById('modalMask').style.display="block";
-    document.getElementById('modalBox').style.display="block";
+    document.getElementById('modalBox').style.display="flex";
     document.getElementById('modalBtnArea').innerHTML = `
         <button class="btn btn-modal" onclick="saveForm()">确认保存</button>
         <button class="btn btn-close" onclick="closeModal()">关闭</button>
@@ -6588,6 +6686,7 @@ function searchAlarm() {
             (item.location && item.location.toLowerCase().includes(key))
         );
     }
+    currentAlarmPage = 1;
     renderAlarmTable();
     showMsg(`找到 ${data.alarms.length} 条记录`);
 }
@@ -6596,6 +6695,7 @@ function searchAlarm() {
 function resetAlarms() {
     data.alarms = [...originalData.alarms];
     document.getElementById('alarmSearch').value = '';
+    currentAlarmPage = 1;
     renderAlarmTable();
     showMsg('已重置');
 }
@@ -6616,22 +6716,21 @@ function editAlarm(id) {
     currentModal = 'editAlarm';
     editId = id;
     const item = data.alarms.find(a => a.id === id);
-    if (item) {
-        openModal('编辑接警记录', `
-            <div class="form-item"><label>接警编号：</label><input type="text" class="input-text" id="alarmId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>报案人：</label><input type="text" class="input-text" id="alarmReporter" value="${item.reporter || ''}"></div>
-            <div class="form-item"><label>受害人：</label><input type="text" class="input-text" id="alarmVictim" value="${item.victim || ''}"></div>
-            <div class="form-item"><label>报警类型：</label><input type="text" class="input-text" id="alarmType" value="${item.type}"></div>
-            <div class="form-item"><label>事发地点：</label><input type="text" class="input-text" id="alarmLocation" value="${item.location || ''}"></div>
-            <div class="form-item"><label>处警人员：</label><input type="text" class="input-text" id="alarmOfficer" value="${item.officer}"></div>
-            <div class="form-item"><label>处置状态：</label>
-                <select class="select-box" id="alarmStatus">
-                    <option value="处置中" ${item.status==='处置中'?'selected':''}>处置中</option>
-                    <option value="已办结" ${item.status==='已办结'?'selected':''}>已办结</option>
-                </select>
-            </div>
-        `);
-    }
+    if (!item) { showMsg('未找到该接警记录'); return; }
+    openModal('编辑接警记录', `
+        <div class="form-item"><label>接警编号：</label><input type="text" class="input-text" id="alarmId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>报案人：</label><input type="text" class="input-text" id="alarmReporter" value="${item.reporter || ''}"></div>
+        <div class="form-item"><label>受害人：</label><input type="text" class="input-text" id="alarmVictim" value="${item.victim || ''}"></div>
+        <div class="form-item"><label>报警类型：</label><input type="text" class="input-text" id="alarmType" value="${item.type}"></div>
+        <div class="form-item"><label>事发地点：</label><input type="text" class="input-text" id="alarmLocation" value="${item.location || ''}"></div>
+        <div class="form-item"><label>处警人员：</label><input type="text" class="input-text" id="alarmOfficer" value="${item.officer || ''}"></div>
+        <div class="form-item"><label>处置状态：</label>
+            <select class="select-box" id="alarmStatus">
+                <option value="处置中" ${item.status==='处置中'?'selected':''}>处置中</option>
+                <option value="已办结" ${item.status==='已办结'?'selected':''}>已办结</option>
+            </select>
+        </div>
+    `);
 }
 
 // 案件
@@ -6641,11 +6740,12 @@ function searchCase() {
         data.cases = [...originalData.cases];
     } else {
         data.cases = originalData.cases.filter(item => 
-            item.id.toLowerCase().includes(key) || 
-            item.type.toLowerCase().includes(key) || 
-            item.person.toLowerCase().includes(key)
+            (item.id && item.id.toLowerCase().includes(key)) || 
+            (item.type && item.type.toLowerCase().includes(key)) || 
+            (item.person && item.person.toLowerCase().includes(key))
         );
     }
+    currentCasePage = 1;
     renderCaseTable();
     showMsg(`找到 ${data.cases.length} 条记录`);
 }
@@ -6654,6 +6754,7 @@ function searchCase() {
 function resetCases() {
     data.cases = [...originalData.cases];
     document.getElementById('caseSearch').value = '';
+    currentCasePage = 1;
     renderCaseTable();
     showMsg('已重置');
 }
@@ -6684,28 +6785,27 @@ function editCase(id) {
     currentModal = 'editCase';
     editId = id;
     const item = data.cases.find(c => c.id === id);
-    if (item) {
-        openModal('编辑案件记录', `
-            <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="caseId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>案件类别：</label><input type="text" class="input-text" id="caseType" value="${item.type}"></div>
-            <div class="form-item"><label>涉案人员：</label><input type="text" class="input-text" id="casePerson" value="${item.person}"></div>
-            <div class="form-item"><label>案件状态：</label>
-                <select class="select-box" id="caseStatus">
-                    <option value="办理中" ${(item.caseStatus || item.progress) === '办理中' ? 'selected' : ''}>办理中</option>
-                    <option value="已结案" ${(item.caseStatus || item.progress) === '已结案' ? 'selected' : ''}>已结案</option>
-                </select>
-            </div>
-            <div class="form-item"><label>办案单位：</label><input type="text" class="input-text" id="caseInvestigator" value="${item.investigator || ''}"></div>
-            <div class="form-item"><label>办理进度：</label>
-                <select class="select-box" id="caseProgress">
-                    <option ${item.progress === '立案' ? 'selected' : ''}>立案</option>
-                    <option ${item.progress === '侦查取证' ? 'selected' : ''}>侦查取证</option>
-                    <option ${item.progress === '审查起诉' ? 'selected' : ''}>审查起诉</option>
-                    <option ${item.progress === '结案归档' ? 'selected' : ''}>结案归档</option>
-                </select>
-            </div>
-        `);
-    }
+    if (!item) { showMsg('未找到该案件记录'); return; }
+    openModal('编辑案件记录', `
+        <div class="form-item"><label>案件编号：</label><input type="text" class="input-text" id="caseId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>案件类别：</label><input type="text" class="input-text" id="caseType" value="${item.type || ''}"></div>
+        <div class="form-item"><label>涉案人员：</label><input type="text" class="input-text" id="casePerson" value="${item.person || ''}"></div>
+        <div class="form-item"><label>案件状态：</label>
+            <select class="select-box" id="caseStatus">
+                <option value="办理中" ${(item.caseStatus || item.progress) === '办理中' ? 'selected' : ''}>办理中</option>
+                <option value="已结案" ${(item.caseStatus || item.progress) === '已结案' ? 'selected' : ''}>已结案</option>
+            </select>
+        </div>
+        <div class="form-item"><label>办案单位：</label><input type="text" class="input-text" id="caseInvestigator" value="${item.investigator || ''}"></div>
+        <div class="form-item"><label>办理进度：</label>
+            <select class="select-box" id="caseProgress">
+                <option ${item.progress === '立案' ? 'selected' : ''}>立案</option>
+                <option ${item.progress === '侦查取证' ? 'selected' : ''}>侦查取证</option>
+                <option ${item.progress === '审查起诉' ? 'selected' : ''}>审查起诉</option>
+                <option ${item.progress === '结案归档' ? 'selected' : ''}>结案归档</option>
+            </select>
+        </div>
+    `);
 }
 
 // 人员
@@ -6715,11 +6815,12 @@ function searchPerson() {
         data.persons = [...originalData.persons];
     } else {
         data.persons = originalData.persons.filter(item => 
-            item.id.toLowerCase().includes(key) || 
-            item.name.toLowerCase().includes(key) || 
-            item.idCard.includes(key)
+            (item.id && item.id.toLowerCase().includes(key)) || 
+            (item.name && item.name.toLowerCase().includes(key)) || 
+            (item.idCard && item.idCard.includes(key))
         );
     }
+    currentPersonPage = 1;
     renderPersonTable();
     showMsg(`找到 ${data.persons.length} 条记录`);
 }
@@ -6728,6 +6829,7 @@ function searchPerson() {
 function resetPersons() {
     data.persons = [...originalData.persons];
     document.getElementById('personSearch').value = '';
+    currentPersonPage = 1;
     renderPersonTable();
     showMsg('已重置');
 }
@@ -6759,29 +6861,28 @@ function editPerson(id) {
     currentModal = 'editPerson';
     editId = id;
     const item = data.persons.find(p => p.id === id);
-    if (item) {
-        openModal('编辑重点人员', `
-            <div class="form-item"><label>人员编号：</label><input type="text" class="input-text" id="personId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>姓名：</label><input type="text" class="input-text" id="personName" value="${item.name}"></div>
-            <div class="form-item"><label>身份证号：</label><input type="text" class="input-text" id="personIdCard" value="${item.idCard}"></div>
-            <div class="form-item"><label>管控等级：</label>
-                <select class="select-box" id="personLevel">
-                    <option ${item.level==='一级管控'?'selected':''}>一级管控</option>
-                    <option ${item.level==='二级管控'?'selected':''}>二级管控</option>
-                    <option ${item.level==='三级管控'?'selected':''}>三级管控</option>
-                </select>
-            </div>
-            <div class="form-item"><label>风险等级：</label>
-                <select class="select-box" id="personRiskLevel">
-                    <option ${(item.riskLevel || '')==='高风险'?'selected':''}>高风险</option>
-                    <option ${(item.riskLevel || '')==='中风险'?'selected':''}>中风险</option>
-                    <option ${(item.riskLevel || '')==='低风险'?'selected':''}>低风险</option>
-                </select>
-            </div>
-            <div class="form-item"><label>居住地址：</label><input type="text" class="input-text" id="personAddress" value="${item.address}"></div>
-            <div class="form-item"><label>备注：</label><textarea class="input-text" id="personNotes" style="height:60px;">${item.notes || ''}</textarea></div>
-        `);
-    }
+    if (!item) { showMsg('未找到该人员记录'); return; }
+    openModal('编辑重点人员', `
+        <div class="form-item"><label>人员编号：</label><input type="text" class="input-text" id="personId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>姓名：</label><input type="text" class="input-text" id="personName" value="${item.name || ''}"></div>
+        <div class="form-item"><label>身份证号：</label><input type="text" class="input-text" id="personIdCard" value="${item.idCard || ''}"></div>
+        <div class="form-item"><label>管控等级：</label>
+            <select class="select-box" id="personLevel">
+                <option ${item.level==='一级管控'?'selected':''}>一级管控</option>
+                <option ${item.level==='二级管控'?'selected':''}>二级管控</option>
+                <option ${item.level==='三级管控'?'selected':''}>三级管控</option>
+            </select>
+        </div>
+        <div class="form-item"><label>风险等级：</label>
+            <select class="select-box" id="personRiskLevel">
+                <option ${(item.riskLevel || '')==='高风险'?'selected':''}>高风险</option>
+                <option ${(item.riskLevel || '')==='中风险'?'selected':''}>中风险</option>
+                <option ${(item.riskLevel || '')==='低风险'?'selected':''}>低风险</option>
+            </select>
+        </div>
+        <div class="form-item"><label>居住地址：</label><input type="text" class="input-text" id="personAddress" value="${item.address || ''}"></div>
+        <div class="form-item"><label>备注：</label><textarea class="input-text" id="personNotes" style="height:60px;">${item.notes || ''}</textarea></div>
+    `);
 }
 
 // 车辆
@@ -6791,11 +6892,12 @@ function searchCar() {
         data.cars = [...originalData.cars];
     } else {
         data.cars = originalData.cars.filter(item => 
-            item.plate.toLowerCase().includes(key) || 
-            item.type.toLowerCase().includes(key) || 
-            item.owner.toLowerCase().includes(key)
+            (item.plate && item.plate.toLowerCase().includes(key)) || 
+            (item.type && item.type.toLowerCase().includes(key)) || 
+            (item.owner && item.owner.toLowerCase().includes(key))
         );
     }
+    currentCarPage = 1;
     renderCarTable();
     showMsg(`找到 ${data.cars.length} 条记录`);
 }
@@ -6804,6 +6906,7 @@ function searchCar() {
 function resetCars() {
     data.cars = [...originalData.cars];
     document.getElementById('carSearch').value = '';
+    currentCarPage = 1;
     renderCarTable();
     showMsg('已重置');
 }
@@ -6834,28 +6937,29 @@ function editCar(plate) {
     currentModal = 'editCar';
     editId = plate;
     const item = data.cars.find(c => c.plate === plate);
-    if (item) {
-        openModal('编辑车辆信息', `
-            <div class="form-item"><label>车牌号码：</label><input type="text" class="input-text" id="carPlate" value="${item.plate}" readonly></div>
-            <div class="form-item"><label>品牌：</label><input type="text" class="input-text" id="carBrand" value="${item.brand || ''}"></div>
-            <div class="form-item"><label>车辆类型：</label><input type="text" class="input-text" id="carType" value="${item.type}"></div>
-            <div class="form-item"><label>颜色：</label><input type="text" class="input-text" id="carColor" value="${item.color || ''}"></div>
-            <div class="form-item"><label>车主姓名：</label><input type="text" class="input-text" id="carOwner" value="${item.owner}"></div>
-            <div class="form-item"><label>登记状态：</label>
-                <select class="select-box" id="carStatus">
-                    <option ${item.status==='正常备案'?'selected':''}>正常备案</option>
-                    <option ${item.status==='重点布控'?'selected':''}>重点布控</option>
-                </select>
-            </div>
-            <div class="form-item"><label>风险等级：</label>
-                <select class="select-box" id="carRiskLevel">
-                    <option ${(item.riskLevel || '')==='高'?'selected':''}>高</option>
-                    <option ${(item.riskLevel || '')==='中'?'selected':''}>中</option>
-                    <option ${(item.riskLevel || '')==='低'?'selected':''}>低</option>
-                </select>
-            </div>
-        `);
-    }
+    if (!item) { showMsg('未找到该车辆记录'); return; }
+    openModal('编辑车辆信息', `
+        <div class="form-item"><label>车牌号码：</label><input type="text" class="input-text" id="carPlate" value="${item.plate}" readonly></div>
+        <div class="form-item"><label>品牌：</label><input type="text" class="input-text" id="carBrand" value="${item.brand || ''}"></div>
+        <div class="form-item"><label>车辆类型：</label><input type="text" class="input-text" id="carType" value="${item.type || ''}"></div>
+        <div class="form-item"><label>颜色：</label><input type="text" class="input-text" id="carColor" value="${item.color || ''}"></div>
+        <div class="form-item"><label>车主姓名：</label><input type="text" class="input-text" id="carOwner" value="${item.owner || ''}"></div>
+        <div class="form-item"><label>登记状态：</label>
+            <select class="select-box" id="carStatus">
+                <option ${item.status==='正常备案'?'selected':''}>正常备案</option>
+                <option ${item.status==='重点布控'?'selected':''}>重点布控</option>
+                <option ${item.status==='涉案车辆'?'selected':''}>涉案车辆</option>
+                <option ${item.status==='协查通报'?'selected':''}>协查通报</option>
+            </select>
+        </div>
+        <div class="form-item"><label>风险等级：</label>
+            <select class="select-box" id="carRiskLevel">
+                <option ${(item.riskLevel || '')==='高'?'selected':''}>高</option>
+                <option ${(item.riskLevel || '')==='中'?'selected':''}>中</option>
+                <option ${(item.riskLevel || '')==='低'?'selected':''}>低</option>
+            </select>
+        </div>
+    `);
 }
 
 // 物品
@@ -6865,11 +6969,12 @@ function searchGoods() {
         data.goods = [...originalData.goods];
     } else {
         data.goods = originalData.goods.filter(item => 
-            item.id.toLowerCase().includes(key) || 
-            item.name.toLowerCase().includes(key) || 
-            item.location.toLowerCase().includes(key)
+            (item.id && item.id.toLowerCase().includes(key)) || 
+            (item.name && item.name.toLowerCase().includes(key)) || 
+            (item.location && item.location.toLowerCase().includes(key))
         );
     }
+    currentGoodsPage = 1;
     renderGoodsTable();
     showMsg(`找到 ${data.goods.length} 条记录`);
 }
@@ -6878,6 +6983,7 @@ function searchGoods() {
 function resetGoods() {
     data.goods = [...originalData.goods];
     document.getElementById('goodsSearch').value = '';
+    currentGoodsPage = 1;
     renderGoodsTable();
     showMsg('已重置');
 }
@@ -6903,23 +7009,22 @@ function editGoods(id) {
     currentModal = 'editGoods';
     editId = id;
     const item = data.goods.find(g => g.id === id);
-    if (item) {
-        openModal('编辑涉案物品', `
-            <div class="form-item"><label>物品编号：</label><input type="text" class="input-text" id="goodsId" value="${item.id}" readonly></div>
-            <div class="form-item"><label>物品名称：</label><input type="text" class="input-text" id="goodsName" value="${item.name}"></div>
-            <div class="form-item"><label>数量：</label><input type="text" class="input-text" id="goodsCount" value="${item.count}"></div>
-            <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="goodsCaseId" value="${item.caseId || ''}"></div>
-            <div class="form-item"><label>保管状态：</label>
-                <select class="select-box" id="goodsStatus">
-                    <option ${(item.status || '')==='已登记'?'selected':''}>已登记</option>
-                    <option ${(item.status || '')==='已封存'?'selected':''}>已封存</option>
-                    <option ${(item.status || '')==='已移交'?'selected':''}>已移交</option>
-                </select>
-            </div>
-            <div class="form-item"><label>保管人：</label><input type="text" class="input-text" id="goodsKeeper" value="${item.keeper || ''}"></div>
-            <div class="form-item"><label>存放位置：</label><input type="text" class="input-text" id="goodsLocation" value="${item.location}"></div>
-        `);
-    }
+    if (!item) { showMsg('未找到该物品记录'); return; }
+    openModal('编辑涉案物品', `
+        <div class="form-item"><label>物品编号：</label><input type="text" class="input-text" id="goodsId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>物品名称：</label><input type="text" class="input-text" id="goodsName" value="${item.name || ''}"></div>
+        <div class="form-item"><label>数量：</label><input type="text" class="input-text" id="goodsCount" value="${item.count || ''}"></div>
+        <div class="form-item"><label>关联案件：</label><input type="text" class="input-text" id="goodsCaseId" value="${item.caseId || ''}"></div>
+        <div class="form-item"><label>保管状态：</label>
+            <select class="select-box" id="goodsStatus">
+                <option ${(item.status || '')==='已登记'?'selected':''}>已登记</option>
+                <option ${(item.status || '')==='已封存'?'selected':''}>已封存</option>
+                <option ${(item.status || '')==='已移交'?'selected':''}>已移交</option>
+            </select>
+        </div>
+        <div class="form-item"><label>保管人：</label><input type="text" class="input-text" id="goodsKeeper" value="${item.keeper || ''}"></div>
+        <div class="form-item"><label>存放位置：</label><input type="text" class="input-text" id="goodsLocation" value="${item.location || ''}"></div>
+    `);
 }
 
 // 日志
@@ -7180,12 +7285,49 @@ function autoLogout() {
 
 // 分页设置
 let currentPage = 1;
-const itemsPerPage = 5; // 每页显示5条记录
+const itemsPerPage = 10; // 每页显示10条记录
+
+// 各模块分页变量
+let currentAlarmPage = 1;
+let currentCasePage = 1;
+let currentPersonPage = 1;
+let currentCarPage = 1;
+let currentGoodsPage = 1;
+let currentUserPage = 1;
+const defaultPageSize = 10;
+
+// 通用智能分页HTML生成
+function buildPaginationHtml(current, total, setFunc, prevFunc, nextFunc, totalCount) {
+    if (total <= 0) total = 1;
+    let html = '';
+    html += `<span class="page-btn ${current <= 1 ? 'btn-disable' : ''}" onclick="${current > 1 ? prevFunc + '()' : ''}">上一页</span>`;
+    const maxShow = 5;
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, start + maxShow - 1);
+    if (end - start < maxShow - 1) {
+        start = Math.max(1, end - maxShow + 1);
+    }
+    if (start > 1) {
+        html += `<span class="page-btn" onclick="${setFunc}(1)">1</span>`;
+        if (start > 2) html += `<span class="page-btn btn-disable" style="border:none;background:transparent;">...</span>`;
+    }
+    for (let i = start; i <= end; i++) {
+        html += `<span class="page-btn ${i === current ? 'active' : ''}" onclick="${setFunc}(${i})">${i}</span>`;
+    }
+    if (end < total) {
+        if (end < total - 1) html += `<span class="page-btn btn-disable" style="border:none;background:transparent;">...</span>`;
+        html += `<span class="page-btn" onclick="${setFunc}(${total})">${total}</span>`;
+    }
+    html += `<span class="page-btn ${current >= total ? 'btn-disable' : ''}" onclick="${current < total ? nextFunc + '()' : ''}">下一页</span>`;
+    if (totalCount !== undefined) {
+        html += `<span class="page-info">共 ${totalCount} 条 / ${total} 页</span>`;
+    }
+    return html;
+}
 
 function setPage(num){
     currentPage = num;
     renderHomeTable();
-    updatePageBtn();
 }
 
 function nextPage(){
@@ -7198,22 +7340,61 @@ function prevPage(){
 }
 
 function updatePageBtn(){
-    const totalPages = Math.max(1, Math.ceil(data.events.length / itemsPerPage));
-    const pageContainer = document.querySelector('.page-area');
-    
+    const totalCount = data.events.length;
+    const totalPages = Math.max(1, Math.ceil(totalCount / itemsPerPage));
+    const pageContainer = document.querySelector('#home .page-area');
     if (!pageContainer) return;
-    
-    // 生成页码按钮
-    let pageHtml = '';
-    pageHtml += `<span class="page-btn ${currentPage === 1 ? 'btn-disable' : ''}" onclick="prevPage()">上一页</span>`;
-    
-    for (let i = 1; i <= totalPages; i++) {
-        pageHtml += `<span class="page-btn ${currentPage === i ? 'active' : ''}" data-page="${i}" onclick="setPage(${i})">${i}</span>`;
-    }
-    
-    pageHtml += `<span class="page-btn ${currentPage === totalPages ? 'btn-disable' : ''}" onclick="nextPage()">下一页</span>`;
-    pageContainer.innerHTML = pageHtml;
+    pageContainer.innerHTML = buildPaginationHtml(currentPage, totalPages, 'setPage', 'prevPage', 'nextPage', totalCount);
 }
+
+// ============ 各模块分页函数 ============
+// 警情
+function setAlarmPage(n){ currentAlarmPage = n; renderAlarmTable(); }
+function nextAlarmPage(){
+    const t = Math.ceil(data.alarms.length / defaultPageSize);
+    if(currentAlarmPage < t) setAlarmPage(currentAlarmPage + 1);
+}
+function prevAlarmPage(){ if(currentAlarmPage > 1) setAlarmPage(currentAlarmPage - 1); }
+
+// 案件
+function setCasePage(n){ currentCasePage = n; renderCaseTable(); }
+function nextCasePage(){
+    const t = Math.ceil(data.cases.length / defaultPageSize);
+    if(currentCasePage < t) setCasePage(currentCasePage + 1);
+}
+function prevCasePage(){ if(currentCasePage > 1) setCasePage(currentCasePage - 1); }
+
+// 人员
+function setPersonPage(n){ currentPersonPage = n; renderPersonTable(); }
+function nextPersonPage(){
+    const t = Math.ceil(data.persons.length / defaultPageSize);
+    if(currentPersonPage < t) setPersonPage(currentPersonPage + 1);
+}
+function prevPersonPage(){ if(currentPersonPage > 1) setPersonPage(currentPersonPage - 1); }
+
+// 车辆
+function setCarPage(n){ currentCarPage = n; renderCarTable(); }
+function nextCarPage(){
+    const t = Math.ceil(data.cars.length / defaultPageSize);
+    if(currentCarPage < t) setCarPage(currentCarPage + 1);
+}
+function prevCarPage(){ if(currentCarPage > 1) setCarPage(currentCarPage - 1); }
+
+// 物品
+function setGoodsPage(n){ currentGoodsPage = n; renderGoodsTable(); }
+function nextGoodsPage(){
+    const t = Math.ceil(data.goods.length / defaultPageSize);
+    if(currentGoodsPage < t) setGoodsPage(currentGoodsPage + 1);
+}
+function prevGoodsPage(){ if(currentGoodsPage > 1) setGoodsPage(currentGoodsPage - 1); }
+
+// 用户
+function setUserPage(n){ currentUserPage = n; renderSysTable(); }
+function nextUserPage(){
+    const t = Math.ceil(data.users.length / defaultPageSize);
+    if(currentUserPage < t) setUserPage(currentUserPage + 1);
+}
+function prevUserPage(){ if(currentUserPage > 1) setUserPage(currentUserPage - 1); }
 
 // 实时时间
 setInterval(()=>{

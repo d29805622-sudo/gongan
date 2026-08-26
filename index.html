@@ -702,6 +702,138 @@
         body.theme-dark th{background:#0f3460;}
         body.theme-dark tbody tr:nth-child(even){background:#1a2744;}
         body.theme-dark tbody tr:hover{background:#233554;}
+        /* 表格容器 */
+        .table-wrap{
+            width:100%;
+            overflow-x:auto;
+            -webkit-overflow-scrolling:touch;
+        }
+        .table-wrap table{min-width:600px;}
+        /* 分页控件适配 */
+        .page-area{
+            display:flex;
+            flex-wrap:wrap;
+            gap:4px;
+            justify-content:center;
+            padding:10px;
+        }
+        .page-btn{
+            padding:4px 10px;
+            font-size:12px;
+            min-width:30px;
+            text-align:center;
+        }
+        /* 工具栏按钮适配 */
+        .content-wrap .btn{
+            padding:6px 10px;
+            font-size:12px;
+            margin:2px;
+        }
+        /* 汉堡菜单 */
+        .hamburger{
+            display:none;
+            width:32px;
+            height:32px;
+            cursor:pointer;
+            margin-right:10px;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            gap:5px;
+            border-radius:4px;
+            padding:4px;
+        }
+        .hamburger span{
+            display:block;
+            width:22px;
+            height:2px;
+            background:#fff;
+            transition:all 0.3s;
+            border-radius:2px;
+        }
+        .hamburger.active span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+        .hamburger.active span:nth-child(2){opacity:0;}
+        .hamburger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+        /* 遮罩层 */
+        .menu-overlay{
+            position:fixed;
+            top:0;left:0;
+            width:100%;height:100%;
+            background:rgba(0,0,0,0.5);
+            z-index:999;
+            display:none;
+            opacity:0;
+            transition:opacity 0.3s;
+        }
+        .menu-overlay.show{display:block;opacity:1;}
+        /* 响应式 */
+        @media (max-width: 768px){
+            .hamburger{display:flex;}
+            .header-middle{display:none;}
+            .top-header{padding:0 10px;height:50px;}
+            .gov-icon{width:32px;height:32px;}
+            .header-title{font-size:14px;letter-spacing:0;}
+            .header-right{font-size:11px;margin-left:auto;}
+            .logout-btn{margin-left:8px;font-size:11px;}
+            .secret-top{font-size:10px;height:22px;line-height:22px;padding:0 5px;}
+            .main-wrap{flex-direction:column;}
+            .left-menu{
+                position:fixed;
+                top:50px;left:-260px;
+                width:240px;
+                height:calc(100vh - 50px);
+                z-index:1000;
+                transition:left 0.3s ease;
+                overflow-y:auto;
+                box-shadow:2px 0 10px rgba(0,0,0,0.2);
+            }
+            .left-menu.open{left:0;}
+            .content-wrap{width:100%;padding:10px;}
+            .title-txt{font-size:16px;margin:10px 5px;}
+            .search-bar{flex-wrap:wrap;gap:8px;padding:10px;}
+            .search-bar .input-text{flex:1 1 100%;}
+            .search-bar .select-box{flex:1 1 45%;}
+            .search-bar .btn-search{flex:1 1 45%;}
+            .stat-bar{flex-wrap:wrap;gap:8px;}
+            .stat-item{flex:1 1 calc(50% - 8px);min-width:0;padding:10px 8px;}
+            .stat-item .num{font-size:20px;}
+            .stat-item .label{font-size:11px;}
+            table{font-size:11px;}
+            table th,table td{padding:6px 4px;}
+            .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+            .detail-row{flex-wrap:wrap;padding:8px 10px;}
+            .detail-row .label{width:100%;margin-bottom:2px;}
+            .detail-row .value{width:100%;}
+            .form-group{margin-bottom:12px;}
+            .form-group input,.form-group select{font-size:14px;}
+            .input-text{width:100%;font-size:14px;height:36px;padding:0 10px;}
+            .select-box{width:100%;font-size:14px;height:36px;margin:5px 0;}
+            .form-item{display:block!important;margin-bottom:12px!important;}
+            .form-item label{display:block!important;width:100%!important;margin-bottom:4px;font-size:13px;}
+            .modal-box{
+                width:95%;
+                max-width:400px;
+                margin:0;
+                top:50%;
+                max-height:90vh;
+                overflow-y:auto;
+                transform:translate(-50%,-50%);
+            }
+            .login-box{width:95%;margin:10px;}
+            .login-input{font-size:16px;padding:10px;}
+            .login-btn{padding:12px;font-size:15px;}
+            .modal-title{font-size:14px;padding:0 10px;height:36px;line-height:36px;}
+            .modal-content{padding:10px;}
+            .settings-panel{width:85%;max-width:280px;}
+            .settings-panel{right:-100%;}
+            .tab-item{padding:6px 8px;font-size:11px;}
+            .page-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;}
+        }
+        @media (max-width: 480px){
+            .stat-item{flex:1 1 100%;}
+            .header-title{display:none;}
+            .top-header{padding:0 8px;}
+        }
     </style>
 </head>
 <body>
@@ -790,6 +922,9 @@
 
 <div class="top-header">
     <div class="header-left">
+        <div class="hamburger" onclick="toggleMobileMenu()" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
         <img class="gov-icon" src="logo.png" alt="警徽">
         <div class="header-title">河北公安</div>
     </div>
@@ -806,6 +941,9 @@
         <span class="logout-btn" id="logoutBtn" style="display:none" onclick="doLogout()">退出登录</span>
     </div>
 </div>
+
+<!-- 移动端遮罩层 -->
+<div class="menu-overlay" id="menuOverlay" onclick="toggleMobileMenu()"></div>
 
 <div class="main-wrap">
     <div class="left-menu">
@@ -852,7 +990,7 @@
                 <button class="btn btn-export" onclick="exportFile()">导出报表</button>
                 <button class="btn btn-close" onclick="resetEvents()">重置</button>
             </div>
-            <table id="homeTable">
+            <div class="table-wrap"><table id="homeTable">
                 <thead>
                     <tr>
                         <th style="width: 40px;">选择</th>
@@ -865,7 +1003,7 @@
                 </thead>
                 <tbody id="homeTableBody">
                 </tbody>
-            </table>
+            </table></div>
             <div class="page-area">
                 <span class="page-btn" onclick="prevPage()">上一页</span>
                 <span class="page-btn active" data-page="1" onclick="setPage(1)">1</span>
@@ -884,7 +1022,7 @@
                 <button class="btn btn-add" onclick="addAlarm()">新增接警</button>
                 <button class="btn btn-close" onclick="resetAlarms()">重置</button>
             </div>
-            <table>
+            <div class="table-wrap"><table>
                 <thead>
                     <tr>
                         <th>接警编号</th>
@@ -900,7 +1038,7 @@
                 </thead>
                 <tbody id="alarmTableBody">
                 </tbody>
-            </table>
+            </table></div>
         </div>
 
         <!-- 案件备案登记 -->
@@ -912,7 +1050,7 @@
                 <button class="btn btn-add" onclick="addCase()">新增案件</button>
                 <button class="btn btn-close" onclick="resetCases()">重置</button>
             </div>
-            <table>
+            <div class="table-wrap"><table>
                 <thead>
                     <tr>
                         <th>案件编号</th>
@@ -927,7 +1065,7 @@
                 </thead>
                 <tbody id="caseTableBody">
                 </tbody>
-            </table>
+            </table></div>
         </div>
 
         <!-- 重点人员管控 -->
@@ -939,7 +1077,7 @@
                 <button class="btn btn-add" onclick="addPerson()">新增人员</button>
                 <button class="btn btn-close" onclick="resetPersons()">重置</button>
             </div>
-            <table>
+            <div class="table-wrap"><table>
                 <thead>
                     <tr>
                         <th>人员编号</th>
@@ -954,7 +1092,7 @@
                 </thead>
                 <tbody id="personTableBody">
                 </tbody>
-            </table>
+            </table></div>
         </div>
 
         <!-- 涉控车辆管理 -->
@@ -966,7 +1104,7 @@
                 <button class="btn btn-add" onclick="addCar()">新增车辆</button>
                 <button class="btn btn-close" onclick="resetCars()">重置</button>
             </div>
-            <table>
+            <div class="table-wrap"><table>
                 <thead>
                     <tr>
                         <th>车牌号码</th>
@@ -982,7 +1120,7 @@
                 </thead>
                 <tbody id="carTableBody">
                 </tbody>
-            </table>
+            </table></div>
         </div>
 
         <!-- 涉案物品登记 -->
@@ -994,7 +1132,7 @@
                 <button class="btn btn-add" onclick="addGoods()">新增物品</button>
                 <button class="btn btn-close" onclick="resetGoods()">重置</button>
             </div>
-            <table>
+            <div class="table-wrap"><table>
                 <thead>
                     <tr>
                         <th>物品编号</th>
@@ -1011,7 +1149,7 @@
                 </thead>
                 <tbody id="goodsTableBody">
                 </tbody>
-            </table>
+            </table></div>
         </div>
 
         <!-- 警情分析报表 -->
@@ -1128,7 +1266,7 @@
                     <div class="supervision-label">待整改问题</div>
                 </div>
             </div>
-            <table>
+            <div class="table-wrap"><table>
                 <thead>
                     <tr>
                         <th>考评人员</th>
@@ -1140,7 +1278,7 @@
                 </thead>
                 <tbody id="supervisionTableBody">
                 </tbody>
-            </table>
+            </table></div>
         </div>
 
         <!-- 操作日志审计 -->
@@ -1150,7 +1288,7 @@
                 <button class="btn btn-export" onclick="exportLog()">导出日志</button>
                 <button class="btn btn-del" onclick="clearLog()">清空日志</button>
             </div>
-            <table>
+            <div class="table-wrap"><table>
                 <thead>
                     <tr>
                         <th>操作账号</th>
@@ -1162,7 +1300,7 @@
                 </thead>
                 <tbody id="logTableBody">
                 </tbody>
-            </table>
+            </table></div>
         </div>
 
         <!-- 权限分配管理 -->
@@ -1171,7 +1309,7 @@
             <div class="search-bar">
                 <button class="btn btn-add" onclick="openAddUserModal()">新增账号</button>
             </div>
-            <table>
+            <div class="table-wrap"><table>
                 <thead>
                     <tr>
                         <th>账号</th>
@@ -1186,7 +1324,7 @@
                 </thead>
                 <tbody id="sysTableBody">
                 </tbody>
-            </table>
+            </table></div>
         </div>
     </div>
 </div>
@@ -1887,6 +2025,17 @@ function openForgotPassword() {
     showMsg('密码重置成功，请使用新密码登录');
 }
 
+// 移动端汉堡菜单
+function toggleMobileMenu() {
+    const menu = document.querySelector('.left-menu');
+    const overlay = document.getElementById('menuOverlay');
+    const hamburger = document.getElementById('hamburger');
+    if (!menu) return;
+    menu.classList.toggle('open');
+    overlay.classList.toggle('show');
+    hamburger.classList.toggle('active');
+}
+
 // 设置面板
 function openSettings() {
     document.getElementById('settingsPanel').classList.add('open');
@@ -2165,9 +2314,20 @@ function editUser(account) {
 // ==================== 页面切换 ====================
 function switchPage(id) {
     document.querySelectorAll('.menu-second').forEach(v=>v.classList.remove('active'));
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    } else {
+        const el = document.querySelector(`.menu-second[onclick*="'${id}'"]`);
+        if (el) el.classList.add('active');
+    }
     document.querySelectorAll('.page-content').forEach(v=>v.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
+    // 移动端自动关闭菜单
+    const menu = document.querySelector('.left-menu');
+    if (menu && menu.classList.contains('open')) {
+        toggleMobileMenu();
+    }
 }
 
 // 消息提示

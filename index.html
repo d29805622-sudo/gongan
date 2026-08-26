@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>公安内网｜综合警务管理系统｜涉密专用</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
@@ -5261,7 +5264,14 @@ function loadDataFromLocalStorage() {
     const saved = localStorage.getItem('policeData');
     const savedVersion = localStorage.getItem('policeDataVersion');
     const currentVersion = '7.0';
-    
+
+    // 版本不匹配时，清除旧缓存，使用源码默认数据
+    if (saved && savedVersion !== currentVersion) {
+        localStorage.removeItem('policeData');
+        localStorage.removeItem('policeDataVersion');
+        return false;
+    }
+
     if (saved && savedVersion === currentVersion) {
         try {
             const loadedData = JSON.parse(saved);

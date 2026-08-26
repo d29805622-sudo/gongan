@@ -6610,8 +6610,8 @@ function editEvent(id) {
     currentModal = 'editEvent';
     editId = id;
     const item = data.events.find(e => e.id === id) || originalData.events.find(e => e.id === id);
-    if (item) {
-        openModal('编辑警务事件记录', `
+    if (!item) { showMsg('未找到该警务事件记录'); return; }
+    openModal('编辑警务事件记录', `
             <div class="form-item"><label>事件编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="code" value="${item.id}" readonly></div>
             <div class="form-item"><label>事件类型：</label>
                 <select class="select-box" id="type">
@@ -6631,7 +6631,6 @@ function editEvent(id) {
                 </select>
             </div>
         `);
-    }
 }
 
 function delCheck() {

@@ -661,20 +661,7 @@
             color:#999;
         }
         .settings-close:hover{color:#003366;}
-        /* 密令输入框 */
-        .debug-input-wrap{
-            margin-top:12px;
-            display:none;
-        }
-        .debug-input-wrap.show{display:block;}
-        .debug-input-wrap input{
-            width:100%;
-            padding:8px;
-            border:1px dashed #ccc;
-            background:#f8f9fa;
-            border-radius:4px;
-            font-size:12px;
-        }
+        
         /* 账号密码显示弹窗 */
         .account-list-item{
             background:#f8f9fa;
@@ -886,9 +873,6 @@
                     <span class="forgot-password" onclick="openForgotPassword()">忘记密码？</span>
                 </div>
                 <button class="login-btn" onclick="doLoginAction()">登录系统</button>
-                <div class="debug-input-wrap" id="debugWrap">
-                    <input type="text" id="debugInput" placeholder="输入密令..." onkeydown="checkDebugKey(event)">
-                </div>
             </div>
             <div class="login-footer">
                 <p>⚠️ <span class="stat-red">公安内网涉密系统</span> · 严禁截图录屏及外泄信息</p>
@@ -931,10 +915,7 @@
             <option value="off">关闭</option>
         </select>
     </div>
-    <div class="settings-item" style="margin-top:25px;border-top:1px solid #eee;padding-top:15px;">
-        <label>高级功能</label>
-        <input type="text" id="settingSecretInput" placeholder="输入密令查看账户..." onkeydown="checkSecretKey(event)">
-    </div>
+    
 </div>
 
 <!-- 主系统界面 -->
@@ -1408,64 +1389,64 @@
 // 数据存储
 let data = {
     events: [
-        {id: '2026001', type: '治安事件', address: '城东幸福小区', status: '已办结'},
-        {id: '2026002', type: '邻里纠纷', address: '城西花园社区', status: '待处理'},
-        {id: '2026003', type: '治安巡查', address: '城北工业园区', status: '处理中'},
-        {id: '2026004', type: '商铺扰民纠纷', address: '市中心商业街', status: '已办结'},
-        {id: '2026005', type: '寻衅滋事', address: '南站广场周边', status: '待处理'},
-        {id: '2026006', type: '盗窃案件', address: '东城花园小区', status: '处理中'},
-        {id: '2026007', type: '治安事件', address: '西区公园', status: '待处理'},
-        {id: '2026008', type: '邻里纠纷', address: '南城居住区', status: '已办结'},
-        {id: '2026009', type: '治安巡查', address: '北区商贸中心', status: '处理中'},
-        {id: '2026010', type: '寻衅滋事', address: '火车站广场', status: '待处理'},
-        {id: '2026011', type: '商铺扰民纠纷', address: '市中心步行街', status: '已办结'},
-        {id: '2026012', type: '盗窃案件', address: '科技园区', status: '处理中'}
+        {id: '2025001', type: '治安事件', address: '城东幸福小区', status: '已办结'},
+        {id: '2025002', type: '邻里纠纷', address: '城西花园社区', status: '待处理'},
+        {id: '2025003', type: '治安巡查', address: '城北工业园区', status: '处理中'},
+        {id: '2025004', type: '商铺扰民纠纷', address: '市中心商业街', status: '已办结'},
+        {id: '2025005', type: '寻衅滋事', address: '南站广场周边', status: '待处理'},
+        {id: '2025006', type: '盗窃案件', address: '东城花园小区', status: '处理中'},
+        {id: '2025007', type: '治安事件', address: '西区公园', status: '待处理'},
+        {id: '2025008', type: '邻里纠纷', address: '南城居住区', status: '已办结'},
+        {id: '2025009', type: '治安巡查', address: '北区商贸中心', status: '处理中'},
+        {id: '2025010', type: '寻衅滋事', address: '火车站广场', status: '待处理'},
+        {id: '2025011', type: '商铺扰民纠纷', address: '市中心步行街', status: '已办结'},
+        {id: '2025012', type: '盗窃案件', address: '科技园区', status: '处理中'}
     ],
     alarms: [
-        {id: 'JJ2026051801', reporter: '张某', victim: '王某', type: '财物丢失', time: '2026-05-18 08:20', location: '幸福小区12号楼', officer: '执勤一组', status: '处置中',
+        {id: 'JJ2025051801', reporter: '张某', victim: '王某', type: '财物丢失', time: '2025-05-18 08:20', location: '幸福小区12号楼', officer: '执勤一组', status: '处置中',
          process: '已派警', records: ['接到报警', '派员处置', '现场勘查']},
-        {id: 'JJ2026051802', reporter: '李某', victim: '赵某', type: '民事纠纷', time: '2026-05-18 10:12', location: '花园社区广场', officer: '调解班组', status: '已办结',
+        {id: 'JJ2025051802', reporter: '李某', victim: '赵某', type: '民事纠纷', time: '2025-05-18 10:12', location: '花园社区广场', officer: '调解班组', status: '已办结',
          process: '已结案', records: ['接到报警', '派员处置', '现场调解', '达成协议', '结案归档']}
     ],
     cases: [
-        {id: 'XA2026021', type: '盗窃案', person: '王某', time: '2026-05-10', progress: '侦查取证',
+        {id: 'XA2025021', type: '盗窃案', person: '王某', time: '2025-05-10', progress: '侦查取证',
          caseStatus: '办理中', investigator: '刑侦大队', evidence: ['现场照片', '指纹采集', '监控录像'],
-         timeline: ['2026-05-10 报案', '2026-05-11 立案', '2026-05-12 侦查取证']},
-        {id: 'XA2026022', type: '寻衅滋事', person: '赵某', time: '2026-05-12', progress: '结案归档',
+         timeline: ['2025-05-10 报案', '2025-05-11 立案', '2025-05-12 侦查取证']},
+        {id: 'XA2025022', type: '寻衅滋事', person: '赵某', time: '2025-05-12', progress: '结案归档',
          caseStatus: '已结案', investigator: '治安大队', evidence: ['当事人陈述', '证人证言'],
-         timeline: ['2026-05-12 报案', '2026-05-13 立案', '2026-05-14 调查取证', '2026-05-18 结案归档']}
+         timeline: ['2025-05-12 报案', '2025-05-13 立案', '2025-05-14 调查取证', '2025-05-18 结案归档']}
     ],
     persons: [
         {id: 'RY001', name: '陈某', idCard: '130XXXX8976', level: '一级管控', address: '市区幸福路小区',
-         relatedPersons: ['王某', '刘某'], trackRecords: ['2026-05-15 火车站', '2026-05-16 幸福小区', '2026-05-17 商业中心'],
+         relatedPersons: ['王某', '刘某'], trackRecords: ['2025-05-15 火车站', '2025-05-16 幸福小区', '2025-05-17 商业中心'],
          riskLevel: '高风险', notes: '有盗窃前科'},
         {id: 'RY002', name: '刘某', idCard: '152XXXX1234', level: '二级管控', address: '城西惠民社区',
-         relatedPersons: ['陈某'], trackRecords: ['2026-05-14 公园', '2026-05-16 超市'],
+         relatedPersons: ['陈某'], trackRecords: ['2025-05-14 公园', '2025-05-16 超市'],
          riskLevel: '中风险', notes: '重点关注人员'}
     ],
     cars: [
         {plate: '冀A12345', type: '小型轿车', owner: '周某', status: '重点布控',
-         color: '黑色', brand: '大众', trackRecords: ['2026-05-17 幸福路', '2026-05-18 人民路'], riskLevel: '高'},
+         color: '黑色', brand: '大众', trackRecords: ['2025-05-17 幸福路', '2025-05-18 人民路'], riskLevel: '高'},
         {plate: '冀B67890', type: '面包车', owner: '吴某', status: '正常备案',
          color: '白色', brand: '五菱', trackRecords: [], riskLevel: '低'}
     ],
     goods: [
-        {id: 'WP011', name: '手机', count: '2部', time: '2026-05-15', location: '物证保管室A区',
-         caseId: 'XA2026021', status: '已登记', keeper: '物证管理员', inTime: '2026-05-15 14:30', outTime: ''},
-        {id: 'WP012', name: '现金', count: '5000元', time: '2026-05-16', location: '财务封存库房',
-         caseId: 'XA2026022', status: '已移交', keeper: '财务室', inTime: '2026-05-16 09:00', outTime: '2026-05-18 10:00'}
+        {id: 'WP011', name: '手机', count: '2部', time: '2025-05-15', location: '物证保管室A区',
+         caseId: 'XA2025021', status: '已登记', keeper: '物证管理员', inTime: '2025-05-15 14:30', outTime: ''},
+        {id: 'WP012', name: '现金', count: '5000元', time: '2025-05-16', location: '财务封存库房',
+         caseId: 'XA2025022', status: '已移交', keeper: '财务室', inTime: '2025-05-16 09:00', outTime: '2025-05-18 10:00'}
     ],
     logs: [
-        {account: 'admin01', name: '系统管理员', action: '新增案件数据', time: '2026-05-18 09:15', ip: '10.26.18.145'},
-        {account: 'police02', name: '执勤民警', action: '修改人员信息', time: '2026-05-18 10:02', ip: '10.26.18.156'}
+        {account: 'zhangwei', name: '张伟', action: '新增案件数据', time: '2025-05-18 09:15', ip: '10.26.18.145'},
+        {account: 'liuyang', name: '刘洋', action: '修改人员信息', time: '2025-05-18 10:02', ip: '10.26.18.156'}
     ],
     accessLogs: [
-        {deviceId: 'init', deviceType: '系统初始化', browser: '-', os: '-', screen: '-', time: '2026-05-18 08:00', ip: '10.26.18.145', referrer: '-'}
+        {deviceId: 'init', deviceType: '系统后台', browser: '-', os: '-', screen: '-', time: '2025-05-18 08:00', ip: '10.26.18.145', referrer: '-'}
     ],
     users: [
-        {account: 'admin', password: '123456', name: '超级管理员', role: '系统运维', level: '最高全权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
-        {account: 'police', password: '123456', name: '普通警员账号', role: '一线执勤', level: '查看+新增权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
-        {account: 'trainee', password: '123456', name: '实习账号', role: '实习人员', level: '仅查看权限', status: '临时开通', expireDate: '', currentSessionId: '', lastLoginTime: ''}
+        {account: 'zhangwei', password: '123456', name: '张伟', role: '系统运维', level: '最高全权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'liuyang', password: '123456', name: '刘洋', role: '一线执勤', level: '查看+新增权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
+        {account: 'wangfang', password: '123456', name: '王芳', role: '内勤文书', level: '仅查看权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''}
     ],
     statistics: {
         todayAlarms: 5,
@@ -1477,9 +1458,9 @@ let data = {
     },
     supervision: {
         evaluations: [
-            {person: '张三', score: 95, rank: '优秀', month: '2026-05'},
-            {person: '李四', score: 88, rank: '良好', month: '2026-05'},
-            {person: '王五', score: 76, rank: '合格', month: '2026-05'}
+            {person: '张三', score: 95, rank: '优秀', month: '2025-05'},
+            {person: '李四', score: 88, rank: '良好', month: '2025-05'},
+            {person: '王五', score: 76, rank: '合格', month: '2025-05'}
         ],
         pendingAudits: 3,
         issues: 1
@@ -1523,9 +1504,7 @@ async function loadDataFromSupabase() {
     }
     
     try {
-        console.log('正在从Supabase加载数据...');
-        
-        // 从police_data表加载所有数据
+        // // 从police_data表加载所有数据
         const { data: dbData, error } = await sbClient
             .from('police_data')
             .select('*')
@@ -1533,8 +1512,7 @@ async function loadDataFromSupabase() {
             .limit(1);
         
         if (error) {
-            console.warn('从Supabase加载数据失败:', error);
-            return false;
+            // return false;
         }
         
         if (dbData && dbData.length > 0) {
@@ -1577,14 +1555,12 @@ async function loadDataFromSupabase() {
                 data.statistics = loadedData.statistics || data.statistics;
                 data.supervision = loadedData.supervision || data.supervision;
                 
-                console.log('从Supabase加载数据成功');
-                return true;
+                // return true;
             }
         }
     } catch (e) {
-        console.warn('从Supabase加载数据异常:', e);
+        
     }
-    
     return false;
 }
 
@@ -1595,9 +1571,7 @@ async function saveDataToSupabase() {
     }
     
     try {
-        console.log('正在保存数据到Supabase...');
-        
-        // 先尝试更新，如果不存在则插入
+        // // 先尝试更新，如果不存在则插入
         const { error } = await sbClient
             .from('police_data')
             .upsert({
@@ -1609,15 +1583,12 @@ async function saveDataToSupabase() {
             });
         
         if (error) {
-            console.warn('保存到Supabase失败:', error);
-            return false;
+            // return false;
         }
         
-        console.log('保存到Supabase成功');
-        return true;
+        // return true;
     } catch (e) {
-        console.warn('保存到Supabase异常:', e);
-        return false;
+        // return false;
     }
 }
 
@@ -1625,7 +1596,7 @@ async function saveDataToSupabase() {
 function loadDataFromLocalStorage() {
     const saved = localStorage.getItem('policeData');
     const savedVersion = localStorage.getItem('policeDataVersion');
-    const currentVersion = '4.1'; // 版本号，确保数据结构更新时递增
+    const currentVersion = '5.0';
     
     if (saved && savedVersion === currentVersion) {
         try {
@@ -1668,7 +1639,7 @@ function loadDataFromLocalStorage() {
             data.supervision = loadedData.supervision || data.supervision;
             return true;
         } catch(e) {
-            console.warn('从本地存储加载数据失败，使用默认数据:', e);
+            
         }
     }
     return false;
@@ -1691,7 +1662,7 @@ async function loadData() {
         if (!loaded && USE_SUPABASE) {
             const saved = localStorage.getItem('policeData');
             const savedVersion = localStorage.getItem('policeDataVersion');
-            const currentVersion = '4.1';
+            const currentVersion = '5.0';
             if (saved) {
                 localStorage.setItem('policeDataVersion', currentVersion);
                 await saveDataToSupabase();
@@ -1738,22 +1709,22 @@ async function saveData() {
     try {
         // 保存到本地存储
         localStorage.setItem('policeData', JSON.stringify(data));
-        localStorage.setItem('policeDataVersion', '4.1'); // 同步保存版本号
+        localStorage.setItem('policeDataVersion', '5.0');
         
         // 尝试保存到Supabase
         if (USE_SUPABASE) {
             await saveDataToSupabase();
         }
     } catch(e) {
-        console.warn('数据保存失败:', e);
+        
     }
 }
 
 // 添加日志
 function addLog(action, detail) {
     data.logs.unshift({
-        account: currentUser ? currentUser.account : 'admin01',
-        name: currentUser ? currentUser.name : '系统管理员',
+        account: currentUser ? currentUser.account : 'zhangwei',
+        name: currentUser ? currentUser.name : '张伟',
         action: action + ': ' + detail,
         time: new Date().toLocaleString('zh-CN'),
         ip: '10.26.18.145'
@@ -1853,10 +1824,10 @@ async function saveAccessLogToSupabase(record) {
                 user_agent: record.userAgent
             }]);
         if (error) {
-            console.warn('保存访问记录失败:', error);
+            
         }
     } catch (e) {
-        console.warn('保存访问记录异常:', e);
+        
     }
 }
 
@@ -1870,8 +1841,7 @@ async function loadAccessLogsFromSupabase() {
             .order('visit_time', { ascending: false })
             .limit(100);
         if (error) {
-            console.warn('加载访问记录失败:', error);
-            return;
+            // return;
         }
         if (dbData && dbData.length > 0) {
             // 转换格式
@@ -1894,7 +1864,7 @@ async function loadAccessLogsFromSupabase() {
             }
         }
     } catch (e) {
-        console.warn('加载访问记录异常:', e);
+        
     }
 }
 
@@ -2326,30 +2296,6 @@ function applyAnimation(enabled) {
     localStorage.setItem('setting_anim', enabled);
 }
 
-// 密令检测（登录页调试输入框）
-function checkDebugKey(e) {
-    if (e.key === 'Enter') {
-        const val = document.getElementById('debugInput').value.trim();
-        if (val === 'gongan') {
-            showAllAccounts();
-        } else {
-            showMsg('密令错误');
-        }
-    }
-}
-
-// 密令检测（设置面板密令框）
-function checkSecretKey(e) {
-    if (e.key === 'Enter') {
-        const val = document.getElementById('settingSecretInput').value.trim();
-        if (val === 'gongan') {
-            showAllAccounts();
-        } else {
-            showMsg('密令错误');
-        }
-    }
-}
-
 // 显示所有账号密码
 function showAllAccounts() {
     let html = '<div style="max-height:400px;overflow-y:auto;">';
@@ -2366,23 +2312,13 @@ function showAllAccounts() {
     openModal('账户密码列表', html);
 }
 
-// 密令彩蛋：在登录页账号框连续按5次Enter显示调试框
-let loginEnterCount = 0;
 document.addEventListener('DOMContentLoaded', function() {
-    const accInput = document.getElementById('loginAccountInput');
-    if (accInput) {
-        accInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                loginEnterCount++;
-                if (loginEnterCount >= 5) {
-                    loginEnterCount = 0;
-                    document.getElementById('debugWrap').classList.add('show');
-                    document.getElementById('debugInput').focus();
-                    showMsg('调试模式已开启，请输入密令');
-                }
-            }
-        });
-    }
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.shiftKey && e.key === 'G') {
+            e.preventDefault();
+            showAllAccounts();
+        }
+    });
     // 恢复设置
     const savedTheme = localStorage.getItem('setting_theme');
     if (savedTheme) {
@@ -3307,8 +3243,7 @@ function saveForm() {
         closeModal();
         showMsg("保存成功");
     } catch(e) {
-        console.error(e);
-        showMsg("保存失败，请检查输入");
+        // showMsg("保存失败，请检查输入");
     }
 }
 

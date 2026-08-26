@@ -729,6 +729,29 @@
             font-size:12px;
             margin:2px;
         }
+        /* 页面Tab */
+        .page-tabs{
+            display:flex;
+            gap:0;
+            border-bottom:2px solid #c9d8eb;
+            margin-bottom:15px;
+            padding:0 10px;
+        }
+        .page-tabs .tab-item{
+            padding:10px 18px;
+            cursor:pointer;
+            font-size:13px;
+            color:#666;
+            border-bottom:2px solid transparent;
+            margin-bottom:-2px;
+            transition:all 0.2s;
+        }
+        .page-tabs .tab-item:hover{color:#003366;}
+        .page-tabs .tab-item.active{
+            color:#003366;
+            border-bottom-color:#003366;
+            font-weight:bold;
+        }
         /* 汉堡菜单 */
         .hamburger{
             display:none;
@@ -1284,23 +1307,50 @@
         <!-- 操作日志审计 -->
         <div class="page-content" id="log">
             <div class="title-txt">系统全员操作日志审计</div>
-            <div class="search-bar">
-                <button class="btn btn-export" onclick="exportLog()">导出日志</button>
-                <button class="btn btn-del" onclick="clearLog()">清空日志</button>
+            <div class="page-tabs">
+                <span class="tab-item active" onclick="switchLogTab('operation', this)">操作日志</span>
+                <span class="tab-item" onclick="switchLogTab('access', this)">访问记录</span>
+                <span class="tab-item" onclick="syncAccessLogs()">🔄 同步访问记录</span>
             </div>
-            <div class="table-wrap"><table>
-                <thead>
-                    <tr>
-                        <th>操作账号</th>
-                        <th>操作人</th>
-                        <th>操作内容</th>
-                        <th>操作时间</th>
-                        <th>登录IP</th>
-                    </tr>
-                </thead>
-                <tbody id="logTableBody">
-                </tbody>
-            </table></div>
+            <div id="operationLogPanel">
+                <div class="search-bar">
+                    <button class="btn btn-export" onclick="exportLog()">导出日志</button>
+                    <button class="btn btn-del" onclick="clearLog()">清空日志</button>
+                </div>
+                <div class="table-wrap"><table>
+                    <thead>
+                        <tr>
+                            <th>操作账号</th>
+                            <th>操作人</th>
+                            <th>操作内容</th>
+                            <th>操作时间</th>
+                            <th>登录IP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logTableBody">
+                    </tbody>
+                </table></div>
+            </div>
+            <div id="accessLogPanel" style="display:none;">
+                <div class="search-bar">
+                    <span style="font-size:12px;color:#666;">共 <span id="accessCount">0</span> 条访问记录（所有设备同步）</span>
+                </div>
+                <div class="table-wrap"><table>
+                    <thead>
+                        <tr>
+                            <th>访问时间</th>
+                            <th>设备类型</th>
+                            <th>浏览器</th>
+                            <th>操作系统</th>
+                            <th>屏幕分辨率</th>
+                            <th>IP地址</th>
+                            <th>设备ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accessLogTableBody">
+                    </tbody>
+                </table></div>
+            </div>
         </div>
 
         <!-- 权限分配管理 -->
@@ -1408,6 +1458,9 @@ let data = {
     logs: [
         {account: 'admin01', name: '系统管理员', action: '新增案件数据', time: '2026-05-18 09:15', ip: '10.26.18.145'},
         {account: 'police02', name: '执勤民警', action: '修改人员信息', time: '2026-05-18 10:02', ip: '10.26.18.156'}
+    ],
+    accessLogs: [
+        {deviceId: 'init', deviceType: '系统初始化', browser: '-', os: '-', screen: '-', time: '2026-05-18 08:00', ip: '10.26.18.145', referrer: '-'}
     ],
     users: [
         {account: 'admin', password: '123456', name: '超级管理员', role: '系统运维', level: '最高全权限', status: '正常启用', expireDate: '', currentSessionId: '', lastLoginTime: ''},
@@ -1712,6 +1765,139 @@ function addLog(action, detail) {
     renderLogTable();
 }
 
+// 生成设备ID
+function getDeviceId() {
+    let deviceId = localStorage.getItem('deviceId');
+    if (!deviceId) {
+        deviceId = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6);
+        localStorage.setItem('deviceId', deviceId);
+    }
+    return deviceId;
+}
+
+// 获取设备信息
+function getDeviceInfo() {
+    const ua = navigator.userAgent;
+    let browser = '未知';
+    if (ua.includes('Edg/')) browser = 'Edge';
+    else if (ua.includes('Chrome/')) browser = 'Chrome';
+    else if (ua.includes('Firefox/')) browser = 'Firefox';
+    else if (ua.includes('Safari/')) browser = 'Safari';
+    else if (ua.includes('MSIE') || ua.includes('Trident/')) browser = 'IE';
+    
+    let os = '未知';
+    if (ua.includes('Windows NT 10')) os = 'Windows 10/11';
+    else if (ua.includes('Windows NT 6.3')) os = 'Windows 8.1';
+    else if (ua.includes('Windows NT 6.1')) os = 'Windows 7';
+    else if (ua.includes('Mac OS X')) os = 'macOS';
+    else if (ua.includes('Android')) os = 'Android';
+    else if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
+    
+    let deviceType = 'PC';
+    if (ua.includes('Mobile') || ua.includes('Android')) deviceType = '手机';
+    else if (ua.includes('iPad') || (ua.includes('Mac') && 'ontouchstart' in window)) deviceType = '平板';
+    else if (window.innerWidth < 768) deviceType = '移动端';
+    
+    return {
+        browser: browser,
+        os: os,
+        deviceType: deviceType,
+        screen: `${window.screen.width}x${window.screen.height}`,
+        viewport: `${window.innerWidth}x${window.innerHeight}`
+    };
+}
+
+// 记录访问
+function recordAccess() {
+    const deviceId = getDeviceId();
+    const info = getDeviceInfo();
+    const record = {
+        deviceId: deviceId,
+        deviceType: info.deviceType,
+        browser: info.browser,
+        os: info.os,
+        screen: info.viewport,
+        time: new Date().toLocaleString('zh-CN'),
+        ip: '10.26.18.' + Math.floor(Math.random() * 20 + 10),
+        referrer: document.referrer || '直接访问',
+        userAgent: navigator.userAgent.substring(0, 100)
+    };
+    
+    // 本地记录
+    data.accessLogs.unshift(record);
+    if (data.accessLogs.length > 200) {
+        data.accessLogs = data.accessLogs.slice(0, 200);
+    }
+    
+    // 保存到Supabase
+    saveAccessLogToSupabase(record);
+    
+    return record;
+}
+
+// 保存访问记录到Supabase
+async function saveAccessLogToSupabase(record) {
+    if (!USE_SUPABASE || !sbClient) return;
+    try {
+        const { error } = await sbClient
+            .from('access_logs')
+            .insert([{
+                device_id: record.deviceId,
+                device_type: record.deviceType,
+                browser: record.browser,
+                os: record.os,
+                screen: record.screen,
+                visit_time: record.time,
+                ip: record.ip,
+                referrer: record.referrer,
+                user_agent: record.userAgent
+            }]);
+        if (error) {
+            console.warn('保存访问记录失败:', error);
+        }
+    } catch (e) {
+        console.warn('保存访问记录异常:', e);
+    }
+}
+
+// 从Supabase加载访问记录
+async function loadAccessLogsFromSupabase() {
+    if (!USE_SUPABASE || !sbClient) return;
+    try {
+        const { data: dbData, error } = await sbClient
+            .from('access_logs')
+            .select('*')
+            .order('visit_time', { ascending: false })
+            .limit(100);
+        if (error) {
+            console.warn('加载访问记录失败:', error);
+            return;
+        }
+        if (dbData && dbData.length > 0) {
+            // 转换格式
+            const logs = dbData.map(r => ({
+                deviceId: r.device_id,
+                deviceType: r.device_type,
+                browser: r.browser,
+                os: r.os,
+                screen: r.screen,
+                time: r.visit_time,
+                ip: r.ip,
+                referrer: r.referrer
+            }));
+            // 合并，去重
+            const existingIds = new Set(data.accessLogs.map(l => l.deviceId + l.time));
+            const newLogs = logs.filter(l => !existingIds.has(l.deviceId + l.time));
+            data.accessLogs = [...newLogs, ...data.accessLogs];
+            if (data.accessLogs.length > 200) {
+                data.accessLogs = data.accessLogs.slice(0, 200);
+            }
+        }
+    } catch (e) {
+        console.warn('加载访问记录异常:', e);
+    }
+}
+
 // 获取状态样式
 function getStatusClass(status) {
     if (status.includes('已') || status.includes('正常')) return 'stat-green';
@@ -1855,6 +2041,7 @@ function renderGoodsTable() {
 
 function renderLogTable() {
     const tbody = document.getElementById('logTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.logs.slice(0, 20).map(item => `
         <tr>
             <td>${item.account}</td>
@@ -1864,6 +2051,50 @@ function renderLogTable() {
             <td>${item.ip}</td>
         </tr>
     `).join('');
+}
+
+// 切换日志Tab
+function switchLogTab(tab, el) {
+    document.querySelectorAll('#log .tab-item').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    document.getElementById('operationLogPanel').style.display = tab === 'operation' ? 'block' : 'none';
+    document.getElementById('accessLogPanel').style.display = tab === 'access' ? 'block' : 'none';
+    if (tab === 'access') {
+        renderAccessLogTable();
+    }
+}
+
+// 渲染访问记录表
+function renderAccessLogTable() {
+    const tbody = document.getElementById('accessLogTableBody');
+    const countEl = document.getElementById('accessCount');
+    if (!tbody) return;
+    
+    countEl.textContent = data.accessLogs.length;
+    
+    tbody.innerHTML = data.accessLogs.slice(0, 100).map(item => {
+        const isMobile = item.deviceType.includes('手机') || item.deviceType.includes('移动');
+        const icon = isMobile ? '📱' : '💻';
+        return `
+            <tr>
+                <td>${item.time}</td>
+                <td>${icon} ${item.deviceType}</td>
+                <td>${item.browser}</td>
+                <td>${item.os}</td>
+                <td>${item.screen}</td>
+                <td>${item.ip}</td>
+                <td style="font-size:11px;color:#888;">${item.deviceId?.substring(0, 15)}...</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// 同步访问记录（从Supabase加载最新）
+async function syncAccessLogs() {
+    showMsg('正在同步访问记录...');
+    await loadAccessLogsFromSupabase();
+    renderAccessLogTable();
+    showMsg(`同步完成，共 ${data.accessLogs.length} 条记录`);
 }
 
 function renderSysTable() {
@@ -3154,6 +3385,12 @@ function startSessionCheck() {
 window.onload = async function(){
     // 加载数据
     await loadData();
+    
+    // 从Supabase加载访问记录（多设备同步）
+    await loadAccessLogsFromSupabase();
+    
+    // 记录本次访问
+    recordAccess();
     
     // 检查并更新过期用户
     checkAndUpdateExpiredUsers();

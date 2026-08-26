@@ -569,12 +569,146 @@
         .main-system.active{
             display:block;
         }
+        /* 登录页设置按钮 */
+        .login-settings-btn{
+            position:absolute;
+            top:15px;
+            right:15px;
+            width:36px;
+            height:36px;
+            background:rgba(255,255,255,0.15);
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            color:#fff;
+            font-size:20px;
+            transition:all 0.3s;
+            z-index:100;
+        }
+        .login-settings-btn:hover{
+            background:rgba(255,255,255,0.3);
+            transform:rotate(60deg);
+        }
+        /* 忘记密码链接 */
+        .forgot-password{
+            display:block;
+            text-align:right;
+            color:#4080c9;
+            font-size:12px;
+            cursor:pointer;
+            margin:5px 0 10px;
+            text-decoration:underline;
+        }
+        .forgot-password:hover{color:#1a5fb4;}
+        /* 错误次数提示 */
+        .login-error-box{
+            background:#fff3cd;
+            border:1px solid #ffc107;
+            color:#856404;
+            padding:10px 12px;
+            border-radius:4px;
+            font-size:12px;
+            margin-bottom:12px;
+            display:none;
+        }
+        .login-error-box.show{display:block;}
+        .login-error-box .remaining{color:#c0392b;font-weight:bold;font-size:14px;}
+        /* 设置面板 */
+        .settings-panel{
+            position:fixed;
+            top:0;right:-320px;
+            width:300px;
+            height:100vh;
+            background:#fff;
+            box-shadow:-4px 0 20px rgba(0,0,0,0.2);
+            z-index:10001;
+            transition:right 0.35s ease;
+            padding:20px;
+            overflow-y:auto;
+        }
+        .settings-panel.open{right:0;}
+        .settings-panel h3{
+            font-size:16px;
+            color:#003366;
+            margin-bottom:20px;
+            padding-bottom:10px;
+            border-bottom:2px solid #003366;
+        }
+        .settings-item{
+            margin-bottom:18px;
+        }
+        .settings-item label{
+            display:block;
+            font-size:12px;
+            color:#333;
+            margin-bottom:6px;
+            font-weight:bold;
+        }
+        .settings-item select, .settings-item input[type=text]{
+            width:100%;
+            padding:8px;
+            border:1px solid #c9d8eb;
+            border-radius:4px;
+            font-size:12px;
+        }
+        .settings-close{
+            position:absolute;
+            top:15px;right:15px;
+            cursor:pointer;
+            font-size:22px;
+            color:#999;
+        }
+        .settings-close:hover{color:#003366;}
+        /* 密令输入框 */
+        .debug-input-wrap{
+            margin-top:12px;
+            display:none;
+        }
+        .debug-input-wrap.show{display:block;}
+        .debug-input-wrap input{
+            width:100%;
+            padding:8px;
+            border:1px dashed #ccc;
+            background:#f8f9fa;
+            border-radius:4px;
+            font-size:12px;
+        }
+        /* 账号密码显示弹窗 */
+        .account-list-item{
+            background:#f8f9fa;
+            border:1px solid #e0e6ed;
+            padding:8px 12px;
+            margin:5px 0;
+            border-radius:4px;
+            font-size:12px;
+            font-family:monospace;
+        }
+        .account-list-item .acc{color:#003366;font-weight:bold;}
+        .account-list-item .pwd{color:#c0392b;}
+        /* 主题切换 */
+        body.theme-dark{
+            background:#1a1a2e;
+            color:#eee;
+        }
+        body.theme-dark .content-wrap{background:#1a1a2e;}
+        body.theme-dark .search-bar,
+        body.theme-dark table{
+            background:#16213e;
+            border-color:#0f3460;
+            color:#eee;
+        }
+        body.theme-dark th{background:#0f3460;}
+        body.theme-dark tbody tr:nth-child(even){background:#1a2744;}
+        body.theme-dark tbody tr:hover{background:#233554;}
     </style>
 </head>
 <body>
 <!-- 登录界面 -->
 <div class="login-page" id="loginPage">
     <div class="login-bg-pattern"></div>
+    <div class="login-settings-btn" onclick="openSettings()" title="设置">⚙</div>
     <div class="login-container">
         <div class="login-box">
             <div class="login-header">
@@ -583,6 +717,10 @@
                 <p>涉密专用 · 内网专用</p>
             </div>
             <div class="login-body">
+                <div class="login-error-box" id="loginErrorBox">
+                    <div id="loginErrorMsg">您输入的密码不正确</div>
+                    <div>您还有 <span class="remaining" id="loginRemaining">5</span> 次机会</div>
+                </div>
                 <div class="login-form-group">
                     <label>账号<span class="required">*</span></label>
                     <input type="text" class="login-input" id="loginAccountInput" placeholder="请输入您的账号">
@@ -590,13 +728,57 @@
                 <div class="login-form-group">
                     <label>密码<span class="required">*</span></label>
                     <input type="password" class="login-input" id="loginPasswordInput" placeholder="请输入您的密码">
+                    <span class="forgot-password" onclick="openForgotPassword()">忘记密码？</span>
                 </div>
                 <button class="login-btn" onclick="doLoginAction()">登录系统</button>
+                <div class="debug-input-wrap" id="debugWrap">
+                    <input type="text" id="debugInput" placeholder="输入密令..." onkeydown="checkDebugKey(event)">
+                </div>
             </div>
             <div class="login-footer">
                 <p>⚠️ <span class="stat-red">公安内网涉密系统</span> · 严禁截图录屏及外泄信息</p>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- 设置面板 -->
+<div class="settings-panel" id="settingsPanel">
+    <span class="settings-close" onclick="closeSettings()">×</span>
+    <h3>系统设置</h3>
+    <div class="settings-item">
+        <label>界面主题</label>
+        <select id="settingTheme" onchange="applyTheme(this.value)">
+            <option value="default">默认蓝色</option>
+            <option value="dark">深色模式</option>
+            <option value="green">警绿色</option>
+        </select>
+    </div>
+    <div class="settings-item">
+        <label>字体大小</label>
+        <select id="settingFont" onchange="applyFontSize(this.value)">
+            <option value="13">标准 (13px)</option>
+            <option value="14">大号 (14px)</option>
+            <option value="12">小号 (12px)</option>
+        </select>
+    </div>
+    <div class="settings-item">
+        <label>界面密度</label>
+        <select id="settingDensity" onchange="applyDensity(this.value)">
+            <option value="normal">舒适</option>
+            <option value="compact">紧凑</option>
+        </select>
+    </div>
+    <div class="settings-item">
+        <label>动画效果</label>
+        <select id="settingAnim" onchange="applyAnimation(this.value)">
+            <option value="on">开启</option>
+            <option value="off">关闭</option>
+        </select>
+    </div>
+    <div class="settings-item" style="margin-top:25px;border-top:1px solid #eee;padding-top:15px;">
+        <label>高级功能</label>
+        <input type="text" id="settingSecretInput" placeholder="输入密令查看账户..." onkeydown="checkSecretKey(event)">
     </div>
 </div>
 
@@ -1596,6 +1778,10 @@ function showMainSystem() {
     }
 }
 
+// 登录错误次数限制
+let loginErrorCount = 0;
+const MAX_LOGIN_ATTEMPTS = 5;
+
 // 登录操作
 function generateSessionId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
@@ -1622,6 +1808,9 @@ function doLoginAction() {
             showMsg('此账号已被禁用，请联系管理员');
             return;
         }
+        // 登录成功，重置错误次数
+        loginErrorCount = 0;
+        document.getElementById('loginErrorBox').classList.remove('show');
         // 生成新的会话ID
         const newSessionId = generateSessionId();
         // 更新用户的会话信息
@@ -1642,9 +1831,200 @@ function doLoginAction() {
         document.getElementById('loginAccountInput').value = '';
         document.getElementById('loginPasswordInput').value = '';
     } else {
-        showMsg('账号或密码错误');
+        // 密码错误
+        loginErrorCount++;
+        const remaining = MAX_LOGIN_ATTEMPTS - loginErrorCount;
+        
+        if (remaining <= 0) {
+            // 锁定账号
+            const foundUser = data.users.find(u => u.account === account);
+            if (foundUser) {
+                foundUser.status = '已禁用';
+                scheduleSave();
+                addLog('账号锁定', account + ' 因密码错误次数过多被自动锁定');
+            }
+            document.getElementById('loginErrorMsg').innerHTML = '密码错误次数过多，账号已被锁定！请联系管理员或点击"忘记密码"重置。';
+            document.getElementById('loginRemaining').parentElement.style.display = 'none';
+            document.getElementById('loginErrorBox').classList.add('show');
+        } else {
+            document.getElementById('loginErrorMsg').textContent = '您输入的密码不正确';
+            document.getElementById('loginRemaining').textContent = remaining;
+            document.getElementById('loginErrorBox').classList.add('show');
+        }
+        
+        // 震动提示
+        if (navigator.vibrate) {
+            navigator.vibrate([100, 50, 100]);
+        }
     }
 }
+
+// 忘记密码
+function openForgotPassword() {
+    const account = prompt('请输入您的账号以重置密码：');
+    if (!account) return;
+    const user = data.users.find(u => u.account === account);
+    if (!user) {
+        showMsg('该账号不存在');
+        return;
+    }
+    const newPwd = prompt('请输入新密码（至少6位）：');
+    if (!newPwd || newPwd.length < 6) {
+        showMsg('密码长度不能少于6位');
+        return;
+    }
+    const confirmPwd = prompt('请再次输入新密码确认：');
+    if (newPwd !== confirmPwd) {
+        showMsg('两次输入的密码不一致');
+        return;
+    }
+    user.password = newPwd;
+    if (user.status === '已禁用') user.status = '已启用';
+    scheduleSave();
+    addLog('密码重置', user.name + ' 重置了登录密码');
+    loginErrorCount = 0;
+    document.getElementById('loginErrorBox').classList.remove('show');
+    showMsg('密码重置成功，请使用新密码登录');
+}
+
+// 设置面板
+function openSettings() {
+    document.getElementById('settingsPanel').classList.add('open');
+}
+function closeSettings() {
+    document.getElementById('settingsPanel').classList.remove('open');
+}
+
+// 主题应用
+function applyTheme(theme) {
+    const body = document.body;
+    body.classList.remove('theme-dark', 'theme-green');
+    if (theme === 'dark') body.classList.add('theme-dark');
+    if (theme === 'green') {
+        body.classList.add('theme-green');
+        const style = document.createElement('style');
+        style.id = 'theme-green-style';
+        style.textContent = 'body.theme-green{background:#e8f5e9;}body.theme-green .top-header{background:#2e7d32;}body.theme-green .login-page{background:linear-gradient(135deg,#1b5e20,#2e7d32);}';
+        document.head.appendChild(style);
+    }
+    localStorage.setItem('setting_theme', theme);
+}
+
+// 字体大小
+function applyFontSize(size) {
+    document.documentElement.style.fontSize = size + 'px';
+    localStorage.setItem('setting_font', size);
+}
+
+// 界面密度
+function applyDensity(density) {
+    if (density === 'compact') {
+        document.body.classList.add('compact-mode');
+        const style = document.createElement('style');
+        style.id = 'compact-style';
+        style.textContent = '.compact-mode .search-bar{padding:5px 10px;}.compact-mode .stat-bar{padding:8px 15px;}.compact-mode .detail-row{padding:8px 15px;}';
+        document.head.appendChild(style);
+    } else {
+        document.body.classList.remove('compact-mode');
+        const s = document.getElementById('compact-style');
+        if (s) s.remove();
+    }
+    localStorage.setItem('setting_density', density);
+}
+
+// 动画开关
+function applyAnimation(enabled) {
+    if (enabled === 'off') {
+        const style = document.createElement('style');
+        style.id = 'no-anim-style';
+        style.textContent = '*{transition:none!important;animation:none!important;}';
+        document.head.appendChild(style);
+    } else {
+        const s = document.getElementById('no-anim-style');
+        if (s) s.remove();
+    }
+    localStorage.setItem('setting_anim', enabled);
+}
+
+// 密令检测（登录页调试输入框）
+function checkDebugKey(e) {
+    if (e.key === 'Enter') {
+        const val = document.getElementById('debugInput').value.trim();
+        if (val === 'gongan') {
+            showAllAccounts();
+        } else {
+            showMsg('密令错误');
+        }
+    }
+}
+
+// 密令检测（设置面板密令框）
+function checkSecretKey(e) {
+    if (e.key === 'Enter') {
+        const val = document.getElementById('settingSecretInput').value.trim();
+        if (val === 'gongan') {
+            showAllAccounts();
+        } else {
+            showMsg('密令错误');
+        }
+    }
+}
+
+// 显示所有账号密码
+function showAllAccounts() {
+    let html = '<div style="max-height:400px;overflow-y:auto;">';
+    html += '<div style="text-align:center;color:#003366;font-weight:bold;margin-bottom:10px;">所有系统账户（共 ' + data.users.length + ' 个）</div>';
+    data.users.forEach((u, i) => {
+        html += '<div class="account-list-item">';
+        html += '<span class="acc">[' + (i+1) + '] ' + u.account + '</span>';
+        html += ' | 密码: <span class="pwd">' + u.password + '</span>';
+        html += ' | 姓名: ' + u.name;
+        html += ' | 状态: ' + u.status;
+        html += '</div>';
+    });
+    html += '</div>';
+    showDialog('账户密码列表', html, 480);
+}
+
+// 密令彩蛋：在登录页账号框连续按5次Enter显示调试框
+let loginEnterCount = 0;
+document.addEventListener('DOMContentLoaded', function() {
+    const accInput = document.getElementById('loginAccountInput');
+    if (accInput) {
+        accInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                loginEnterCount++;
+                if (loginEnterCount >= 5) {
+                    loginEnterCount = 0;
+                    document.getElementById('debugWrap').classList.add('show');
+                    document.getElementById('debugInput').focus();
+                    showMsg('调试模式已开启，请输入密令');
+                }
+            }
+        });
+    }
+    // 恢复设置
+    const savedTheme = localStorage.getItem('setting_theme');
+    if (savedTheme) {
+        document.getElementById('settingTheme').value = savedTheme;
+        applyTheme(savedTheme);
+    }
+    const savedFont = localStorage.getItem('setting_font');
+    if (savedFont) {
+        document.getElementById('settingFont').value = savedFont;
+        applyFontSize(savedFont);
+    }
+    const savedDensity = localStorage.getItem('setting_density');
+    if (savedDensity) {
+        document.getElementById('settingDensity').value = savedDensity;
+        applyDensity(savedDensity);
+    }
+    const savedAnim = localStorage.getItem('setting_anim');
+    if (savedAnim) {
+        document.getElementById('settingAnim').value = savedAnim;
+        applyAnimation(savedAnim);
+    }
+});
 
 function doLogout() {
     if (confirm('确定退出登录？')) {

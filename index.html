@@ -5782,7 +5782,11 @@ function searchIdCard() {
     data.idcards = originalData.idcards.filter(item => {
         let match = true;
         if (key) {
-            match = item.name.toLowerCase().includes(key) || item.idCard.includes(key);
+            match = (item.name && item.name.toLowerCase().includes(key)) ||
+                    (item.idCard && item.idCard.includes(key)) ||
+                    (item.address && item.address.toLowerCase().includes(key)) ||
+                    (item.authority && item.authority.toLowerCase().includes(key)) ||
+                    (item.nation && item.nation.toLowerCase().includes(key));
         }
         if (match && gender) {
             match = item.gender === gender;

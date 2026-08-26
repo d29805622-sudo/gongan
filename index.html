@@ -1368,7 +1368,7 @@
     </div>
     <div class="modal-content" id="modalContent">
     </div>
-    <div class="modal-btn">
+    <div class="modal-btn" id="modalBtnArea">
         <button class="btn btn-modal" onclick="saveForm()">确认保存</button>
         <button class="btn btn-close" onclick="closeModal()">关闭</button>
     </div>
@@ -4753,31 +4753,89 @@ function doLoginAction() {
 }
 
 // 忘记密码
+let forgotPwdAccount = '';
+let forgotPwdNew = '';
+
 function openForgotPassword() {
-    const account = prompt('请输入您的账号以重置密码：');
-    if (!account) return;
+    forgotPwdAccount = '';
+    forgotPwdNew = '';
+    forgotPwdStep1();
+}
+
+function forgotPwdStep1() {
+    openModal('密码重置 · 第一步', `
+        <div style="padding:10px 0;">
+            <div style="margin-bottom:15px;color:#666;font-size:13px;">请输入您的账号以重置登录密码</div>
+            <div class="form-item"><label>账号 <span class="required">*</span>：</label><input type="text" class="input-text" id="forgotAccount" placeholder="请输入账号"></div>
+            <div style="margin-top:12px;font-size:12px;color:#999;">提示：请联系管理员获取账号信息</div>
+        </div>
+    `);
+    setTimeout(() => {
+        const el = document.getElementById('forgotAccount');
+        if (el) {
+            el.focus();
+            el.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') forgotPwdNext1();
+            });
+        }
+    }, 100);
+    document.getElementById('modalBtnArea').innerHTML = `
+        <button class="btn btn-close" onclick="closeModal()">取消</button>
+        <button class="btn btn-modal" onclick="forgotPwdNext1()">下一步</button>
+    `;
+}
+
+function forgotPwdNext1() {
+    const account = document.getElementById('forgotAccount').value.trim();
+    if (!account) { showMsg('请输入账号'); return; }
     const user = data.users.find(u => u.account === account);
-    if (!user) {
-        showMsg('该账号不存在');
-        return;
-    }
-    const newPwd = prompt('请输入新密码（至少6位）：');
-    if (!newPwd || newPwd.length < 6) {
-        showMsg('密码长度不能少于6位');
-        return;
-    }
-    const confirmPwd = prompt('请再次输入新密码确认：');
-    if (newPwd !== confirmPwd) {
-        showMsg('两次输入的密码不一致');
-        return;
-    }
+    if (!user) { showMsg('该账号不存在'); return; }
+    forgotPwdAccount = account;
+    forgotPwdStep2();
+}
+
+function forgotPwdStep2() {
+    openModal('密码重置 · 第二步', `
+        <div style="padding:10px 0;">
+            <div style="margin-bottom:15px;color:#666;font-size:13px;">账号验证通过，请设置新密码</div>
+            <div class="form-item"><label>新密码 <span class="required">*</span>：</label><input type="password" class="input-text" id="forgotNewPwd" placeholder="至少6位"></div>
+            <div class="form-item"><label>确认密码 <span class="required">*</span>：</label><input type="password" class="input-text" id="forgotConfirmPwd" placeholder="再次输入新密码"></div>
+        </div>
+    `);
+    setTimeout(() => {
+        const el1 = document.getElementById('forgotNewPwd');
+        if (el1) el1.focus();
+    }, 100);
+    document.getElementById('modalBtnArea').innerHTML = `
+        <button class="btn btn-close" onclick="forgotPwdStep1()">上一步</button>
+        <button class="btn btn-modal" onclick="forgotPwdSubmit()">确认重置</button>
+    `;
+}
+
+function forgotPwdSubmit() {
+    const newPwd = document.getElementById('forgotNewPwd').value;
+    const confirmPwd = document.getElementById('forgotConfirmPwd').value;
+    if (!newPwd || newPwd.length < 6) { showMsg('密码长度不能少于6位'); return; }
+    if (newPwd !== confirmPwd) { showMsg('两次输入的密码不一致'); return; }
+    const user = data.users.find(u => u.account === forgotPwdAccount);
+    if (!user) { showMsg('账号不存在'); return; }
     user.password = newPwd;
     if (user.status === '已禁用') user.status = '已启用';
     scheduleSave();
     addLog('密码重置', user.name + ' 重置了登录密码');
     loginErrorCount = 0;
-    document.getElementById('loginErrorBox').classList.remove('show');
-    showMsg('密码重置成功，请使用新密码登录');
+    const errBox = document.getElementById('loginErrorBox');
+    if (errBox) errBox.classList.remove('show');
+    openModal('密码重置成功', `
+        <div style="text-align:center;padding:15px 0;">
+            <div style="font-size:36px;color:#2a5298;">✓</div>
+            <div style="margin:10px 0;color:#333;font-size:14px;">密码重置成功</div>
+            <div style="color:#888;font-size:12px;">请使用新密码登录系统</div>
+        </div>
+    `);
+    document.getElementById('modalBtnArea').innerHTML = `
+        <button class="btn btn-modal" onclick="closeModal()">确定</button>
+    `;
 }
 
 // 移动端汉堡菜单
@@ -5068,6 +5126,10 @@ function openModal(title, content) {
     document.getElementById('modalContent').innerHTML = content;
     document.getElementById('modalMask').style.display="block";
     document.getElementById('modalBox').style.display="block";
+    document.getElementById('modalBtnArea').innerHTML = `
+        <button class="btn btn-modal" onclick="saveForm()">确认保存</button>
+        <button class="btn btn-close" onclick="closeModal()">关闭</button>
+    `;
 }
 
 function closeModal() {

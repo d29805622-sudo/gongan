@@ -5003,7 +5003,7 @@ async function loadData() {
     // 强制版本升级到4.2，清除旧缓存数据
     const saved = localStorage.getItem('policeData');
     const savedVersion = localStorage.getItem('policeDataVersion');
-    const currentVersion = '4.2';
+    const currentVersion = '4.3';
     
     // 如果版本不匹配或idcards数据缺失，强制清除缓存
     const needReset = !saved || savedVersion !== currentVersion;
@@ -5069,8 +5069,8 @@ async function loadData() {
         })) : data.goods;
         data.logs = (loadedData.logs && loadedData.logs.length > 0) ? loadedData.logs : data.logs;
         data.users = (loadedData.users && loadedData.users.length > 0) ? loadedData.users : data.users;
-        data.statistics = loadedData.statistics || data.statistics;
-        data.supervision = loadedData.supervision || data.supervision;
+        data.statistics = (loadedData.statistics && Object.keys(loadedData.statistics).length > 0) ? loadedData.statistics : data.statistics;
+        data.supervision = (loadedData.supervision && loadedData.supervision.evaluations && loadedData.supervision.evaluations.length > 0) ? loadedData.supervision : data.supervision;
         
         // 新增模块 - 检查是否有有效数据
         if (loadedData.commandData && Object.keys(loadedData.commandData).length > 0) data.commandData = loadedData.commandData;
@@ -5444,7 +5444,7 @@ function saveData() {
         const jsonStr = JSON.stringify(allData);
         const encrypted = ENCRYPTION_KEY ? encryptData(jsonStr, ENCRYPTION_KEY) : jsonStr;
         localStorage.setItem('policeData', encrypted);
-        localStorage.setItem('policeDataVersion', '4.2');
+        localStorage.setItem('policeDataVersion', '4.3');
         
         const syncService = getSyncService();
         if (syncService === 'jsonbin') {

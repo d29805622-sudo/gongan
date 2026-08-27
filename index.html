@@ -1306,6 +1306,116 @@
             .stat-label {
                 font-size:12px;
             }
+            
+            /* 修复弹窗在移动端的完整显示 */
+            .modal-box{
+                width:94% !important;
+                left:3% !important;
+                right:3%;
+                top:50% !important;
+                transform:translateY(-50%) !important;
+                max-height:88vh;
+                overflow-y:auto;
+                border-width:2px;
+            }
+            .modal-title{
+                padding:0 12px;
+                font-size:13px;
+                min-height:38px;
+                height:auto;
+                line-height:38px;
+                flex-wrap:nowrap;
+            }
+            .modal-title span{
+                flex-shrink:0;
+            }
+            .modal-close{
+                font-size:20px;
+                padding:0 8px;
+                line-height:1;
+                margin-left:auto;
+            }
+            .modal-content{
+                padding:15px 12px;
+                overflow-y:auto;
+                max-height:calc(88vh - 120px);
+            }
+            .modal-btn{
+                padding:12px 10px;
+                display:flex;
+                gap:8px;
+                justify-content:center;
+                flex-wrap:wrap;
+            }
+            .modal-btn .btn{
+                flex:1;
+                min-width:120px;
+            }
+            
+            /* 修复页面内容在移动端的显示 */
+            .page-content{
+                padding:10px !important;
+                overflow-x:hidden;
+            }
+            .container, .search-bar, .func-btns{
+                width:100% !important;
+                max-width:100% !important;
+                box-sizing:border-box;
+            }
+            .form-item{
+                flex-direction:column;
+                align-items:flex-start;
+            }
+            .form-item label{
+                width:100% !important;
+                margin-bottom:4px;
+                text-align:left;
+            }
+            .form-item .input-text,
+            .form-item .select-box{
+                width:100% !important;
+                margin-left:0 !important;
+            }
+            
+            /* 修复表格在移动端的横向滚动 */
+            .table-container,
+            table{
+                display:block;
+                overflow-x:auto;
+                -webkit-overflow-scrolling:touch;
+                width:100%;
+                max-width:100%;
+            }
+            
+            /* 修复所有可能溢出的容器 */
+            .stat-cards,
+            .stat-rows,
+            .portal-grid,
+            .shortcut-grid,
+            .func-btns,
+            .watch-list,
+            .detail-cards{
+                width:100% !important;
+                max-width:100% !important;
+                box-sizing:border-box;
+            }
+            
+            /* 修复卡片样式 */
+            .stat-card{
+                width:100% !important;
+                margin:5px 0 !important;
+                box-sizing:border-box;
+            }
+            
+            /* 修复所有按钮组 */
+            .btn-group{
+                flex-direction:column;
+                gap:6px;
+            }
+            .btn-group .btn{
+                width:100%;
+                margin:0 !important;
+            }
         }
     </style>
 </head>
@@ -4684,6 +4794,11 @@ async function loadData() {
         if (loadedData.duty && Object.keys(loadedData.duty).length > 0) data.duty = loadedData.duty;
         if (loadedData.petition && Object.keys(loadedData.petition).length > 0) data.petition = loadedData.petition;
         if (loadedData.assessment && Object.keys(loadedData.assessment).length > 0) data.assessment = loadedData.assessment;
+        
+        // 身份证数据
+        if (loadedData.idcards && loadedData.idcards.length > 0) {
+            data.idcards = loadedData.idcards;
+        }
     }
     
     // 确保所有模块都有默认数据
@@ -4943,6 +5058,17 @@ function ensureDefaultData() {
             ]
         };
     }
+    
+    if (!data.idcards || data.idcards.length === 0) {
+        data.idcards = [
+            {id: 'SFZ00001', idCard: '230184198708284021', name: '杨洋', gender: '女', nation: '汉族',
+             birthday: '1987-08-28', address: '黑龙江省东大街573号康馨苑25栋4单元414室', authority: '黑龙江省公安厅',
+             issueDate: '2021.07.27', validPeriod: '20年', expiryDate: '2041.09.15', status: '正常'},
+            {id: 'SFZ00002', idCard: '510106199202046248', name: '李萍', gender: '女', nation: '满族',
+             birthday: '1992-02-04', address: '四川省工农路266号光明社区27栋6单元242室', authority: '四川省公安厅',
+             issueDate: '2020.08.15', validPeriod: '20年', expiryDate: '2040.08.15', status: '正常'}
+        ];
+    }
 }
 
 // 备份原始数据
@@ -4955,6 +5081,7 @@ function backupOriginalData() {
     originalData.goods = [...data.goods];
     originalData.logs = [...data.logs];
     originalData.users = [...data.users];
+    originalData.idcards = [...data.idcards];
     originalData.recordData = JSON.parse(JSON.stringify(data.recordData));
     originalData.lawSupervisionData = JSON.parse(JSON.stringify(data.lawSupervisionData));
     originalData.serviceData = JSON.parse(JSON.stringify(data.serviceData));
@@ -5001,6 +5128,7 @@ function saveData() {
             goods: data.goods,
             logs: data.logs,
             users: data.users,
+            idcards: data.idcards,
             statistics: data.statistics,
             supervision: data.supervision,
             recordData: data.recordData,
@@ -5624,7 +5752,7 @@ function openModal(title, content) {
     document.getElementById('modalTitle').innerText = title;
     document.getElementById('modalContent').innerHTML = content;
     document.getElementById('modalMask').style.display="block";
-    document.getElementById('modalBox').style.display="flex";
+    document.getElementById('modalBox').style.display="block";
 }
 
 function getModalBtnArea() {
@@ -8525,15 +8653,22 @@ function toggleMenu() {
 }
 
 // 点击菜单项后自动关闭
-function switchPage(id) {
+function switchPage(id, evt) {
+    const clickEvent = evt || window.event;
     document.querySelectorAll('.menu-second').forEach(v=>v.classList.remove('active'));
-    // 兼容处理：确保点击的是.menu-second元素
-    let target = event.target;
-    while (target && !target.classList.contains('menu-second') && target !== document.body) {
-        target = target.parentElement;
-    }
-    if (target && target.classList.contains('menu-second')) {
-        target.classList.add('active');
+    if (clickEvent && clickEvent.target) {
+        let target = clickEvent.target;
+        while (target && !target.classList.contains('menu-second') && target !== document.body) {
+            target = target.parentElement;
+        }
+        if (target && target.classList.contains('menu-second')) {
+            target.classList.add('active');
+        }
+    } else {
+        const menuItem = document.querySelector('.menu-second[onclick*="switchPage(\'' + id + '\')"]');
+        if (menuItem) {
+            menuItem.classList.add('active');
+        }
     }
     document.querySelectorAll('.page-content').forEach(v=>v.classList.remove('active'));
     const page = document.getElementById(id);
@@ -8543,8 +8678,40 @@ function switchPage(id) {
         console.error('Page not found:', id);
     }
     
-    if (id === 'idcard') {
-        renderIdCardTable();
+    // 根据页面ID调用对应的渲染函数
+    const renderMap = {
+        'home': renderHomeTable,
+        'alarm': renderAlarmTable,
+        'case': renderCaseTable,
+        'person': renderPersonTable,
+        'car': renderCarTable,
+        'goods': renderGoodsTable,
+        'idcard': renderIdCardTable,
+        'log': renderLogTable,
+        'sys': renderSysTable,
+        'supervision': renderSupervisionTable,
+        'command': renderCommandTable,
+        'intelligence': renderIntelTable,
+        'community': renderCommunityTable,
+        'patrol': renderPatrolTable,
+        'record': renderRecordTable,
+        'law': renderLawTable,
+        'service': renderServiceTable,
+        'traffic': renderTrafficTable,
+        'market': renderMarketTable,
+        'combined': renderCombinedTable,
+        'file': renderFileTable,
+        'duty': renderDutyTable,
+        'petition': renderPetitionTable,
+        'assessment': renderAssessmentTable
+    };
+    
+    if (renderMap[id]) {
+        try {
+            renderMap[id]();
+        } catch(e) {
+            console.error('渲染页面失败:', id, e);
+        }
     }
     
     // 手机端自动关闭侧边栏

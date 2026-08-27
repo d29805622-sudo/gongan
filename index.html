@@ -1778,7 +1778,8 @@
         <div class="menu-second" onclick="switchPage('record')">电子笔录制作</div>
         <div class="menu-second" onclick="switchPage('file')">电子卷宗管理</div>
         <div class="menu-second" onclick="switchPage('goods')">涉案财物管理</div>
-        <div class="menu-second" onclick="switchPage('law')">执法监督考评</div>
+        <div class="menu-second" onclick="switchPage('law')">执法监督管理平台</div>
+        <div class="menu-second" onclick="switchPage('supervision')">执法监督与绩效考评</div>
         
         <div class="menu-first">重点要素管控</div>
         <div class="menu-second" onclick="switchPage('person')">重点人员管控</div>
@@ -2582,6 +2583,7 @@
                     <option>异常</option>
                 </select>
                 <button class="btn btn-search" onclick="searchLawSupervision()">查询</button>
+                <button class="btn btn-add" onclick="addLawCase()">新增案件</button>
             </div>
             <table id="lawTable">
                 <thead>
@@ -8310,6 +8312,27 @@ function updateSaveForm() {
                     addLog('编辑情报', editId);
                     renderIntelTable();
                 }
+            } else if (currentModal === 'addLawCase') {
+                const caseId = document.getElementById('addLawCaseId').value.trim();
+                const caseName = document.getElementById('addLawCaseName').value.trim();
+                const police = document.getElementById('addLawCasePolice').value.trim();
+                if (!caseId || !caseName || !police) { showMsg("请填写案件编号、案件名称和主办民警"); return; }
+                // 检查编号是否重复
+                if (data.lawSupervisionData.cases.some(c => c.id === caseId)) {
+                    showMsg("案件编号已存在，请修改后重试");
+                    return;
+                }
+                data.lawSupervisionData.cases.unshift({
+                    id: caseId,
+                    name: caseName,
+                    police: police,
+                    deadline: document.getElementById('addLawCaseDeadline').value,
+                    remaining: parseInt(document.getElementById('addLawCaseRemaining').value) || 0,
+                    status: document.getElementById('addLawCaseStatus').value,
+                    supervision: document.getElementById('addLawCaseSupervision').value
+                });
+                addLog('新增执法案件', caseId);
+                renderLawTable();
             } else if (currentModal === 'editLawCase') {
                 const item = data.lawSupervisionData.cases.find(c => c.id === editId);
                 if (item) {
@@ -8809,6 +8832,45 @@ function editRecord(id) {
             <select class="select-box" id="editRecordStatus">
                 <option value="制作中" ${item.status === '制作中' ? 'selected' : ''}>制作中</option>
                 <option value="已完成" ${item.status === '已完成' ? 'selected' : ''}>已完成</option>
+            </select>
+        </div>
+    `);
+}
+
+function addLawCase() {
+    currentModal = 'addLawCase';
+    // 生成新案件编号 JD + 年份 + 3位序号
+    const year = new Date().getFullYear();
+    const existingCases = data.lawSupervisionData.cases.filter(c => c.id && c.id.startsWith('JD' + year));
+    let maxNum = 0;
+    existingCases.forEach(c => {
+        const num = parseInt(c.id.replace('JD' + year, ''));
+        if (!isNaN(num) && num > maxNum) maxNum = num;
+    });
+    const newId = 'JD' + year + String(maxNum + 1).padStart(2, '0');
+    // 默认办理期限为30天后
+    const defaultDeadline = new Date();
+    defaultDeadline.setDate(defaultDeadline.getDate() + 30);
+    const deadlineStr = defaultDeadline.toISOString().split('T')[0];
+    openModal('新增执法监督案件', `
+        <div class="form-item"><label>案件编号 <span class="required">*</span>：</label><input type="text" class="input-text" id="addLawCaseId" value="${newId}"></div>
+        <div class="form-item"><label>案件名称 <span class="required">*</span>：</label><input type="text" class="input-text" id="addLawCaseName" placeholder="请输入案件名称"></div>
+        <div class="form-item"><label>主办民警 <span class="required">*</span>：</label><input type="text" class="input-text" id="addLawCasePolice" placeholder="请输入主办民警姓名"></div>
+        <div class="form-item"><label>办理期限：</label><input type="date" class="input-text" id="addLawCaseDeadline" value="${deadlineStr}"></div>
+        <div class="form-item"><label>剩余天数：</label><input type="number" class="input-text" id="addLawCaseRemaining" value="30"></div>
+        <div class="form-item"><label>状态：</label>
+            <select class="select-box" id="addLawCaseStatus">
+                <option value="待处理">待处理</option>
+                <option value="办理中" selected>办理中</option>
+                <option value="已完成">已完成</option>
+            </select>
+        </div>
+        <div class="form-item"><label>监督状态：</label>
+            <select class="select-box" id="addLawCaseSupervision">
+                <option value="正常" selected>正常</option>
+                <option value="预警">预警</option>
+                <option value="督办中">督办中</option>
+                <option value="异常">异常</option>
             </select>
         </div>
     `);

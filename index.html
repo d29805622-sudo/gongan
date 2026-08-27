@@ -4075,7 +4075,16 @@ function openModal(title, content) {
     document.getElementById('modalTitle').innerText = title;
     document.getElementById('modalContent').innerHTML = content;
     document.getElementById('modalMask').style.display="block";
-    document.getElementById('modalBox').style.display="block";
+    document.getElementById('modalBox').style.display="flex";
+}
+
+function getModalBtnArea() {
+    return document.getElementById('modalBtnArea') || document.querySelector('.modal-btn');
+}
+
+function setModalBtns(html) {
+    const area = getModalBtnArea();
+    if (area) area.innerHTML = html;
 }
 
 function closeModal() {

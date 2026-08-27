@@ -5196,6 +5196,7 @@ function getStatusClass(status) {
 // 渲染表格
 function renderHomeTable() {
     const tbody = document.getElementById('homeTableBody');
+    if (!tbody) return;
     
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -5313,6 +5314,7 @@ function renderMiniCalendarNext() {
 
 function renderAlarmTable() {
     const tbody = document.getElementById('alarmTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.alarms.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -5330,6 +5332,7 @@ function renderAlarmTable() {
 
 function renderCaseTable() {
     const tbody = document.getElementById('caseTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.cases.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -5346,6 +5349,7 @@ function renderCaseTable() {
 
 function renderPersonTable() {
     const tbody = document.getElementById('personTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.persons.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -5362,6 +5366,7 @@ function renderPersonTable() {
 
 function renderCarTable() {
     const tbody = document.getElementById('carTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.cars.map(item => `
         <tr>
             <td>${item.plate}</td>
@@ -5379,6 +5384,7 @@ function renderCarTable() {
 
 function renderGoodsTable() {
     const tbody = document.getElementById('goodsTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.goods.map(item => `
         <tr>
             <td>${item.id}</td>
@@ -5397,6 +5403,7 @@ function renderGoodsTable() {
 
 function renderLogTable() {
     const tbody = document.getElementById('logTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.logs.slice(0, 20).map(item => `
         <tr>
             <td>${item.account}</td>
@@ -5410,6 +5417,7 @@ function renderLogTable() {
 
 function renderSysTable() {
     const tbody = document.getElementById('sysTableBody');
+    if (!tbody) return;
     tbody.innerHTML = data.users.map(item => `
         <tr>
             <td>${item.account}</td>

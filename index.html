@@ -6736,6 +6736,7 @@ function clearLog() {
 
 // 保存表单
 async function saveForm() {
+    console.log('saveForm被调用, currentModal=' + currentModal);
     try {
         if (currentModal === 'addEvent') {
             const code = document.getElementById('code').value;
@@ -8121,8 +8122,10 @@ function printTrafficService(id) {
 
 // 完善saveForm函数，添加对新功能的支持
 function updateSaveForm() {
+    console.log('updateSaveForm被调用, 正在覆盖saveForm');
     const originalSaveForm = saveForm;
     window.saveForm = async function() {
+        console.log('overridden saveForm被调用, currentModal=' + currentModal);
         try {
             if (currentModal === 'addDispatch') {
                 const id = document.getElementById('dispatchId').value;

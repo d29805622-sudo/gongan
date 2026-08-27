@@ -5003,7 +5003,7 @@ async function loadData() {
     // 强制版本升级到4.2，清除旧缓存数据
     const saved = localStorage.getItem('policeData');
     const savedVersion = localStorage.getItem('policeDataVersion');
-    const currentVersion = '4.3';
+    const currentVersion = '4.4';
     
     // 如果版本不匹配或idcards数据缺失，强制清除缓存
     const needReset = !saved || savedVersion !== currentVersion;
@@ -5072,23 +5072,23 @@ async function loadData() {
         data.statistics = (loadedData.statistics && Object.keys(loadedData.statistics).length > 0) ? loadedData.statistics : data.statistics;
         data.supervision = (loadedData.supervision && loadedData.supervision.evaluations && loadedData.supervision.evaluations.length > 0) ? loadedData.supervision : data.supervision;
         
-        // 新增模块 - 检查是否有有效数据
-        if (loadedData.commandData && Object.keys(loadedData.commandData).length > 0) data.commandData = loadedData.commandData;
-        if (loadedData.intelligenceData && Object.keys(loadedData.intelligenceData).length > 0) data.intelligenceData = loadedData.intelligenceData;
-        if (loadedData.communityData && Object.keys(loadedData.communityData).length > 0) data.communityData = loadedData.communityData;
-        if (loadedData.patrolData && Object.keys(loadedData.patrolData).length > 0) data.patrolData = loadedData.patrolData;
-        if (loadedData.recordData && Object.keys(loadedData.recordData).length > 0) data.recordData = loadedData.recordData;
-        if (loadedData.lawSupervisionData && Object.keys(loadedData.lawSupervisionData).length > 0) data.lawSupervisionData = loadedData.lawSupervisionData;
-        if (loadedData.serviceData && Object.keys(loadedData.serviceData).length > 0) data.serviceData = loadedData.serviceData;
-        if (loadedData.trafficData && Object.keys(loadedData.trafficData).length > 0) data.trafficData = loadedData.trafficData;
-        if (loadedData.marketData && Object.keys(loadedData.marketData).length > 0) data.marketData = loadedData.marketData;
+        // 新增模块 - 严格检查具体数组字段是否有数据
+        if (loadedData.commandData && loadedData.commandData.dispatches && loadedData.commandData.dispatches.length > 0) data.commandData = loadedData.commandData;
+        if (loadedData.intelligenceData && loadedData.intelligenceData.items && loadedData.intelligenceData.items.length > 0) data.intelligenceData = loadedData.intelligenceData;
+        if (loadedData.communityData && loadedData.communityData.visits && loadedData.communityData.visits.length > 0) data.communityData = loadedData.communityData;
+        if (loadedData.patrolData && loadedData.patrolData.patrols && loadedData.patrolData.patrols.length > 0) data.patrolData = loadedData.patrolData;
+        if (loadedData.recordData && loadedData.recordData.records && loadedData.recordData.records.length > 0) data.recordData = loadedData.recordData;
+        if (loadedData.lawSupervisionData && loadedData.lawSupervisionData.cases && loadedData.lawSupervisionData.cases.length > 0) data.lawSupervisionData = loadedData.lawSupervisionData;
+        if (loadedData.serviceData && loadedData.serviceData.services && loadedData.serviceData.services.length > 0) data.serviceData = loadedData.serviceData;
+        if (loadedData.trafficData && loadedData.trafficData.services && loadedData.trafficData.services.length > 0) data.trafficData = loadedData.trafficData;
+        if (loadedData.marketData && loadedData.marketData.entities && loadedData.marketData.entities.length > 0) data.marketData = loadedData.marketData;
         
-        // 新模块 - 检查是否有有效数据
-        if (loadedData.combined && Object.keys(loadedData.combined).length > 0) data.combined = loadedData.combined;
-        if (loadedData.fileData && Object.keys(loadedData.fileData).length > 0) data.fileData = loadedData.fileData;
-        if (loadedData.duty && Object.keys(loadedData.duty).length > 0) data.duty = loadedData.duty;
-        if (loadedData.petition && Object.keys(loadedData.petition).length > 0) data.petition = loadedData.petition;
-        if (loadedData.assessment && Object.keys(loadedData.assessment).length > 0) data.assessment = loadedData.assessment;
+        // 新模块 - 严格检查具体数组字段是否有数据
+        if (loadedData.combined && loadedData.combined.tasks && loadedData.combined.tasks.length > 0) data.combined = loadedData.combined;
+        if (loadedData.fileData && loadedData.fileData.files && loadedData.fileData.files.length > 0) data.fileData = loadedData.fileData;
+        if (loadedData.duty && loadedData.duty.schedule && loadedData.duty.schedule.length > 0) data.duty = loadedData.duty;
+        if (loadedData.petition && loadedData.petition.items && loadedData.petition.items.length > 0) data.petition = loadedData.petition;
+        if (loadedData.assessment && loadedData.assessment.tasks && loadedData.assessment.tasks.length > 0) data.assessment = loadedData.assessment;
         
         // 身份证数据
         if (loadedData.idcards && loadedData.idcards.length > 0) {
@@ -5444,7 +5444,7 @@ function saveData() {
         const jsonStr = JSON.stringify(allData);
         const encrypted = ENCRYPTION_KEY ? encryptData(jsonStr, ENCRYPTION_KEY) : jsonStr;
         localStorage.setItem('policeData', encrypted);
-        localStorage.setItem('policeDataVersion', '4.3');
+        localStorage.setItem('policeDataVersion', '4.4');
         
         const syncService = getSyncService();
         if (syncService === 'jsonbin') {

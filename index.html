@@ -1416,6 +1416,246 @@
                 width:100%;
                 margin:0 !important;
             }
+            
+            /* ===== 主页portal布局移动端适配 ===== */
+            .portal-top-row{
+                flex-direction:column !important;
+                gap:8px !important;
+            }
+            .portal-special-column,
+            .portal-nav-area{
+                width:100% !important;
+            }
+            .portal-nav-area{
+                flex-wrap:wrap !important;
+                justify-content:flex-start !important;
+            }
+            .nav-item{
+                flex:0 0 auto;
+                padding:6px 10px !important;
+                font-size:11px !important;
+            }
+            .special-header{
+                font-size:12px !important;
+                padding:8px 10px !important;
+            }
+            .special-links{
+                padding:8px 10px !important;
+                gap:6px !important;
+            }
+            .special-link{
+                padding:5px 10px !important;
+                font-size:11px !important;
+            }
+            
+            /* 数据展示区适配 */
+            .data-show-header{
+                flex-direction:column !important;
+                align-items:flex-start !important;
+                gap:4px !important;
+                padding:8px 10px !important;
+            }
+            .data-show-title{
+                font-size:13px !important;
+            }
+            .data-show-user{
+                font-size:10px !important;
+            }
+            .data-show-grid{
+                grid-template-columns:repeat(2,1fr) !important;
+                gap:8px !important;
+                padding:10px !important;
+            }
+            .data-show-card{
+                padding:8px 4px !important;
+                border-right:none !important;
+                border-bottom:1px solid #f0f2f5;
+            }
+            .data-show-number{
+                font-size:20px !important;
+            }
+            .data-show-label{
+                font-size:10px !important;
+            }
+            .data-show-trend{
+                font-size:9px !important;
+            }
+            
+            /* 主内容区左右布局改为上下堆叠 */
+            .portal-main-row{
+                flex-direction:column !important;
+                gap:8px !important;
+            }
+            .portal-left-area,
+            .portal-right-area{
+                width:100% !important;
+                flex:none !important;
+            }
+            
+            /* 信息列表适配 */
+            .info-header{
+                padding:8px 10px !important;
+            }
+            .info-title{
+                font-size:12px !important;
+            }
+            .info-more{
+                font-size:10px !important;
+            }
+            .info-list{
+                padding:6px 10px !important;
+            }
+            .info-item{
+                padding:6px 0 !important;
+            }
+            .info-text{
+                font-size:11px !important;
+            }
+            .info-date{
+                font-size:10px !important;
+            }
+            
+            /* 快捷入口适配 */
+            .shortcut-grid{
+                grid-template-columns:repeat(4,1fr) !important;
+                gap:6px !important;
+            }
+            .shortcut-item{
+                padding:8px 2px !important;
+            }
+            .shortcut-icon{
+                font-size:16px !important;
+            }
+            .shortcut-label{
+                font-size:9px !important;
+            }
+            
+            /* 统计卡片改为2列 */
+            .stat-cards{
+                grid-template-columns:repeat(2,1fr) !important;
+                gap:8px !important;
+            }
+            .stat-card{
+                padding:10px 8px !important;
+            }
+            
+            /* 搜索栏更紧凑 */
+            .search-bar{
+                padding:8px !important;
+                gap:6px !important;
+            }
+            .search-bar .input-text,
+            .search-bar .select-box{
+                width:100% !important;
+                margin:2px 0 !important;
+                font-size:12px !important;
+                padding:6px 8px !important;
+            }
+            .search-bar .btn{
+                width:100% !important;
+                margin:2px 0 !important;
+                padding:8px 12px !important;
+                font-size:12px !important;
+            }
+            
+            /* 表格更紧凑 */
+            .table-container{
+                margin:8px 0 !important;
+            }
+            th,td{
+                padding:4px 3px !important;
+                font-size:10px !important;
+            }
+            
+            /* 分页区域适配 */
+            .page-btn, .page-info{
+                font-size:10px !important;
+                padding:3px 6px !important;
+            }
+            
+            /* 功能按钮组适配 */
+            .func-btns{
+                flex-wrap:wrap !important;
+                gap:6px !important;
+            }
+            .func-btn{
+                flex:0 0 auto !important;
+                min-width:auto !important;
+                padding:6px 10px !important;
+                font-size:11px !important;
+            }
+            
+            /* 日历适配 */
+            .cal-day{
+                width:24px !important;
+                height:24px !important;
+                line-height:24px !important;
+                font-size:10px !important;
+            }
+            .cal-weekdays span{
+                font-size:9px !important;
+            }
+            
+            /* 登录页适配 */
+            .login-box{
+                width:94% !important;
+                max-width:none !important;
+                padding:20px 15px !important;
+                margin:10px !important;
+            }
+            .login-header h1{
+                font-size:20px !important;
+            }
+            .login-header p{
+                font-size:11px !important;
+            }
+            .login-form-group label{
+                font-size:12px !important;
+            }
+            .login-input{
+                font-size:14px !important;
+                padding:10px 12px !important;
+            }
+            .login-btn{
+                font-size:14px !important;
+                padding:10px !important;
+            }
+            .login-footer{
+                flex-direction:column !important;
+                gap:6px !important;
+            }
+            .login-footer a{
+                font-size:11px !important;
+            }
+        }
+        
+        /* 超小屏幕适配 (≤380px) */
+        @media screen and (max-width: 380px) {
+            .data-show-grid{
+                grid-template-columns:1fr !important;
+            }
+            .shortcut-grid{
+                grid-template-columns:repeat(3,1fr) !important;
+            }
+            .stat-cards{
+                grid-template-columns:1fr !important;
+            }
+            .special-link{
+                display:block !important;
+                text-align:center !important;
+                margin:2px 0 !important;
+            }
+            .nav-item{
+                width:calc(50% - 4px) !important;
+                text-align:center !important;
+            }
+            .header-title{
+                font-size:11px !important;
+            }
+            th,td{
+                font-size:9px !important;
+                padding:3px 2px !important;
+            }
         }
     </style>
 </head>
@@ -7003,6 +7243,10 @@ window.onload = async function(){
 function renderSupervisionTable() {
     const tbody = document.getElementById('supervisionTableBody');
     if (!tbody) return;
+    if (!data.supervision || !data.supervision.evaluations) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:20px;">暂无数据</td></tr>';
+        return;
+    }
     tbody.innerHTML = data.supervision.evaluations.map(item => `
         <tr>
             <td>${item.person}</td>
@@ -8996,14 +9240,14 @@ async function syncNow() {
 }
 
 // ==================== 合成作战模块 ====================
-function renderCombinedTable(data) {
+function renderCombinedTable(renderData) {
     const tbody = document.getElementById('combinedTableBody');
     if (!tbody) return;
-    const displayData = data || (window._combinedFiltered || null);
-    let items = displayData || (data.combined ? data.combined.tasks : []);
+    const displayData = renderData || (window._combinedFiltered || null);
+    let items = displayData || (window._combinedRaw || []);
     // 兼容逻辑：优先使用传入数据
-    if (data && Array.isArray(data)) {
-        items = data;
+    if (renderData && Array.isArray(renderData)) {
+        items = renderData;
     } else if (!displayData && window._combinedFiltered === undefined) {
         items = window._combinedRaw || [];
     }

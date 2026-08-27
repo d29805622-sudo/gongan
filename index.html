@@ -5005,7 +5005,7 @@ async function loadData() {
     // 强制版本升级到4.2，清除旧缓存数据
     const saved = localStorage.getItem('policeData');
     const savedVersion = localStorage.getItem('policeDataVersion');
-    const currentVersion = '4.4';
+    const currentVersion = '4.5';
     
     // 如果版本不匹配或idcards数据缺失，强制清除缓存
     const needReset = !saved || savedVersion !== currentVersion;
@@ -5446,7 +5446,7 @@ function saveData() {
         const jsonStr = JSON.stringify(allData);
         const encrypted = ENCRYPTION_KEY ? encryptData(jsonStr, ENCRYPTION_KEY) : jsonStr;
         localStorage.setItem('policeData', encrypted);
-        localStorage.setItem('policeDataVersion', '4.4');
+        localStorage.setItem('policeDataVersion', '4.5');
         
         const syncService = getSyncService();
         if (syncService === 'jsonbin') {

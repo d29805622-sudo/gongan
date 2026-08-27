@@ -5088,9 +5088,9 @@ async function loadData() {
         // 新模块 - 严格检查具体数组字段是否有数据
         if (loadedData.combined && loadedData.combined.tasks && loadedData.combined.tasks.length > 0) data.combined = loadedData.combined;
         if (loadedData.fileData && loadedData.fileData.files && loadedData.fileData.files.length > 0) data.fileData = loadedData.fileData;
-        if (loadedData.duty && loadedData.duty.schedule && loadedData.duty.schedule.length > 0) data.duty = loadedData.duty;
+        if (loadedData.duty && loadedData.duty.rosters && loadedData.duty.rosters.length > 0) data.duty = loadedData.duty;
         if (loadedData.petition && loadedData.petition.items && loadedData.petition.items.length > 0) data.petition = loadedData.petition;
-        if (loadedData.assessment && loadedData.assessment.tasks && loadedData.assessment.tasks.length > 0) data.assessment = loadedData.assessment;
+        if (loadedData.assessment && loadedData.assessment.records && loadedData.assessment.records.length > 0) data.assessment = loadedData.assessment;
         
         // 身份证数据
         if (loadedData.idcards && loadedData.idcards.length > 0) {

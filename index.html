@@ -6619,29 +6619,30 @@ function resetIdCard() {
 function editIdCard(id) {
     const item = data.idcards.find(x => x.id === id);
     if (!item) { showMsg('未找到该身份证记录'); return; }
-    
+    currentModal = 'editIdCard';
+    editId = id;
     openModal('编辑身份证信息', `
-        <div class="form-item"><label>身份证编号：</label><input type="text" class="input-text" value="${item.id}" readonly></div>
-        <div class="form-item"><label>身份证号：</label><input type="text" class="input-text" value="${item.idCard}"></div>
-        <div class="form-item"><label>姓名：</label><input type="text" class="input-text" value="${item.name}"></div>
+        <div class="form-item"><label>身份证编号：</label><input type="text" class="input-text" id="editIdCardId" value="${item.id}" readonly></div>
+        <div class="form-item"><label>身份证号：</label><input type="text" class="input-text" id="editIdCardNumber" value="${item.idCard}"></div>
+        <div class="form-item"><label>姓名：</label><input type="text" class="input-text" id="editIdCardName" value="${item.name}"></div>
         <div class="form-item"><label>性别：</label>
-            <select class="select-box">
-                <option ${item.gender === '男' ? 'selected' : ''}>男</option>
-                <option ${item.gender === '女' ? 'selected' : ''}>女</option>
+            <select class="select-box" id="editIdCardGender">
+                <option value="男" ${item.gender === '男' ? 'selected' : ''}>男</option>
+                <option value="女" ${item.gender === '女' ? 'selected' : ''}>女</option>
             </select>
         </div>
-        <div class="form-item"><label>民族：</label><input type="text" class="input-text" value="${item.nation}"></div>
-        <div class="form-item"><label>出生日期：</label><input type="text" class="input-text" value="${item.birthday}"></div>
-        <div class="form-item"><label>户籍地址：</label><input type="text" class="input-text" value="${item.address}" style="width:100%;"></div>
-        <div class="form-item"><label>签发机关：</label><input type="text" class="input-text" value="${item.authority}"></div>
-        <div class="form-item"><label>签发日期：</label><input type="text" class="input-text" value="${item.issueDate}"></div>
-        <div class="form-item"><label>有效期：</label><input type="text" class="input-text" value="${item.validPeriod}"></div>
-        <div class="form-item"><label>到期日期：</label><input type="text" class="input-text" value="${item.expiryDate}"></div>
+        <div class="form-item"><label>民族：</label><input type="text" class="input-text" id="editIdCardNation" value="${item.nation}"></div>
+        <div class="form-item"><label>出生日期：</label><input type="text" class="input-text" id="editIdCardBirthday" value="${item.birthday}"></div>
+        <div class="form-item"><label>户籍地址：</label><input type="text" class="input-text" id="editIdCardAddress" value="${item.address}" style="width:100%;"></div>
+        <div class="form-item"><label>签发机关：</label><input type="text" class="input-text" id="editIdCardAuthority" value="${item.authority}"></div>
+        <div class="form-item"><label>签发日期：</label><input type="text" class="input-text" id="editIdCardIssueDate" value="${item.issueDate}"></div>
+        <div class="form-item"><label>有效期：</label><input type="text" class="input-text" id="editIdCardValidPeriod" value="${item.validPeriod}"></div>
+        <div class="form-item"><label>到期日期：</label><input type="text" class="input-text" id="editIdCardExpiryDate" value="${item.expiryDate}"></div>
         <div class="form-item"><label>状态：</label>
-            <select class="select-box">
-                <option ${item.status === '正常' ? 'selected' : ''}>正常</option>
-                <option ${item.status === '注销' ? 'selected' : ''}>注销</option>
-                <option ${item.status === '待审核' ? 'selected' : ''}>待审核</option>
+            <select class="select-box" id="editIdCardStatus">
+                <option value="正常" ${item.status === '正常' ? 'selected' : ''}>正常</option>
+                <option value="注销" ${item.status === '注销' ? 'selected' : ''}>注销</option>
+                <option value="待审核" ${item.status === '待审核' ? 'selected' : ''}>待审核</option>
             </select>
         </div>
     `);
@@ -8385,6 +8386,178 @@ function updateSaveForm() {
                     
                     addLog('编辑交通服务', editId);
                     renderTrafficTable();
+                }
+            } else if (currentModal === 'addCombined') {
+                const taskId = document.getElementById('combinedTaskId').value.trim();
+                const taskName = document.getElementById('combinedTaskName').value.trim();
+                if (!taskId || !taskName) { showMsg("请填写任务编号和名称"); return; }
+                if (!window._combinedRaw) window._combinedRaw = [];
+                if (window._combinedRaw.some(i => i.id === taskId)) { showMsg("任务编号已存在"); return; }
+                window._combinedRaw.unshift({
+                    id: taskId, name: taskName,
+                    leadUnit: document.getElementById('combinedLeadUnit').value,
+                    partnerUnits: document.getElementById('combinedPartner').value,
+                    level: document.getElementById('combinedLevel').value,
+                    startTime: document.getElementById('combinedStartTime').value,
+                    commander: document.getElementById('combinedCommander').value,
+                    status: document.getElementById('combinedStatus').value
+                });
+                addLog('新建作战任务', taskId);
+                renderCombinedTable();
+            } else if (currentModal === 'editCombined') {
+                const items = window._combinedRaw || [];
+                const item = items.find(i => i.id === editId);
+                if (item) {
+                    item.name = document.getElementById('combinedTaskName').value;
+                    item.leadUnit = document.getElementById('combinedLeadUnit').value;
+                    item.partnerUnits = document.getElementById('combinedPartner').value;
+                    item.level = document.getElementById('combinedLevel').value;
+                    item.startTime = document.getElementById('combinedStartTime').value;
+                    item.commander = document.getElementById('combinedCommander').value;
+                    item.status = document.getElementById('combinedStatus').value;
+                    addLog('编辑作战任务', editId);
+                    renderCombinedTable();
+                }
+            } else if (currentModal === 'addFile') {
+                const fileId = document.getElementById('fileTaskId').value.trim();
+                const fileName = document.getElementById('fileName').value.trim();
+                if (!fileId || !fileName) { showMsg("请填写卷宗编号和名称"); return; }
+                if (!window._fileRaw) window._fileRaw = [];
+                if (window._fileRaw.some(i => i.id === fileId)) { showMsg("卷宗编号已存在"); return; }
+                window._fileRaw.unshift({
+                    id: fileId, name: fileName,
+                    caseId: document.getElementById('fileCaseId').value,
+                    type: document.getElementById('fileType').value,
+                    archiveDate: document.getElementById('fileDate').value,
+                    unit: document.getElementById('fileUnit').value,
+                    period: document.getElementById('filePeriod').value,
+                    status: document.getElementById('fileStatus').value
+                });
+                addLog('新增卷宗', fileId);
+                renderFileTable();
+            } else if (currentModal === 'editFile') {
+                const items = window._fileRaw || [];
+                const item = items.find(i => i.id === editId);
+                if (item) {
+                    item.name = document.getElementById('fileName').value;
+                    item.caseId = document.getElementById('fileCaseId').value;
+                    item.type = document.getElementById('fileType').value;
+                    item.archiveDate = document.getElementById('fileDate').value;
+                    item.unit = document.getElementById('fileUnit').value;
+                    item.period = document.getElementById('filePeriod').value;
+                    item.status = document.getElementById('fileStatus').value;
+                    addLog('编辑卷宗', editId);
+                    renderFileTable();
+                }
+            } else if (currentModal === 'addDuty') {
+                const dutyDate = document.getElementById('dutyDate').value;
+                const dutyShift = document.getElementById('dutyShift').value;
+                if (!dutyDate) { showMsg("请选择值班日期"); return; }
+                if (!window._dutyRaw) window._dutyRaw = [];
+                if (window._dutyRaw.some(i => i.date === dutyDate && i.shift === dutyShift)) { showMsg("该日期和班次已存在排班"); return; }
+                window._dutyRaw.unshift({
+                    date: dutyDate, shift: dutyShift,
+                    leader: document.getElementById('dutyLeader').value,
+                    staff: document.getElementById('dutyStaff').value,
+                    phone: document.getElementById('dutyPhone').value,
+                    unit: document.getElementById('dutyUnit').value,
+                    backup: document.getElementById('dutyBackup').value,
+                    status: document.getElementById('dutyStatus').value
+                });
+                addLog('新增排班', dutyDate + ' ' + dutyShift);
+                renderDutyTable();
+            } else if (currentModal === 'editDuty') {
+                const items = window._dutyRaw || [];
+                const [date, shift] = editId.split('_');
+                const item = items.find(i => i.date === date && i.shift === shift);
+                if (item) {
+                    item.leader = document.getElementById('dutyLeader').value;
+                    item.staff = document.getElementById('dutyStaff').value;
+                    item.phone = document.getElementById('dutyPhone').value;
+                    item.unit = document.getElementById('dutyUnit').value;
+                    item.backup = document.getElementById('dutyBackup').value;
+                    item.status = document.getElementById('dutyStatus').value;
+                    addLog('编辑排班', editId);
+                    renderDutyTable();
+                }
+            } else if (currentModal === 'addPetition') {
+                const petitionId = document.getElementById('petitionId').value.trim();
+                const petitioner = document.getElementById('petitionPetitioner').value.trim();
+                if (!petitionId || !petitioner) { showMsg("请填写事项编号和信访人"); return; }
+                if (!window._petitionRaw) window._petitionRaw = [];
+                if (window._petitionRaw.some(i => i.id === petitionId)) { showMsg("事项编号已存在"); return; }
+                window._petitionRaw.unshift({
+                    id: petitionId, petitioner: petitioner,
+                    phone: document.getElementById('petitionPhone').value,
+                    title: document.getElementById('petitionTitle').value,
+                    type: document.getElementById('petitionType').value,
+                    acceptDate: document.getElementById('petitionDate').value,
+                    unit: document.getElementById('petitionUnit').value,
+                    status: document.getElementById('petitionStatus').value
+                });
+                addLog('新增信访', petitionId);
+                renderPetitionTable();
+            } else if (currentModal === 'editPetition') {
+                const items = window._petitionRaw || [];
+                const item = items.find(i => i.id === editId);
+                if (item) {
+                    item.petitioner = document.getElementById('petitionPetitioner').value;
+                    item.phone = document.getElementById('petitionPhone').value;
+                    item.title = document.getElementById('petitionTitle').value;
+                    item.type = document.getElementById('petitionType').value;
+                    item.acceptDate = document.getElementById('petitionDate').value;
+                    item.unit = document.getElementById('petitionUnit').value;
+                    item.status = document.getElementById('petitionStatus').value;
+                    addLog('编辑信访', editId);
+                    renderPetitionTable();
+                }
+            } else if (currentModal === 'addAssessment') {
+                const assessId = document.getElementById('assessmentId').value.trim();
+                const assessName = document.getElementById('assessmentName').value.trim();
+                if (!assessId || !assessName) { showMsg("请填写考核编号和民警姓名"); return; }
+                if (!window._assessmentRaw) window._assessmentRaw = [];
+                if (window._assessmentRaw.some(i => i.id === assessId)) { showMsg("考核编号已存在"); return; }
+                window._assessmentRaw.unshift({
+                    id: assessId, name: assessName,
+                    policeId: document.getElementById('assessmentPoliceId').value,
+                    unit: document.getElementById('assessmentUnit').value,
+                    period: document.getElementById('assessmentPeriod').value,
+                    score: parseInt(document.getElementById('assessmentScore').value) || 0,
+                    rank: document.getElementById('assessmentRank').value,
+                    status: document.getElementById('assessmentStatus').value
+                });
+                addLog('新增考核', assessId);
+                renderAssessmentTable();
+            } else if (currentModal === 'editAssessment') {
+                const items = window._assessmentRaw || [];
+                const item = items.find(i => i.id === editId);
+                if (item) {
+                    item.name = document.getElementById('assessmentName').value;
+                    item.policeId = document.getElementById('assessmentPoliceId').value;
+                    item.unit = document.getElementById('assessmentUnit').value;
+                    item.period = document.getElementById('assessmentPeriod').value;
+                    item.score = parseInt(document.getElementById('assessmentScore').value) || 0;
+                    item.rank = document.getElementById('assessmentRank').value;
+                    item.status = document.getElementById('assessmentStatus').value;
+                    addLog('编辑考核', editId);
+                    renderAssessmentTable();
+                }
+            } else if (currentModal === 'editIdCard') {
+                const item = data.idcards.find(x => x.id === editId);
+                if (item) {
+                    item.idCard = document.getElementById('editIdCardNumber').value;
+                    item.name = document.getElementById('editIdCardName').value;
+                    item.gender = document.getElementById('editIdCardGender').value;
+                    item.nation = document.getElementById('editIdCardNation').value;
+                    item.birthday = document.getElementById('editIdCardBirthday').value;
+                    item.address = document.getElementById('editIdCardAddress').value;
+                    item.authority = document.getElementById('editIdCardAuthority').value;
+                    item.issueDate = document.getElementById('editIdCardIssueDate').value;
+                    item.validPeriod = document.getElementById('editIdCardValidPeriod').value;
+                    item.expiryDate = document.getElementById('editIdCardExpiryDate').value;
+                    item.status = document.getElementById('editIdCardStatus').value;
+                    addLog('编辑身份证', editId);
+                    renderIdCardTable();
                 }
             } else {
                 await originalSaveForm();

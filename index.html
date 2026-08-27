@@ -5329,29 +5329,37 @@ function ensureDefaultData() {
         };
     }
     
-    if (!data.lawSupervisionData || !data.lawSupervisionData.items || data.lawSupervisionData.items.length === 0) {
+    if (!data.lawSupervisionData || !data.lawSupervisionData.cases || data.lawSupervisionData.cases.length === 0) {
         data.lawSupervisionData = {
-            items: [
-                {id: 'JD202605001', caseId: 'XA2026021', type: '立案监督', status: '已通过', checkDate: '2026-05-11', checker: '法制科'},
-                {id: 'JD202605002', caseId: 'XA2026022', type: '执法质量', status: '待审核', checkDate: '2026-05-18', checker: '法制科'}
-            ]
+            cases: [
+                {id: 'JD202601', name: '盗窃案侦查监督', police: '张警官', deadline: '2026-06-10', remaining: 15, status: '正常', supervision: '正常'},
+                {id: 'JD202602', name: '寻衅滋事案监督', police: '李警官', deadline: '2026-05-25', remaining: 3, status: '预警', supervision: '督办中'},
+                {id: 'JD202603', name: '交通肇事案监督', police: '王警官', deadline: '2026-05-20', remaining: -2, status: '异常', supervision: '超期预警'}
+            ],
+            evaluations: [
+                {person: '张三', score: 95, rank: '优秀', month: '2026-05'},
+                {person: '李四', score: 88, rank: '良好', month: '2026-05'},
+                {person: '王五', score: 76, rank: '合格', month: '2026-05'}
+            ],
+            pendingAudits: 3,
+            issues: 1
         };
     }
     
-    if (!data.serviceData || !data.serviceData.items || data.serviceData.items.length === 0) {
+    if (!data.serviceData || !data.serviceData.services || data.serviceData.services.length === 0) {
         data.serviceData = {
-            items: [
-                {id: 'FW20260518001', type: '身份证办理', applicant: '张三', phone: '138****1234', status: '办理中', applyDate: '2026-05-18', finishDate: '2026-06-01'},
-                {id: 'FW20260518002', type: '户口迁移', applicant: '李四', phone: '139****5678', status: '已办结', applyDate: '2026-05-15', finishDate: '2026-05-18'}
+            services: [
+                {id: 'FW20260518001', type: '身份证办理', applicant: '张三', phone: '138****1234', status: '办理中', applyDate: '2026-05-18', finishDate: '2026-06-01', police: '王警官'},
+                {id: 'FW20260518002', type: '户口迁移', applicant: '李四', phone: '139****5678', status: '已办结', applyDate: '2026-05-15', finishDate: '2026-05-18', police: '李警官'}
             ]
         };
     }
     
-    if (!data.trafficData || !data.trafficData.items || data.trafficData.items.length === 0) {
+    if (!data.trafficData || !data.trafficData.services || data.trafficData.services.length === 0) {
         data.trafficData = {
-            items: [
-                {id: 'JT20260518001', plate: '冀A12345', type: '违章停车', time: '2026-05-18 09:30', location: '中山路', status: '已处理'},
-                {id: 'JT20260518002', plate: '冀B67890', type: '闯红灯', time: '2026-05-18 10:15', location: '建设大街', status: '待处理'}
+            services: [
+                {id: 'JT20260518001', plate: '冀A12345', type: '违章停车', party: '张某', police: '王警官', time: '2026-05-18 09:30', location: '中山路', status: '已处理'},
+                {id: 'JT20260518002', plate: '冀B67890', type: '闯红灯', party: '李某', police: '赵警官', time: '2026-05-18 10:15', location: '建设大街', status: '待处理'}
             ]
         };
     }

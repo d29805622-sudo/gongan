@@ -4711,30 +4711,36 @@ async function loadData() {
         loadedData = await loadDataFromGist();
     }
     
-    if (!loadedData) {
-        const saved = localStorage.getItem('policeData');
-        const savedVersion = localStorage.getItem('policeDataVersion');
-        const currentVersion = '4.1';
-        
-        if (saved) {
-            try {
-                let decrypted = saved;
-                if (ENCRYPTION_KEY) {
-                    const dec = decryptData(saved, ENCRYPTION_KEY);
-                    if (dec) decrypted = dec;
-                }
-                loadedData = JSON.parse(decrypted);
-            } catch(e) {
-                console.warn('从localStorage加载失败:', e);
-                loadedData = null;
+    // 强制版本升级到4.2，清除旧缓存数据
+    const saved = localStorage.getItem('policeData');
+    const savedVersion = localStorage.getItem('policeDataVersion');
+    const currentVersion = '4.2';
+    
+    // 如果版本不匹配或idcards数据缺失，强制清除缓存
+    const needReset = !saved || savedVersion !== currentVersion;
+    
+    if (needReset) {
+        console.log('强制重置数据缓存，使用最新版本');
+        localStorage.setItem('policeDataVersion', currentVersion);
+        localStorage.removeItem('policeData');
+        loadedData = null;
+    } else if (saved) {
+        try {
+            let decrypted = saved;
+            if (ENCRYPTION_KEY) {
+                const dec = decryptData(saved, ENCRYPTION_KEY);
+                if (dec) decrypted = dec;
             }
-        }
-        
-        // 版本不匹配或加载的数据为空对象时，强制使用默认数据
-        if (savedVersion !== currentVersion || (loadedData && Object.keys(loadedData).length === 0)) {
-            console.log('数据版本不匹配或数据为空，使用默认数据');
-            localStorage.setItem('policeDataVersion', currentVersion);
-            localStorage.removeItem('policeData');
+            loadedData = JSON.parse(decrypted);
+            
+            // 检查关键数据是否存在
+            if (loadedData && (!loadedData.idcards || loadedData.idcards.length === 0)) {
+                console.log('身份证数据缺失，强制重置');
+                loadedData = null;
+                localStorage.removeItem('policeData');
+            }
+        } catch(e) {
+            console.warn('从localStorage加载失败:', e);
             loadedData = null;
         }
     }
@@ -5149,7 +5155,7 @@ function saveData() {
         const jsonStr = JSON.stringify(allData);
         const encrypted = ENCRYPTION_KEY ? encryptData(jsonStr, ENCRYPTION_KEY) : jsonStr;
         localStorage.setItem('policeData', encrypted);
-        localStorage.setItem('policeDataVersion', '4.1');
+        localStorage.setItem('policeDataVersion', '4.2');
         
         const syncService = getSyncService();
         if (syncService === 'jsonbin') {
@@ -6266,7 +6272,8 @@ function searchIdCard() {
     const gender = document.getElementById('idcardGenderSearch').value;
     const nation = document.getElementById('idcardNationSearch').value;
     
-    data.idcards = originalData.idcards.filter(item => {
+    // 从原始数据过滤，不修改原始数据
+    const searchResults = originalData.idcards.filter(item => {
         let match = true;
         if (key) {
             match = (item.name && item.name.toLowerCase().includes(key)) ||
@@ -6283,6 +6290,9 @@ function searchIdCard() {
         }
         return match;
     });
+    
+    // 只更新data.idcards为搜索结果（保留原数据在originalData中）
+    data.idcards = searchResults;
     
     currentIdCardPage = 1;
     renderIdCardTable();
@@ -6929,31 +6939,54 @@ window.onload = async function(){
     } else {
         showLoginPage();
     }
-    renderHomeTable();
-    renderMiniCalendar();
-    renderAlarmTable();
-    renderCaseTable();
-    renderPersonTable();
-    renderCarTable();
-    renderGoodsTable();
-    renderIdCardTable();
-    renderLogTable();
-    renderSysTable();
-    renderSupervisionTable();
-    renderCommandTable();
-    renderIntelTable();
-    renderCommunityTable();
-    renderPatrolTable();
-    renderRecordTable();
-    renderLawTable();
-    renderServiceTable();
-    renderTrafficTable();
-    renderMarketTable();
-    renderCombinedTable();
-    renderFileTable();
-    renderDutyTable();
-    renderPetitionTable();
-    renderAssessmentTable();
+    
+    // 调试日志：打印数据状态
+    console.log('=== 系统数据状态 ===');
+    console.log('idcards 数量:', data.idcards ? data.idcards.length : '未定义');
+    console.log('events 数量:', data.events ? data.events.length : '未定义');
+    console.log('alarms 数量:', data.alarms ? data.alarms.length : '未定义');
+    console.log('====================');
+    
+    // 渲染所有页面数据（带错误处理）
+    const renderFunctions = [
+        {name: 'renderHomeTable', fn: renderHomeTable},
+        {name: 'renderMiniCalendar', fn: renderMiniCalendar},
+        {name: 'renderAlarmTable', fn: renderAlarmTable},
+        {name: 'renderCaseTable', fn: renderCaseTable},
+        {name: 'renderPersonTable', fn: renderPersonTable},
+        {name: 'renderCarTable', fn: renderCarTable},
+        {name: 'renderGoodsTable', fn: renderGoodsTable},
+        {name: 'renderIdCardTable', fn: renderIdCardTable},
+        {name: 'renderLogTable', fn: renderLogTable},
+        {name: 'renderSysTable', fn: renderSysTable},
+        {name: 'renderSupervisionTable', fn: renderSupervisionTable},
+        {name: 'renderCommandTable', fn: renderCommandTable},
+        {name: 'renderIntelTable', fn: renderIntelTable},
+        {name: 'renderCommunityTable', fn: renderCommunityTable},
+        {name: 'renderPatrolTable', fn: renderPatrolTable},
+        {name: 'renderRecordTable', fn: renderRecordTable},
+        {name: 'renderLawTable', fn: renderLawTable},
+        {name: 'renderServiceTable', fn: renderServiceTable},
+        {name: 'renderTrafficTable', fn: renderTrafficTable},
+        {name: 'renderMarketTable', fn: renderMarketTable},
+        {name: 'renderCombinedTable', fn: renderCombinedTable},
+        {name: 'renderFileTable', fn: renderFileTable},
+        {name: 'renderDutyTable', fn: renderDutyTable},
+        {name: 'renderPetitionTable', fn: renderPetitionTable},
+        {name: 'renderAssessmentTable', fn: renderAssessmentTable}
+    ];
+    
+    renderFunctions.forEach(({name, fn}) => {
+        try {
+            if (typeof fn === 'function') {
+                fn();
+            }
+        } catch(e) {
+            console.error(`渲染 ${name} 失败:`, e.message);
+        }
+    });
+    
+    console.log('=== 数据渲染完成 ===');
 };
 
 // ==================== 统计分析和执法监督功能 ====================

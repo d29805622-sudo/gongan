@@ -6924,6 +6924,8 @@ async function saveForm() {
             const person = document.getElementById('evalPerson').value;
             const score = parseInt(document.getElementById('evalScore').value);
             if (!person || isNaN(score)) { showMsg("请填写完整信息"); return; }
+            if (!data.supervision) data.supervision = {evaluations: [], pendingAudits: 0, issues: 0};
+            if (!data.supervision.evaluations) data.supervision.evaluations = [];
             data.supervision.evaluations.unshift({
                 person: person,
                 score: score,
@@ -6933,6 +6935,7 @@ async function saveForm() {
             renderSupervisionTable();
             addLog('新增考评', person);
         } else if (currentModal === 'editEvaluation') {
+            if (!data.supervision || !data.supervision.evaluations) return;
             const idx = data.supervision.evaluations.findIndex(e => e.person === editId);
             if (idx > -1) {
                 data.supervision.evaluations[idx].score = parseInt(document.getElementById('evalScore').value);
@@ -7347,6 +7350,7 @@ function addEvaluation() {
 function editEvaluation(person) {
     currentModal = 'editEvaluation';
     editId = person;
+    if (!data.supervision || !data.supervision.evaluations) return;
     const item = data.supervision.evaluations.find(e => e.person === person);
     if (item) {
         openModal('编辑绩效考评', `
@@ -7967,13 +7971,13 @@ function searchLawSupervision() {
     const keyword = document.getElementById('lawSearch').value.toLowerCase().trim();
     const statusFilter = document.getElementById('lawStatusFilter').value;
     
-    let filteredData = data.lawSupervisionData.cases;
+    let filteredData = (data.lawSupervisionData && data.lawSupervisionData.cases) || [];
     
     if (keyword) {
         filteredData = filteredData.filter(item => 
-            item.id.toLowerCase().includes(keyword) || 
-            item.name.toLowerCase().includes(keyword) || 
-            item.police.toLowerCase().includes(keyword)
+            (item.id || '').toLowerCase().includes(keyword) || 
+            (item.name || '').toLowerCase().includes(keyword) || 
+            (item.police || '').toLowerCase().includes(keyword)
         );
     }
     
@@ -7986,6 +7990,7 @@ function searchLawSupervision() {
 }
 
 function superviseCase(id) {
+    if (!data.lawSupervisionData || !data.lawSupervisionData.cases) return;
     const item = data.lawSupervisionData.cases.find(c => c.id === id);
     if (item) {
         item.supervision = '督办中';
@@ -8342,6 +8347,7 @@ function updateSaveForm() {
                 addLog('新增执法案件', caseId);
                 renderLawTable();
             } else if (currentModal === 'editLawCase') {
+                if (!data.lawSupervisionData || !data.lawSupervisionData.cases) return;
                 const item = data.lawSupervisionData.cases.find(c => c.id === editId);
                 if (item) {
                     item.name = document.getElementById('editLawCaseName').value;
@@ -8355,6 +8361,7 @@ function updateSaveForm() {
                     renderLawTable();
                 }
             } else if (currentModal === 'editService') {
+                if (!data.serviceData || !data.serviceData.services) return;
                 const item = data.serviceData.services.find(s => s.id === editId);
                 if (item) {
                     item.type = document.getElementById('editServiceType').value;
@@ -8367,6 +8374,7 @@ function updateSaveForm() {
                     renderServiceTable();
                 }
             } else if (currentModal === 'editTrafficService') {
+                if (!data.trafficData || !data.trafficData.services) return;
                 const item = data.trafficData.services.find(t => t.id === editId);
                 if (item) {
                     item.plate = document.getElementById('editTrafficPlate').value;
@@ -8627,6 +8635,7 @@ function exportRecord(id) {
 }
 
 function viewLawDetail(id) {
+    if (!data.lawSupervisionData || !data.lawSupervisionData.cases) return;
     const item = data.lawSupervisionData.cases.find(c => c.id === id);
     if (item) {
         openModal('执法监督详情', `
@@ -8723,6 +8732,7 @@ function deleteRecord(id) {
 }
 
 function deleteLawCase(id) {
+    if (!data.lawSupervisionData || !data.lawSupervisionData.cases) return;
     if (confirm('确定要删除这个执法监督案件吗？')) {
         const idx = data.lawSupervisionData.cases.findIndex(c => c.id === id);
         if (idx > -1) {
@@ -8847,6 +8857,10 @@ function editRecord(id) {
 
 function addLawCase() {
     currentModal = 'addLawCase';
+    if (!data.lawSupervisionData) {
+        data.lawSupervisionData = {cases: [], evaluations: [], pendingAudits: 0, issues: 0};
+    }
+    if (!data.lawSupervisionData.cases) data.lawSupervisionData.cases = [];
     // 生成新案件编号 JD + 年份 + 3位序号
     const year = new Date().getFullYear();
     const existingCases = data.lawSupervisionData.cases.filter(c => c.id && c.id.startsWith('JD' + year));
@@ -8885,6 +8899,7 @@ function addLawCase() {
 }
 
 function editLawCase(id) {
+    if (!data.lawSupervisionData || !data.lawSupervisionData.cases) return;
     const item = data.lawSupervisionData.cases.find(c => c.id === id);
     if (!item) return;
     currentModal = 'editLawCase';

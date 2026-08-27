@@ -8585,7 +8585,8 @@ function updateSaveForm() {
                 await originalSaveForm();
                 return;
             }
-            scheduleSave();
+            saveData(); // 立即保存，不使用debounce
+            scheduleSave(); // 同时触发debounce保存
             backupOriginalData();
             closeModal();
             showMsg("保存成功");

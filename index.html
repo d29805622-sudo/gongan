@@ -5011,7 +5011,7 @@ async function loadData() {
     const needReset = !saved || savedVersion !== currentVersion;
     
     if (needReset) {
-        console.log('强制重置数据缓存，使用最新版本');
+        console.log('强制重置数据缓存，使用最新版本 v4.6-fix2');
         localStorage.setItem('policeDataVersion', currentVersion);
         localStorage.removeItem('policeData');
         loadedData = null;

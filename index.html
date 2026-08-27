@@ -5023,6 +5023,7 @@ async function loadData() {
                 if (dec) decrypted = dec;
             }
             loadedData = JSON.parse(decrypted);
+            console.log('loadData: 从localStorage加载数据成功, combined.tasks=' + (loadedData.combined && loadedData.combined.tasks ? loadedData.combined.tasks.length : 'N/A') + ', fileData.files=' + (loadedData.fileData && loadedData.fileData.files ? loadedData.fileData.files.length : 'N/A'));
             
             // 检查关键数据是否存在
             if (loadedData && (!loadedData.idcards || loadedData.idcards.length === 0)) {
@@ -5459,9 +5460,11 @@ function saveData() {
             assessment: data.assessment
         };
         const jsonStr = JSON.stringify(allData);
+        console.log('saveData: 数据大小=' + jsonStr.length + ' bytes, combined.tasks=' + (data.combined && data.combined.tasks ? data.combined.tasks.length : 'N/A') + ', fileData.files=' + (data.fileData && data.fileData.files ? data.fileData.files.length : 'N/A'));
         const encrypted = ENCRYPTION_KEY ? encryptData(jsonStr, ENCRYPTION_KEY) : jsonStr;
         localStorage.setItem('policeData', encrypted);
         localStorage.setItem('policeDataVersion', '4.6');
+        console.log('saveData: 保存完成, policeDataVersion=4.6');
         
         const syncService = getSyncService();
         if (syncService === 'jsonbin') {
